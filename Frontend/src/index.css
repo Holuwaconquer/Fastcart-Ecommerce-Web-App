@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
+}
+
+body{
+  font-family: "Montserrat", sans-serif;
+}
+.coloredTxt{
+  color: #2DA5F3;
+  font-weight: bold;
+}
+.registerPage, .loginPage{
+  input:focus{
+    outline: none;
+  }
+}
+.logoTxt{
+  font-family: "Rubik Glitch", system-ui !important;
+}
+.customer-table th, td{
+  padding: 15px 0;
+}
+.customer-table tr{
+  border-bottom: 1px solid #E6E9F4;
+}
+.productTbody:hover .dAndE{
+  opacity: 1;
+  transition: 0.3s ease-in-out;
+}
+.categoryText:hover .categoryCaret{
+  opacity: 1;
+}
+.rotateCaret{
+  transform: rotate(180deg);
+  transition: transform 0.2s linear;
+}
+

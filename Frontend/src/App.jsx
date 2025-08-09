@@ -1,0 +1,108 @@
+import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import Register from './Pages/user/Register';
+import Home from './Pages/Home';
+import Signin from './Pages/user/Signin';
+import UserDashboard from './Pages/user/Dashboard';
+import AdminLogin from './Pages/admin/AdminLogin';
+import AdminDashboard from './Pages/admin/AdminDashboard';
+import Dashboard from './Pages/admin/adminPages/Dashboard'
+import ProtectedRoute from './ProtectedRoute';
+import PublicRoute from './PublicRoute';
+import Customer from './Pages/admin/adminPages/Customer';
+import CustomerDetails from './Pages/admin/adminPages/CustomerDetails'
+import AddNewCustomer from './Pages/admin/adminPages/AddNewCustomer'
+import Categories from './Pages/admin/adminPages/Categories';
+import CategoryProvider from './CategoryContext';
+import CategoriesDetails from './Pages/admin/adminPages/CategoriesDetails';
+import ProductPage from './Pages/admin/adminPages/ProductPage';
+import AddProduct from './Pages/admin/adminPages/AddProduct';
+import ShopPage from './components/ShopPage';
+import Landingpage from './Pages/Landingpage';
+import Account from './Pages/user/Account';
+import HomeDashboard from './Pages/user/HomeDashboard';
+import UserProvider from './Pages/user/UserContext';
+import Settings from './Pages/user/Settings';
+
+
+const App = () => {
+  return (
+    <div>
+      <Routes>
+          <Route path="/" element={
+            <CategoryProvider>
+              <Home />
+            </CategoryProvider>
+          }>
+            <Route index element={<Landingpage />} />
+            <Route path='/shop' element={<ShopPage />} />
+            <Route path="/dashboard/" element={
+              <UserProvider>
+                <ProtectedRoute role="user">
+                  <UserDashboard />
+                </ProtectedRoute>
+              </UserProvider>
+            }>
+              <Route path='account' element={
+                <UserProvider>
+                  <HomeDashboard />
+                </UserProvider>
+              }/>
+              <Route path='setting' element={
+                <UserProvider>
+                  <Settings />
+                </UserProvider>
+              }/>
+            </Route>
+            <Route path='/account' element={<Account />}>
+              <Route path="register" element={<Register />} />
+            
+              <Route path="login" element={
+                <PublicRoute><Signin /></PublicRoute>
+              } />
+            </Route>
+        </Route>
+
+
+        <Route path="/admin/login" element={
+          <PublicRoute><AdminLogin /></PublicRoute>
+        } />
+
+        {/* Protected Routes */}
+        
+
+        <Route path="/admin/" element={
+          <ProtectedRoute role="admin"><AdminDashboard /></ProtectedRoute>
+        }> 
+          <Route path='dashboard' element={<Dashboard />}/>
+          <Route path='customer' element={<Customer />} />
+          <Route path='customer/:id' element={<CustomerDetails />} />
+          <Route path='customer/add-new-customer' element={<AddNewCustomer />} />
+
+          <Route path='categories' element={
+            <CategoryProvider>
+              <Categories />
+            </CategoryProvider>
+          }/>
+          <Route path='categories/:name' element={
+            <CategoryProvider>
+              <CategoriesDetails />
+            </CategoryProvider>
+          } />
+          <Route path='products' element={ 
+            <CategoryProvider>
+              <ProductPage />
+            </CategoryProvider>
+          } />
+          <Route path='product/add-product' element={ 
+            <CategoryProvider>
+              <AddProduct />
+            </CategoryProvider>
+          } />
+        </Route>
+      </Routes>
+    </div>
+  );
+};
+
+export default App;
