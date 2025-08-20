@@ -1,5 +1,7 @@
 const userModel = require("../model/user.model");
+const AdminOrder = require("../model/adminOrder.model")
 const jwt = require('jsonwebtoken')
+const bcrypt = require('bcryptjs')
 
 const greetingUser = (req, res) =>{
   const {confirmPassword, ...userData} = req.body
@@ -66,6 +68,37 @@ const userLogin = (req, res) => {
     });
 };
 
+const changePassword = async (req, res) =>{
+  const { id } = req.params;
+  const {currentpassword, newpassword} = req.body;
+  try{
+    const user = await userModel.findById(id);
+    if(!user){
+      return res.status(404).json({ error: 'user not found'});
+    }
+
+    user.validatePassword(currentpassword, async (err, isMatch) => {
+      if(err){
+        console.log('Error validating password: ', err);
+        return res.status(500).json({ error: "Server error while validating password" });
+      }
+      if (!isMatch) {
+        return res.status(401).json({ error: "Current password is incorrect" });
+      }
+      user.password = newpassword;
+
+      await user.save();
+
+      res.status(200).json({ message: "Password updated successfully" });
+    })
+  }
+  catch (err) {
+    console.error("Error during password change:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+}
+  
+
 
 const userDashboard = (req, res) =>{
   let token = req.headers.authorization.split(" ")[1]
@@ -126,8 +159,6 @@ const billingDetails = async (req, res) =>{
     )
     if(!billingData){
       return res.status(404).json({ error: 'User not found'})
-      console.log(res);
-      
     }
     console.log(billingData);
     
@@ -138,7 +169,7 @@ const billingDetails = async (req, res) =>{
   }
   catch(err){
     console.error("Error updating billing data:", err);
-    res.status(500).json({ error: "Internal server error" });v
+    res.status(500).json({ error: "Internal server error" });
   }
 }
 const shippingDetails = async (req, res) =>{
@@ -150,9 +181,7 @@ const shippingDetails = async (req, res) =>{
       {new: true, runValidators: true}
     )
     if(!shippingData){
-      return res.status(404).json({ error: 'User not found'})
-      console.log(res);
-      
+      return res.status(404).json({ error: 'User not found'}) 
     }
     console.log(shippingData);
     
@@ -163,14 +192,61 @@ const shippingDetails = async (req, res) =>{
   }
   catch(err){
     console.error("Error updating shipping data:", err);
-    res.status(500).json({ error: "Internal server error" });v
+    res.status(500).json({ error: "Internal server error" });
   }
 }
+const orderDetails = async (req, res) => {
+  const { id } = req.params;
+  const { flutterwaveResponse, cartItems, billingDetails, subtotal } = req.body;
+
+  try {
+    const user = await userModel.findById(id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    const order = {
+      flutterwaveResponse,
+      products: cartItems.map(item => ({
+        productId: item._id,
+        name: item.name,
+        price: typeof item.discountprice === 'number' ? item.discountprice : item.price,
+        quantity: item.quantity,
+        image: item.image?.[0],
+      })),
+      billingDetails,
+      subtotal,
+      createdAt: new Date(),
+    };
+
+    user.productOrder.push(order);
+    await user.save();
+
+    const adminOrder = new AdminOrder({
+      transactionId: flutterwaveResponse?.transaction_id || 'N/A',
+      userId: user._id,
+      userEmail: user.email,
+      userName: `${user.firstname} ${user.lastname}`,
+      products: order.products,
+      billingDetails,
+      subtotal,
+      createdAt: order.createdAt,
+    });
+
+    await adminOrder.save();
+
+    res.status(200).json({ message: 'Order saved successfully' });
+  } catch (err) {
+    console.error('Error saving order:', err);
+    res.status(500).json({ message: 'Failed to save order' });
+  }
+};
+
 module.exports = {
   greetingUser,
   userLogin,
   userDashboard,
   editUser,
   billingDetails,
-  shippingDetails
+  shippingDetails,
+  changePassword,
+  orderDetails
 }

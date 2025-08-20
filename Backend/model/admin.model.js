@@ -10,12 +10,16 @@ const adminSchema = mongoose.Schema({
   password: { type: String, required: true, default: admin_password},
   role: {type:String, enum: ['admin'], default: 'admin'}
 })
-
+const subCategorySchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now }
+});
 const categorySchema = mongoose.Schema({
   name: { type: String, required: true, unique: true },
   description: { type: String },
   image: { type: String },
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
+  subcategories: [subCategorySchema]
 })
 
 const productSchema = mongoose.Schema({
@@ -29,13 +33,19 @@ const productSchema = mongoose.Schema({
   country: {type: String},
   size: {type: String},
   color: {type:String},
-  category: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'product-category',
-    required: true
-  },
+  category: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'product-category',
+      required: true
+    }
+  ],
+  productBox: {type: String},
+  keyFeatures: {type: String},
+  discountPercentage: {type:Number},
   createdAt: {type:Date, default: Date.now}
 })
+
 
 let saltRounds = 10
 adminSchema.pre('save', function(next){

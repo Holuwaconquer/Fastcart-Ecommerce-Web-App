@@ -23,6 +23,9 @@ import Account from './Pages/user/Account';
 import HomeDashboard from './Pages/user/HomeDashboard';
 import UserProvider from './Pages/user/UserContext';
 import Settings from './Pages/user/Settings';
+import NotFound from './404';
+import ShoppingCart from './Pages/ShoppingCart';
+import Checkout from './components/Checkout';
 
 
 const App = () => {
@@ -36,6 +39,14 @@ const App = () => {
           }>
             <Route index element={<Landingpage />} />
             <Route path='/shop' element={<ShopPage />} />
+            <Route path='/shopping-cart' element={<ShoppingCart />} />
+            <Route path='/shopping-cart/checkout' element={
+              <UserProvider>
+                <ProtectedRoute role="user">
+                  <Checkout />
+                </ProtectedRoute>
+              </UserProvider>
+            } />
             <Route path="/dashboard/" element={
               <UserProvider>
                 <ProtectedRoute role="user">
@@ -61,6 +72,7 @@ const App = () => {
                 <PublicRoute><Signin /></PublicRoute>
               } />
             </Route>
+            <Route path='*' element={<NotFound />} />
         </Route>
 
 
@@ -100,6 +112,7 @@ const App = () => {
             </CategoryProvider>
           } />
         </Route>
+        
       </Routes>
     </div>
   );

@@ -13,8 +13,11 @@ import { toast, ToastContainer } from 'react-toastify';
 const ProductPage = () => {
   const { allProduct, allCategory } = useContext(CategoryContext);
   const [isOpen, setIsOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selected, setSelected] = useState([]);
+  const [selectedProductIds, setSelectedProductIds] = useState([])
+  const [isconfirmDelete, setIsConfirmDelete] = useState(false)
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -73,7 +76,7 @@ const ProductPage = () => {
       description: yup.string().required('Product Description is required'),
       price: yup.number().required('Product price is required'),
       category: yup.array().min(1, 'Product category is required'),
-      image: yup.array().min(1,)
+      image: yup.array().min(1, 'At least one image is required')
     }),
     onSubmit: async (values) => {
       values.category = selected;
@@ -104,7 +107,35 @@ const ProductPage = () => {
         console.log(err);
       })
     }
-    
+  }
+  const selectAllProduct = (event) => {
+    const { checked } = event.target;
+    if (checked) {
+      const allIds = allProduct.map(product => product._id);
+      setSelectedProductIds(allIds);
+    } else {
+      setSelectedProductIds([]);
+    }
+  };
+  const deleteAllProduct = () =>{
+    console.log(selectedProductIds);
+    axios.delete('http://localhost:5000/admin/deleteSelectedProduct', {data: selectedProductIds} )
+    .then((res) =>{
+      console.log(res);
+      if(res.status){
+        toast.success('Selected Product Deleted Successfully')
+        window.location.reload()
+      }
+    }).catch((err) =>{
+      console.log('selected product cannot be deleted', err);
+    })
+  }
+  const openDeleteOption = () =>{
+    if(selectedProductIds.length > 0){
+      setDeleteOpen(true)
+    }else{
+      toast.warning('Select at least 1 item to delete')
+    }
   }
 
   return (
@@ -145,7 +176,7 @@ const ProductPage = () => {
               </div>
             </div>
             <div className='justify-self-end'>
-              <div className='w-[40px] h-[40px] cursor-pointer hover:text-[#304169] flex flex-col justify-center items-center text-[#1E5EFF] rounded-[4px] shadow-sm'>
+              <div onClick={openDeleteOption} className='w-[40px] h-[40px] cursor-pointer hover:text-[#304169] flex flex-col justify-center items-center text-[#1E5EFF] rounded-[4px] shadow-sm'>
                 <FaRegTrashCan size={24} />
               </div>
             </div>
@@ -155,12 +186,17 @@ const ProductPage = () => {
             <table className="w-full">
               <thead className='w-full'>
                 <tr className='font-bold border-b-1 border-[#D7DBEC] w-full grid grid-cols-[0.4fr_3fr_1fr_1fr_1fr_1fr_1fr]'>
-                  <td style={{ padding: '15px 0' }} className='text-left'>S/N</td>
+                  <td style={{ padding: '15px 0' }} className='text-left'>
+                    <label className="container">
+                      <input onChange={selectAllProduct} checked={selectedProductIds.length === allProduct.length && allProduct.length > 0} defaultValue="wedding-gift" className="peer cursor-pointer hidden after:opacity-100" type="checkbox" />
+                      <span className="inline-block w-5 h-5 border-2 relative cursor-pointer after:content-[''] after:absolute after:top-2/4 after:left-2/4 after:-translate-x-1/2 after:-translate-y-1/2 after:w-[10px] after:h-[10px] after:bg-[#333] after:rounded-[2px] after:opacity-0 peer-checked:after:opacity-100" />
+                    </label>
+                  </td>
                   <td>Product</td>
                   <td>Inventory</td>
                   <td>Color</td>
                   <td>Price</td>
-                  <td>Rating</td>
+                  <td>Discounted Price</td>
                   <td></td>
                 </tr>
               </thead>
@@ -168,21 +204,38 @@ const ProductPage = () => {
                 {allProduct ? (
                   allProduct.map((product, index) => (
                     <tr className='border-b-1 border-[#D7DBEC] w-full grid grid-cols-[0.4fr_3fr_1fr_1fr_1fr_1fr_1fr]' key={product._id}>
-                      <td>{index + 1}</td>
-                      <td className='flex items-center w-full gap-2'>
-                        <div className='w-[48px] h-[48px] rounded-[4px] bg-[#979797]'><img src={product.image[0]} className='w-[100%] h-[100%] rounded-[4px] object-fit-cover' alt="" /></div>
+                      <td>
+                        <label>
+                        <input
+                          type="checkbox"
+                          className="peer cursor-pointer hidden after:opacity-100"
+                          checked={selectedProductIds.includes(product._id)}
+                          onChange={(e) => {
+                            const { checked } = e.target;
+                            if (checked) {
+                              setSelectedProductIds(prev => [...prev, product._id]);
+                            } else {
+                              setSelectedProductIds(prev => prev.filter(id => id !== product._id));
+                            }
+                          }}
+                        />
+                        <span className="inline-block w-5 h-5 border-2 relative cursor-pointer after:content-[''] after:absolute after:top-2/4 after:left-2/4 after:-translate-x-1/2 after:-translate-y-1/2 after:w-[10px] after:h-[10px] after:bg-[#333] after:rounded-[2px] after:opacity-0 peer-checked:after:opacity-100" />
+                        </label>
+                      </td>
+                      <td className='flex items-center w-10/12 gap-2'>
+                        <div className='w-[48px] h-[48px] rounded-[4px] bg-[#979797]'><img src={product.image?.[0]} className='w-[100%] h-[100%] rounded-[4px] object-fit-cover' alt="product-img" /></div>
                         <div>
-                          <h1 className='text-[14px] font-bold text-[#131523]'>{product.name}</h1>
+                          <h1 className='text-[14px] font-bold text-[#131523]'>{product?.name}</h1>
                           <p className='text-[#5A607F] text-[14px]'>{Array.isArray(product.category) ? product.category[0]?.name : product.category?.name}</p>
                         </div>
                       </td>
-                      <td>{product.inventory} in stock</td>
-                      <td>{product.color || '-'}</td>
-                      <td>{product.price}</td>
-                      <td>-</td>
+                      <td>{product?.inventory} in stock</td>
+                      <td>{product?.color || '-'}</td>
+                      <td>₦{product?.price.toLocaleString()}</td>
+                      <td>₦{product?.discountprice.toLocaleString()}</td>
                       <td className='dAndE text-[#1E5EFF] flex gap-2'>
                         <MdOpenInNew size={24} onClick={() => handleEdit(product)} className='cursor-pointer'/>
-                        <FaRegTrashCan onClick={() => deleteProduct(product._id)} size={24} />
+                        <FaRegTrashCan onClick={() => deleteProduct(product._id)} className='cursor-pointer' size={24} />
                       </td>
                     </tr>
                   ))
@@ -210,8 +263,9 @@ const ProductPage = () => {
                 value={formik.values.name}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className='border rounded p-2'
-              />
+                className='border rounded'
+                style={{padding: '8px'}}
+                />
               {formik.touched.name && formik.errors.name && <small className="text-red-500">{formik.errors.name}</small>}
               <textarea
                 name='description'
@@ -219,8 +273,9 @@ const ProductPage = () => {
                 value={formik.values.description}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className='border rounded p-2'
-              />
+                className='border rounded resize-none'
+                style={{padding: '8px'}}
+                />
               {formik.touched.description && formik.errors.description && <small className="text-red-500">{formik.errors.description}</small>}
               <input
                 name='price'
@@ -229,7 +284,8 @@ const ProductPage = () => {
                 value={formik.values.price}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className='border rounded p-2'
+                className='border rounded'
+                style={{padding: '8px'}}
               />
               {formik.touched.price && formik.errors.price && <small className="text-red-500">{formik.errors.price}</small>}
               <div className='flex flex-col gap-2'>
@@ -239,6 +295,7 @@ const ProductPage = () => {
                     <input
                       type='checkbox'
                       value={option._id}
+                      className=''
                       onChange={handleCheckboxChange}
                       checked={selected.includes(option._id)}
                     />
@@ -249,6 +306,23 @@ const ProductPage = () => {
               </div>
               <button type='submit' className='bg-blue-600 text-white px-4 py-2 rounded mt-2'>Save</button>
             </form>
+          </DialogPanel>
+        </div>
+      </Dialog>
+      <Dialog open={deleteOpen} onClose={() => setDeleteOpen(false)} className="relative z-50">
+        <DialogBackdrop className="fixed inset-0 bg-black/30" />
+        <div className="fixed inset-0 flex w-screen items-center justify-center">
+          <DialogPanel className="w-2/4 space-y-4 bg-white rounded-[4px] shadow-lg flex flex-col gap-[1em]" style={{ padding: '40px', borderRadius: '4px' }}>
+            <DialogTitle className="font-bold text-[#131523] text-[16px]">Delete Items</DialogTitle>
+            <div className='w-full flex flex-col gap-4'>
+              <p>Are you sure you want to delete {selectedProductIds.length} selected items?</p>
+              <div className='w-full justify-items-end'>
+                <div className='flex gap-4 items-center'>
+                  <button onClick={() => setDeleteOpen(false)} className='text-[16px] text-[#F0142F] cursor-pointer'>Cancel</button>
+                  <button style={{padding: '10px 25px'}} onClick={deleteAllProduct} className='text-[16px] active:bg-[#f72b43] text-white cursor-pointer rounded-[4px] bg-[#F0142F]'>Delete</button>
+                </div>
+              </div>
+            </div>
           </DialogPanel>
         </div>
       </Dialog>

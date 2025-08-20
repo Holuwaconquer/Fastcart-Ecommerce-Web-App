@@ -20,7 +20,6 @@ const Bottomnav = () => {
 
   useEffect(() => {
     if(allCategory){
-
       console.log("All Categories:", allCategory);
     }
 

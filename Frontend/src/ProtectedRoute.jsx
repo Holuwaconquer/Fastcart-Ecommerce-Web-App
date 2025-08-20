@@ -1,48 +1,35 @@
-import React from 'react'
-import { Navigate } from 'react-router-dom'
-import {jwtDecode} from 'jwt-decode'
+import React from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
 
 const ProtectedRoute = ({ children, role }) => {
-  const token = localStorage.getItem(role === 'admin' ? 'adminToken' : 'userToken')
+  const location = useLocation();
+  const token = localStorage.getItem(role === 'admin' ? 'adminToken' : 'userToken');
 
   if (!token) {
-    if(role==='admin'){
-      return <Navigate to={`/admin/login`} />
-    }else{
-      return <Navigate to={`/account/login`} />
-    }
+    return <Navigate to={role === 'admin' ? '/admin/login' : '/account/login'} replace state={{ from: location }} />;
   }
 
   try {
-    const decoded = jwtDecode(token)
-    const isExpired = decoded.exp * 1000 < Date.now()
-
-    if (isExpired) {
-      localStorage.removeItem(role === 'admin' ? 'adminToken' : 'userToken')
-      if(role==='admin'){
-        return <Navigate to={`/admin/login`} />
-      }else{
-        return <Navigate to={`/account/login`} />
-      }
+    const decoded = jwtDecode(token);
+    if (decoded.exp * 1000 < Date.now()) {
+      localStorage.removeItem(role === 'admin' ? 'adminToken' : 'userToken');
+      return <Navigate to={role === 'admin' ? '/admin/login' : '/account/login'} replace state={{ from: location }} />;
     }
-
-    if (role === 'admin' && localStorage.getItem('userToken')) {
-      return <Navigate to='/dashboard/account' />
-    }
-
-    if (role === 'user' && localStorage.getItem('adminToken')) {
-      return <Navigate to='/admin/dashboard' />
-    }
-
-    return children
-  } catch (error) {
-    localStorage.removeItem(role === 'admin' ? 'adminToken' : 'userToken')
-    if(role==='admin'){
-      return <Navigate to={`/admin/login`} />
-    }else{
-      return <Navigate to={`/account/login`} />
-    }
+  } catch {
+    localStorage.removeItem(role === 'admin' ? 'adminToken' : 'userToken');
+    return <Navigate to={role === 'admin' ? '/admin/login' : '/account/login'} replace state={{ from: location }} />;
   }
-}
 
-export default ProtectedRoute
+  if (role === 'admin' && localStorage.getItem('userToken')) {
+    return <Navigate to="/dashboard/account" replace />;
+  }
+
+  if (role === 'user' && localStorage.getItem('adminToken')) {
+    return <Navigate to="/admin/dashboard" replace />;
+  }
+
+  return children;
+};
+
+export default ProtectedRoute;

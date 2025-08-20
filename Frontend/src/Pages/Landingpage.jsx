@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { GoArrowRight } from "react-icons/go";
 import Xbox from "../assets/xbox.png";
 import GooglePixel from "../assets/googlePixel.png";
@@ -8,10 +8,8 @@ import { PiTrophyThin } from "react-icons/pi";
 import { SlEarphonesAlt } from "react-icons/sl";
 import { IoIosArrowRoundForward, IoIosArrowRoundBack } from "react-icons/io";
 import Playstation from "../assets/playstation.png";
-import { FaStar } from "react-icons/fa6";
-import { FaRegHeart } from "react-icons/fa";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
-import { FiShoppingCart } from "react-icons/fi";
+
 import Drone from "../assets/drone.png";
 import Samsung from "../assets/samsung-phone.png";
 import "swiper/css";
@@ -22,11 +20,16 @@ import { Navigation } from "swiper/modules";
 import { useRef, useEffect } from "react";
 import Computer from "../assets/computer.png";
 import Banner from "../assets/Banner.png";
+import { useContext } from "react";
+import { CategoryContext } from "../CategoryContext";
+import BestDeals from "../components/BestDeals";
 
 const Landingpage = () => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
 
+  const {allCategory} = useContext(CategoryContext)
+  const { allProduct } = useContext(CategoryContext)
   const categories = [
     "Phones",
     "Consoles",
@@ -48,7 +51,8 @@ const Landingpage = () => {
     }
     return result;
   };
-  const slideCategory = chunkArray(categories, 6);
+  const slideCategory = chunkArray(allCategory, 6);
+
 
   return (
     <div
@@ -224,13 +228,6 @@ const Landingpage = () => {
           {/* for best deals and countdown */}
           <div className="flex gap-4 items-center">
             <p className="text-[#191C1F] text-[24px] font-bold">Best Deals</p>
-            <small className="text-[14px] text-black">Deals ends in</small>
-            <div
-              className="bg-[#F3DE6D] rounded-[2px]"
-              style={{ padding: "6px 12px" }}
-            >
-              <span>16d : 21h : 57m : 23s</span>
-            </div>
           </div>
           <div className="text-[14px] text-[#2DA5F3] flex gap-2 font-bold">
             <span>Browse All Product</span>
@@ -238,221 +235,7 @@ const Landingpage = () => {
           </div>
         </div>
         {/* for best deal products */}
-        <div className="w-full grid md:grid-cols-[24%_19%_19%_19%_19%] border-1 border-[#E4E7E9]">
-          {/* for playstation product */}
-          <div
-            className="border-r-1 border-[#E4E7E9]"
-            style={{ padding: "10px" }}
-          >
-            <div className="w-full flex flex-col">
-              {/* for playstation image and top section */}
-              <div className="relative">
-                <img src={Playstation} alt="" />
-                <span
-                  className="absolute top-0 left-0 rounded-[2px] bg-[#EFD33D]"
-                  style={{ padding: "5px 10px" }}
-                >
-                  32% OFF
-                </span>
-                <span
-                  className="absolute top-[40px] left-0 rounded-[2px] bg-[#EE5858] text-white"
-                  style={{ padding: "5px 10px" }}
-                >
-                  HOT
-                </span>
-              </div>
-              <div className="w-full flex flex-col gap-2">
-                {/* for start ratings and purchase counts */}
-                <span className="flex gap-4 items-center">
-                  <span className="flex gap-1 items-center">
-                    <FaStar className="text-[#EBC80C]" size={20} />
-                    <FaStar className="text-[#EBC80C]" size={20} />
-                    <FaStar className="text-[#EBC80C]" size={20} />
-                    <FaStar className="text-[#EBC80C]" size={20} />
-                    <FaStar className="text-[#EBC80C]" size={20} />
-                  </span>
-                  <span className="text-[#77878F] text-[14px]">(52,677)</span>
-                </span>
-                <p className="text-[16px] text-[#191C1F]">
-                  Xbox Series S - 512GB SSD Console with Wireless Controller -
-                  EU Versio...
-                </p>
-                <p>
-                  <span className="text-[16px] text-[#ADB7BC]">$865.99</span>
-                  <span className="text-[#2DA5F3] text-[18px] font-bold">
-                    $442.12
-                  </span>
-                </p>
-                <p className="text-[14px] text-[#5F6C72]">
-                  Games built using the Xbox Series X|S development kit showcase
-                  unparalleled load times, visuals.
-                </p>
-                <div className="w-full grid grid-cols-[1fr_3fr_1fr] gap-2">
-                  <button
-                    className="rounded-[2px] bg-[#FFE7D6] text-[#191C1F]"
-                    style={{ padding: "12px" }}
-                  >
-                    <FaRegHeart size={24} />
-                  </button>
-                  <button
-                    className="rounded-[2px] bg-[#FA8232] text-white flex items-center gap-[8px]"
-                    style={{ padding: "12px" }}
-                  >
-                    <FiShoppingCart size={20} />
-                    <span className="font-bold text-[14px]">ADD TO CART</span>
-                  </button>
-                  <button
-                    className="rounded-[2px] bg-[#FFE7D6] text-[#191C1F]"
-                    style={{ padding: "12px" }}
-                  >
-                    <MdOutlineRemoveRedEye size={24} />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          {/* for second best deal product */}
-          <div className="w-full flex flex-col border-r-1 border-[#E4E7E9]">
-            {/* for second product top */}
-            <div
-              className="w-full flex flex-col gap-2 border-b-1 border-[#E4E7E9]"
-              style={{ padding: "10px" }}
-            >
-              <div className="relative">
-                <img src={Drone} alt="product-image" />
-                <span
-                  className="absolute top-0 left-0 rounded-[2px] bg-[#929FA5] text-white"
-                  style={{ padding: "5px 10px" }}
-                >
-                  SOLD OUT
-                </span>
-              </div>
-              <p className="text-[14px] text-[#191C1F]">
-                Bose Sport Earbuds - Wireless Earphones - Bluetooth In Ear...
-              </p>
-              <p className="text-[#2DA5F3] text-[14px]">$2,300</p>
-            </div>
-            {/* for second product bottom */}
-            <div
-              className="w-full flex flex-col gap-2 border-b-1 border-[#E4E7E9]"
-              style={{ padding: "10px" }}
-            >
-              <div className="relative">
-                <img src={Samsung} alt="product-image" />
-              </div>
-              <p className="text-[14px] text-[#191C1F]">
-                Dell Optiplex 7000x7480 All-in-One Computer Monitor
-              </p>
-              <p className="text-[#2DA5F3] text-[14px]">$299</p>
-            </div>
-          </div>
-          {/* for Third best deal product */}
-          <div className="w-full flex flex-col border-r-1 border-[#E4E7E9]">
-            {/* for third product top */}
-            <div
-              className="w-full flex flex-col gap-2 border-b-1 border-[#E4E7E9]"
-              style={{ padding: "10px" }}
-            >
-              <div className="relative">
-                <img src={Drone} alt="product-image" />
-                <span
-                  className="absolute top-0 left-0 rounded-[2px] bg-[#929FA5] text-white"
-                  style={{ padding: "5px 10px" }}
-                >
-                  SOLD OUT
-                </span>
-              </div>
-              <p className="text-[14px] text-[#191C1F]">
-                Bose Sport Earbuds - Wireless Earphones - Bluetooth In Ear...
-              </p>
-              <p className="text-[#2DA5F3] text-[14px]">$2,300</p>
-            </div>
-            {/* for third product bottom */}
-            <div
-              className="w-full flex flex-col gap-2 border-b-1 border-[#E4E7E9]"
-              style={{ padding: "10px" }}
-            >
-              <div className="relative">
-                <img src={Samsung} alt="product-image" />
-              </div>
-              <p className="text-[14px] text-[#191C1F]">
-                Dell Optiplex 7000x7480 All-in-One Computer Monitor
-              </p>
-              <p className="text-[#2DA5F3] text-[14px]">$299</p>
-            </div>
-          </div>
-          {/* for fourth best deal product */}
-          <div className="w-full flex flex-col border-r-1 border-[#E4E7E9]">
-            {/* for fourth product top */}
-            <div
-              className="w-full flex flex-col gap-2 border-b-1 border-[#E4E7E9]"
-              style={{ padding: "10px" }}
-            >
-              <div className="relative">
-                <img src={Drone} alt="product-image" />
-                <span
-                  className="absolute top-0 left-0 rounded-[2px] bg-[#929FA5] text-white"
-                  style={{ padding: "5px 10px" }}
-                >
-                  SOLD OUT
-                </span>
-              </div>
-              <p className="text-[14px] text-[#191C1F]">
-                Bose Sport Earbuds - Wireless Earphones - Bluetooth In Ear...
-              </p>
-              <p className="text-[#2DA5F3] text-[14px]">$2,300</p>
-            </div>
-            {/* for fourth product bottom */}
-            <div
-              className="w-full flex flex-col gap-2 border-b-1 border-[#E4E7E9]"
-              style={{ padding: "10px" }}
-            >
-              <div className="relative">
-                <img src={Samsung} alt="product-image" />
-              </div>
-              <p className="text-[14px] text-[#191C1F]">
-                Dell Optiplex 7000x7480 All-in-One Computer Monitor
-              </p>
-              <p className="text-[#2DA5F3] text-[14px]">$299</p>
-            </div>
-          </div>
-          {/* for fifth best deal product */}
-          <div className="w-full flex flex-col border-r-1 border-[#E4E7E9]">
-            {/* for fifth product top */}
-            <div
-              className="w-full flex flex-col gap-2 border-b-1 border-[#E4E7E9]"
-              style={{ padding: "10px" }}
-            >
-              <div className="relative">
-                <img src={Drone} alt="product-image" />
-                <span
-                  className="absolute top-0 left-0 rounded-[2px] bg-[#929FA5] text-white"
-                  style={{ padding: "5px 10px" }}
-                >
-                  SOLD OUT
-                </span>
-              </div>
-              <p className="text-[14px] text-[#191C1F]">
-                Bose Sport Earbuds - Wireless Earphones - Bluetooth In Ear...
-              </p>
-              <p className="text-[#2DA5F3] text-[14px]">$2,300</p>
-            </div>
-            {/* for fifth product bottom */}
-            <div
-              className="w-full flex flex-col gap-2 border-b-1 border-[#E4E7E9]"
-              style={{ padding: "10px" }}
-            >
-              <div className="relative">
-                <img src={Samsung} alt="product-image" />
-              </div>
-              <p className="text-[14px] text-[#191C1F]">
-                Dell Optiplex 7000x7480 All-in-One Computer Monitor
-              </p>
-              <p className="text-[#2DA5F3] text-[14px]">$299</p>
-            </div>
-          </div>
-          {/* end of fifth product */}
-        </div>
+        <BestDeals />
       </div>
       {/* for shop with catergory section */}
       <div
@@ -479,18 +262,18 @@ const Landingpage = () => {
             }}
             className="w-full"
           >
-            {slideCategory.map((chunk, index) => (
+            {slideCategory.map((allCategory, index) => (
               <SwiperSlide key={index}>
                 <div className="w-full grid grid-cols-6 gap-4">
-                  {chunk.map((cat, i) => (
+                  {allCategory.map((category, i) => (
                     <div
                       key={i}
-                      className="bg-white border-1 border-[#E4E7E9] rounded-[4px] flex flex-col items-center justify-center"
+                      className="bg-white border-1 border-[#E4E7E9] rounded-[4px] flex flex-col gap-4 items-center justify-center"
                       style={{ padding: "24px 12px" }}
                     >
-                      <img src={Computer} alt="" />
+                      <img src={category.image} alt="category-image" />
                       <h1 className="text-[#191C1F] text-[16px] font-bold">
-                        {cat}
+                        {category.name}
                       </h1>
                     </div>
                   ))}
@@ -534,7 +317,7 @@ const Landingpage = () => {
             <div className="w-full flex items-center justify-between">
               <div className="flex gap-4 items-center">
                 <p className="text-[#191C1F] text-[24px] font-bold">
-                  Best Deals
+                  Flash Sales
                 </p>
                 <small className="text-[14px] text-black">Deals ends in</small>
                 <div

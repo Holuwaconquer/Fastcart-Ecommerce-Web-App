@@ -18,7 +18,7 @@ const CustomerDetails = () => {
   const goBack = () =>{
     window.history.back()
   }
-
+  
   const deleteUser = () =>{
     let deleteURL = 'http://localhost:5000/admin/deleteCustomers'
     axios.post(deleteURL, customer)
@@ -27,7 +27,7 @@ const CustomerDetails = () => {
       if(res.data.status){
         toast.success('Customer Information has been Deleted Successfully')
         setTimeout(() => {
-          window.location.href = '/admin/dashboard/customer'
+          window.history.back()
         }, 3000);
       }
     }).catch((err) =>{

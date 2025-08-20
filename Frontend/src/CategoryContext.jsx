@@ -8,6 +8,8 @@ const CategoryProvider = ({ children }) => {
 
   const [allCategory, setAllCategory] = useState([])
   const [allProduct, setallProduct] = useState([])
+  const [allOrders, setAllOrders] = useState([])
+
     useEffect(() => {
       let newURL = 'http://localhost:5000/admin/getCategoriesWithProducts'
       axios.get(newURL)
@@ -29,6 +31,17 @@ const CategoryProvider = ({ children }) => {
       })
       .catch((err) =>{
         console.log("Error Encountered while fetching all product", err);
+      })
+
+      let ordersURL = 'http://localhost:5000/admin/orders'
+      axios.get(ordersURL)
+      .then((res) =>{
+        if(res.data.status){
+          setAllOrders("these are all orders", res)
+        }
+      })
+      .catch((err) =>{
+        console.log("There is an error fetching orders", err);
       })
     }, [])
 

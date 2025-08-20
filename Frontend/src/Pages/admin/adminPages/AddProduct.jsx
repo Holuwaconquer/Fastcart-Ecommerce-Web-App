@@ -23,7 +23,8 @@ const AddProduct = () => {
       console.log(allProduct);
     }
     if(allCategory){
-
+      console.log(allCategory);
+      
     }
   }, [allProduct])
   
@@ -41,6 +42,7 @@ const AddProduct = () => {
     setSelected(updated);
     formik.setFieldValue('category', updated);
   };
+
   const goBack = () => {
     window.history.back();
   }
@@ -55,7 +57,10 @@ const AddProduct = () => {
       category: [],
       weight: '',
       country: '',
-      size: ''
+      size: '',
+      productBox: '',
+      keyFeatures: '',
+      discountPercentage: 0
     },
     onSubmit: (values) =>{
       values.category = selected;
@@ -82,13 +87,25 @@ const AddProduct = () => {
       image: '',
       inventory: '',
       price: yup.number().required('Product price is required').typeError('Price must be a number'),
-      discountprice: '',
+      discountprice: yup.number().typeError('Discount must be a number').max(yup.ref('price'), 'Discount must be less than the price').nullable(),
       category: yup.array().min(1, "At least one category is required").required('Product category is required'),
       weight: '',
       country: '',
       size: ''
     })
   })
+  useEffect(() => {
+    const { price, discountprice } = formik.values;
+    if (price && discountprice && price > 0 && discountprice > 0) {
+      const discount = price - discountprice;
+      const discountPercentage = ((discount / price) * 100).toFixed(2);
+      formik.setFieldValue('discountPercentage', discountPercentage);
+      console.log(discountPercentage);
+    } else {
+      formik.setFieldValue('discountPercentage', 0);
+    }
+  }, [formik.values.price, formik.values.discountprice]);
+
 
   return (
     <div className='w-full flex flex-col gap-2'>
@@ -131,7 +148,7 @@ const AddProduct = () => {
                     </div>
                     <div className='p-4'>
                       <label className='block mb-2 text-[#5A607F]'>Description</label>
-                      <textarea name='description' onChange={formik.handleChange} onBlur={formik.handleBlur}  style={{padding: '10px'}} className='w-full p-2 border border-[#D9E4FF] focus:outline-0 rounded resize-none' rows={3} placeholder='Product description'></textarea>
+                      <textarea name='description' onChange={formik.handleChange} onBlur={formik.handleBlur}  style={{padding: '10px'}} className='w-full p-2 border border-[#D9E4FF] focus:outline-0 rounded resize-none' rows={5} placeholder='Product description'></textarea>
                       {formik.touched.description && formik.errors.description && (
                         <small className="text-red-500">{formik.errors.description}</small>
                       )}
@@ -198,6 +215,11 @@ const AddProduct = () => {
                         <label className='block mb-2'>Discount Price</label>
                         <input name='discountprice' onChange={formik.handleChange} onBlur={formik.handleBlur}  type="number" style={{padding: '10px'}} className='w-full p-2 border border-[#D9E4FF] focus:outline-0' placeholder='Enter product price' />
                       </div>
+                      {formik.values.price && formik.values.discountprice && (
+                        <div className='text-green-600 font-medium'>
+                          You save: ₦{(formik.values.price - formik.values.discountprice).toLocaleString()}
+                        </div>
+                      )}
                     </div>
                   </div>
                   {/* for different options */}
@@ -258,25 +280,63 @@ const AddProduct = () => {
                 </div>
               </div>
               {/* for select area */}
-              <div style={{padding: '20px'}} className="w-full flex flex-col gap-4 bg-white rounded-[6px]">
-                <p className='text-[16px] text-[#131523] font-bold'>Categories</p>
-                <div className="flex flex-col gap-2">
-                  {allCategory.map((option) => (
-                    <label key={option._id} className="flex items-center gap-2">
-                       <input
-                          type="checkbox"
-                          value={option._id}
-                          onChange={handleCheckboxChange}
-                          name='category'
-                          onBlur={formik.handleBlur}
-                          checked={selected.includes(option._id)}
-                        />
-                      <span>{option.name}</span>
-                    </label>
-                  ))}
-                  {formik.touched.category && formik.errors.category && (
-                    <small className="text-red-500">{formik.errors.category}</small>
-                  )}
+              <div className='w-full flex flex-col gap-4'>
+                {/* for key features */}
+                <div style={{padding: '20px'}} className="w-full flex flex-col gap-4 bg-white rounded-[6px]">
+                  <p className='text-[16px] text-[#131523] font-bold'>Key features</p>
+                  <textarea name='keyFeatures' onChange={formik.handleChange} onBlur={formik.handleBlur}  style={{padding: '10px'}} className='w-full p-2 border border-[#D9E4FF] focus:outline-0 rounded resize-none' rows={5} placeholder='Enter the key features of this product'></textarea>
+                </div>
+                {/* for What's in the box */}
+                <div style={{padding: '20px'}} className="w-full flex flex-col gap-4 bg-white rounded-[6px]">
+                  <p className='text-[16px] text-[#131523] font-bold'>What's in the Box</p>
+                  <textarea name='productBox' onChange={formik.handleChange} onBlur={formik.handleBlur}  style={{padding: '10px'}} className='w-full p-2 border border-[#D9E4FF] focus:outline-0 rounded resize-none' rows={5} placeholder='Enter details of what is in the product box'></textarea>
+                </div>
+                {/* for select category */}
+                <div style={{padding: '20px'}} className="w-full flex flex-col gap-4 bg-white rounded-[6px]">
+                  <p className='text-[16px] text-[#131523] font-bold'>Categories</p>
+                  <div className="flex flex-col gap-2">
+                    {allCategory.map((option) => {
+                      const isParentChecked = selected.includes(option._id);
+                      return (
+                        <div key={option._id} className="flex flex-col gap-1">
+                          
+                          <label className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              value={option._id}
+                              onChange={handleCheckboxChange}
+                              name="category"
+                              onBlur={formik.handleBlur}
+                              checked={isParentChecked}
+                            />
+                            <strong>{option.name}</strong>
+                          </label>   
+                          {isParentChecked && option.subcategories && option.subcategories.length > 0 && (
+                            <div className="ml-6 mt-1 flex flex-col gap-1">
+                              {option.subcategories.map((sub, i) => {
+                                const subValue = `${sub._id}`;
+                                return (
+                                  <label key={i} className="flex items-center gap-2 text-sm text-gray-700">
+                                    <input
+                                      type="checkbox"
+                                      value={subValue}
+                                      checked={selected.includes(subValue)}
+                                      onChange={handleCheckboxChange}
+                                    />
+                                    {sub.name}
+                                  </label>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+
+                    {formik.touched.category && formik.errors.category && (
+                      <small className="text-red-500">{formik.errors.category}</small>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

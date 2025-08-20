@@ -2,7 +2,7 @@ const {adminModel, categoryModel, productModel} = require("../model/admin.model"
 const userModel = require("../model/user.model")
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
-
+const AdminOrder = require('../model/adminOrder.model')
 const admin_username = process.env.admin_username;
 const admin_password = process.env.admin_password;
 
@@ -167,7 +167,7 @@ const getCategory = (req, res) =>{
 
 const createProduct = async (req, res) =>{
   try {
-    const  { name, description, price, discountprice, image, inventory, size, weight, country, color, category } = req.body;
+    const  { name, description, price, discountprice, image, inventory, size, weight, country, color, category, keyFeatures, productBox, discountPercentage } = req.body;
 
     const newProduct = new productModel({
       name,
@@ -180,7 +180,10 @@ const createProduct = async (req, res) =>{
       size,
       weight,
       country,
-      category
+      category,
+      productBox,
+      keyFeatures,
+      discountPercentage
     });
     const savedProduct = await newProduct.save()
     console.log('product created successfully');
@@ -227,6 +230,21 @@ const deleteProduct = async (req, res) =>{
       message: 'Failed to delete product',
       error: err.message
     });
+  }
+}
+const deleteSelectedProduct = async (req, res) =>{
+  const selectedProductId = req.body
+  try{
+    const result = await productModel.deleteMany({ _id: { $in: selectedProductId } });
+    return res.status(200).json({
+      status: true,
+      message: 'Product Deleted Successfully',
+      deletedCount: result.deletedCount
+    });
+  } 
+  catch (error) {
+    console.error("Delete error:", error);
+    return res.status(500).json({ status: false, message: "Failed to delete products" });
   }
 }
 
@@ -398,7 +416,51 @@ const editProduct = async (req, res) => {
     });
   }
 };
+const addSubcategory = async (req, res) => {
+  console.log('Received body:', req.body);
+  const { id } = req.params;
+  const { name } = req.body;
 
+  try {
+    const category = await categoryModel.findById(id);
+    if (!category) {
+      return res.status(404).json({ message: 'Category not found' });
+    }
+
+    const duplicate = category.subcategories.some(
+      (sub) => sub.name.toLowerCase() === name.toLowerCase()
+    );
+
+    if (duplicate) {
+      return res.status(400).json({ message: 'Subcategory already exists' });
+    }
+
+    category.subcategories.push({ name });
+    await category.save();
+
+    return res.json(category);
+  } catch (error) {
+    console.error("Error in addSubcategory:", error);
+    return res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
+};
+
+const getAllOrdersForAdmin = async (req, res) =>{
+  try{
+    const orders = await AdminOrder.find()
+    .sort({ createdAt: -1 })
+    .populate('userId', 'firstname lastname email');
+
+    res.status(200).json({
+      message: "All orders fetched successfully",
+      data: orders
+    })
+    console.log(orders)
+  }catch (err) {
+    console.error("Error fetching admin orders:", err);
+    res.status(500).json({ message: 'Failed to fetch orders' });
+  }
+}
 
 module.exports = {
   adminRegister, 
@@ -415,5 +477,8 @@ module.exports = {
   editCategory,
   deleteProduct,
   editProduct,
-  fetchPaginatedCustomers
+  fetchPaginatedCustomers,
+  addSubcategory,
+  deleteSelectedProduct,
+  getAllOrdersForAdmin
 };

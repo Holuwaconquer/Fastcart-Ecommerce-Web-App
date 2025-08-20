@@ -59,7 +59,7 @@ const AdminTopNav = () => {
             <div>
               <IoMdNotificationsOutline size={24}/>
             </div>
-            <div onClick={() => setMenuShow(!menuShow)} className='cursor-pointer flex items-center gap-2'>
+            <div onMouseLeave={() => setMenuShow(false)} onMouseEnter={() => setMenuShow(true)} className='cursor-pointer flex items-center gap-2'>
               <div>
                 {adminImg ? <img src='' /> : 
                   <div className='w-[36px] h-[36px] rounded-[50%] bg-[#1FD286] text-white font-bold flex items-center justify-center'>A</div>
@@ -71,10 +71,10 @@ const AdminTopNav = () => {
               <div>
                 <FaCaretDown size={24}/>
               </div>
+              <div style={{padding: '20px'}} className={ menuShow ? `absolute top-[130%] shadow-sm right-0 bg-[#f5f6fa] rounded-[4px` : 'hidden'}>
+                <div onClick={logAdminOut} style={{padding: '15px 20px'}} className='cursor-pointer flex items-center rounded-[4px] text-white gap-2 bg-[#070B1D]'><IoIosLogOut size={24} /><span>Log Out</span></div>
+              </div>
             </div>
-          </div>
-          <div style={{padding: '20px'}} className={ menuShow ? `absolute top-[130%] shadow-sm right-0 bg-[#f5f6fa] rounded-[4px` : 'hidden'}>
-            <div onClick={logAdminOut} style={{padding: '15px 20px'}} className='cursor-pointer flex items-center rounded-[4px] text-white gap-2 bg-[#070B1D]'><IoIosLogOut size={24} /><span>Log Out</span></div>
           </div>
         </div>
       </div>

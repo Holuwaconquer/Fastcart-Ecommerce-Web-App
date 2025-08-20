@@ -1,9 +1,8 @@
 import React from 'react'
 import { FaPlus } from "react-icons/fa6"
 import { useNavigate } from 'react-router-dom'
-import CategoryProvider, { CategoryContext } from '../../../CategoryContext'
+import { CategoryContext } from '../../../CategoryContext'
 import { useEffect, useContext, useState, useMemo} from 'react'
-import MensClothe from '../../../assets/Bitmap.png'
 import { Dialog, DialogPanel, DialogTitle, DialogBackdrop } from '@headlessui/react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
@@ -218,14 +217,14 @@ return(
               </div>
               <div className="flex gap-4">
                 <button style={{ padding: '10px 20px' }} type='button' className='cursor-pointer flex items-center rounded-[4px] shadow-lg bg-white gap-2 text-[#1E5EFF]' onClick={() => setIsOpen(false)}>Close</button>
-                <button style={{ padding: '10px 20px' }} type='submit' className='cursor-pointer flex items-center rounded-[4px] text-white gap-2 bg-[#1E5EFF]'>Save</button>
+                <button style={{ padding: '10px 20px' }} type='submit' className='cursor-pointer flex items-center rounded-[4px] text-white gap-2 active:bg-[#4176fd] bg-[#1E5EFF]'>Save</button>
               </div>
             </form>
           </DialogPanel>
         </div>
-      </Dialog>
+    </Dialog>
 
-      <ToastContainer />
+    <ToastContainer />
   </div>
 )
 }

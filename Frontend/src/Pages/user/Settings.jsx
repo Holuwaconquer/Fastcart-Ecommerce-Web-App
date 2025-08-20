@@ -7,6 +7,7 @@ import { Country, State } from 'country-state-city'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 import axios from 'axios'
+import { toast, ToastContainer } from 'react-toastify'
 
 const Settings = () => {
 
@@ -98,16 +99,16 @@ const Settings = () => {
 			billingaddress: userData?.billingaddress || '',
 		},
 		validationSchema: yup.object({
-			billingfirstname: yup.string(),
-			billinglastname: yup.string(),
-			billingemail: yup.string().email('This is not a valid email address'),
+			billingfirstname: yup.string().required('This field is required'),
+			billinglastname: yup.string().required('This field is required'),
+			billingemail: yup.string().email('This is not a valid email address').required('This field is required'),
 			billingphonenumber: yup.string(),
-			billingcountry: yup.string(),
-			billingstate: yup.string(),
-			billingzipcode: yup.string(),
-			billingcity: yup.string(),
+			billingcountry: yup.string().required('This field is required'),
+			billingstate: yup.string().required('This field is required'),
+			billingzipcode: yup.string().required('This field is required'),
+			billingcity: yup.string().required('This field is required'),
 			billingcompanyname: yup.string(),
-			billingaddress: yup.string(),
+			billingaddress: yup.string().required('This field is required'),
 		}),
 		onSubmit: (values) => {
 			console.log(values);	
@@ -135,16 +136,16 @@ const Settings = () => {
 			shippingaddress: userData?.shippingaddress || '',
 		},
 		validationSchema: yup.object({
-			shippingfirstname: yup.string(),
-			shippinglastname: yup.string(),
+			shippingfirstname: yup.string().required('This field is required'),
+			shippinglastname: yup.string().required('This field is required'),
 			shippingemail: yup.string().email('This is not a valid email address'),
-			shippingphonenumber: yup.string(),
-			shippingcountry: yup.string(),
-			shippingstate: yup.string(),
-			shippingzipcode: yup.string(),
-			shippingcity: yup.string(),
+			shippingphonenumber: yup.string().required('This field is required'),
+			shippingcountry: yup.string().required('This field is required'),
+			shippingstate: yup.string().required('This field is required'),
+			shippingzipcode: yup.string().required('This field is required'),
+			shippingcity: yup.string().required('This field is required'),
 			shippingcompanyname: yup.string(),
-			shippingaddress: yup.string(),
+			shippingaddress: yup.string().required('This field is required'),
 		}),
 		onSubmit: (values) => {
 			console.log(values);	
@@ -155,6 +156,38 @@ const Settings = () => {
 			.catch((err) =>{
 				console.log('cannot update user', err);	
 			})
+		}
+	})
+	const passwordformik = useFormik({
+		enableReinitialize: true,
+		initialValues: {
+			currentpassword: '',
+			newpassword: '',
+			confirmpassword: ''
+		},
+		validationSchema: yup.object({
+			currentpassword: yup.string().required('This field is required').min(6, 'password must be at least 6 characters long'),
+			newpassword: yup.string().required('This field is required').min(6, 'password must be at least 6 characters long'),
+			confirmpassword: yup.string().oneOf([yup.ref('newpassword'), null], "Passwords must match").required('Please confirm your password'),
+		}),
+		onSubmit: async (values, { setTouched }) => {
+			setTouched({
+				currentpassword: true,
+				newpassword: true,
+				confirmpassword: true
+			});
+			 try {
+				const response = await axios.put(`http://localhost:5000/user/changepassword/${userData._id}`, values);
+				console.log(response);
+				toast.success("Password changed successfully");
+			} catch (err) {
+				console.log("cannot change password", err);
+				if (err.response?.data?.error === 'Current password is incorrect') {
+					toast.error('Current password is incorrect');
+				} else {
+					toast.error('Failed to change password');
+				}
+			}
 		}
 	})
     
@@ -363,7 +396,7 @@ const Settings = () => {
 										</div>
 											
 										<div>
-											<button type='submit' className='rounded-[2px] bg-[#FA8232] text-white font-bold cursor-pointer hover:bg-[#fa8232b6] active:bg-[#FA8232]' style={{padding: '15px'}}>SAVE CHANGES</button>
+											<button type='submit' className={`rounded-[2px] bg-[#FA8232] text-white font-bold cursor-pointer hover:bg-[#fa8232b6] active:bg-[#FA8232] ${(!billingformik.isValid || !billingformik.dirty) ? 'cursor-not-allowed opacity-50 pointer-events-none' : ''}`} disabled={!billingformik.isValid || !billingformik.dirty} style={{padding: '15px'}}>SAVE CHANGES</button>
 										</div>
 									</div>
 										{/* end of personal information details */}
@@ -376,7 +409,7 @@ const Settings = () => {
 				</div>
 				{/* for shipping address */}
 				<div className='border-1 border-[#E4E7E9] rounded-[4px] flex flex-col gap-4'>
-					<h1 style={{padding: '10px 15px 10px'}} className='w-full border-b-1 font-bold border-[#E4E7E9] text-[14px] text-[#191C1F]'>BILLING ADDRESS</h1>
+					<h1 style={{padding: '10px 15px 10px'}} className='w-full border-b-1 font-bold border-[#E4E7E9] text-[14px] text-[#191C1F]'>SHIPPING ADDRESS</h1>
 					{userData ?
 						<div style={{padding: '10px 15px'}} className='w-full flex flex-col gap-5'>
 							<form action="" onSubmit={shippingformik.handleSubmit}>
@@ -390,22 +423,26 @@ const Settings = () => {
 												<div className='w-full flex flex-col gap-1'>
 													<small className='text-[14px] text-[#191C1F] font-bold'>Firstname</small>
 													<input name='shippingfirstname' onChange={shippingformik.handleChange} value={shippingformik.values.shippingfirstname} type="text" className='border-1 border-[#E4E7E9] text-[#475156] text-[14px] rounded-[2px] focus:outline-0' style={{padding: '8px'}}/>
+													<small className='text-[red]'>{shippingformik.touched.shippingfirstname && shippingformik.errors.shippingfirstname}</small>
 												</div>
 												{/* for last name */}
 												<div className='w-full flex flex-col gap-1'>
 													<small className='text-[14px] text-[#191C1F] font-bold'>Lastname</small>
 													<input name='shippinglastname' onChange={shippingformik.handleChange} value={shippingformik.values.shippinglastname} type="text" className='border-1 border-[#E4E7E9] text-[#475156] text-[14px] rounded-[2px] focus:outline-0' style={{padding: '8px'}}/>
+													<small className='text-[red]'>{shippingformik.touched.shippinglastname && shippingformik.errors.shippinglastname}</small>
 												</div>
 											</div>
 											{/* for shippingcompanyname */}
 											<div className='w-full flex flex-col gap-1'>
 												<small className='text-[14px] text-[#191C1F] font-bold'>Company Name</small>
 												<input name='shippingcompanyname' onChange={shippingformik.handleChange} value={shippingformik.values.shippingcompanyname} type="text" className='border-1 border-[#E4E7E9] text-[#475156] text-[14px] rounded-[2px] focus:outline-0' style={{padding: '8px'}}/>
+												<small className='text-[red]'>{shippingformik.touched.shippingcompanyname && shippingformik.errors.shippingcompanyname}</small>
 											</div>
 											{/* for shippingaddress */}
 											<div className='w-full flex flex-col gap-1'>
 												<small className='text-[14px] text-[#191C1F] font-bold'>Address</small>
 												<input name='shippingaddress' onChange={shippingformik.handleChange} value={shippingformik.values.shippingaddress} type="text" className='border-1 border-[#E4E7E9] text-[#475156] text-[14px] rounded-[2px] focus:outline-0' style={{padding: '8px'}}/>
+												<small className='text-[red]'>{shippingformik.touched.shippingaddress && shippingformik.errors.shippingaddress}</small>
 											</div>
 											{/* for country */}
 											<div className='w-full flex flex-col gap-1'>
@@ -450,6 +487,7 @@ const Settings = () => {
 														<div className='w-full flex flex-col gap-1'>
 															<small className='text-[14px] text-[#191C1F] font-bold'>City</small>
 															<input name='shippingcity' value={shippingformik.values.shippingcity} onChange={shippingformik.handleChange} type="text" className='border-1 border-[#E4E7E9] text-[#475156] text-[14px] rounded-[2px] focus:outline-0' style={{padding: '8px'}}/>
+															<small className='text-[red]'>{shippingformik.touched.shippingcity && shippingformik.errors.shippingcity}</small>
 														</div>
 													</div>
 													{/* for shippingzipcode */}
@@ -457,6 +495,7 @@ const Settings = () => {
 														<div className='w-full flex flex-col gap-1'>
 															<small className='text-[14px] text-[#191C1F] font-bold'>Zip Code</small>
 															<input name='shippingzipcode' value={shippingformik.values.shippingzipcode} onChange={shippingformik.handleChange} type="text" className='border-1 border-[#E4E7E9] text-[#475156] text-[14px] rounded-[2px] focus:outline-0' style={{padding: '8px'}}/>
+															<small className='text-[red]'>{shippingformik.touched.shippingzipcode && shippingformik.errors.shippingzipcode}</small>
 														</div>
 													</div>
 											</div>
@@ -464,16 +503,18 @@ const Settings = () => {
 											<div className='w-full flex flex-col gap-1'>
 												<small className='text-[14px] text-[#191C1F] font-bold'>Email</small>
 												<input name='shippingemail' onChange={shippingformik.handleChange} value={shippingformik.values.shippingemail} type="email" className='border-1 border-[#E4E7E9] text-[#475156] text-[14px] rounded-[2px] focus:outline-0' style={{padding: '8px'}}/>
+												<small className='text-[red]'>{shippingformik.touched.shippingemail && shippingformik.errors.shippingemail}</small>
 											</div>
 											{/* for phone number */}
 											<div className='w-full flex flex-col gap-1'>
 												<small className='text-[14px] text-[#191C1F] font-bold'>Phone number</small>
 												<input name='shippingphonenumber' onChange={shippingformik.handleChange} value={shippingformik.values.shippingphonenumber} type="text" className='border-1 border-[#E4E7E9] text-[#475156] text-[14px] rounded-[2px] focus:outline-0' style={{padding: '8px'}}/>
+												<small className='text-[red]'>{shippingformik.touched.shippingphonenumber && shippingformik.errors.shippingphonenumber}</small>
 											</div>
 										</div>
 											
 										<div>
-											<button type='submit' className='rounded-[2px] bg-[#FA8232] text-white font-bold cursor-pointer hover:bg-[#fa8232b6] active:bg-[#FA8232]' style={{padding: '15px'}}>SAVE CHANGES</button>
+											<button type='submit' className={`rounded-[2px] bg-[#FA8232] text-white font-bold cursor-pointer hover:bg-[#fa8232b6] active:bg-[#FA8232] ${(!shippingformik.isValid || !shippingformik.dirty) ? 'cursor-not-allowed opacity-50 pointer-events-none' : ''}`} disabled={!shippingformik.isValid || !shippingformik.dirty} style={{padding: '15px'}}>SAVE CHANGES</button>
 										</div>
 									</div>
 										{/* end of personal information details */}
@@ -486,9 +527,32 @@ const Settings = () => {
 				</div>
 			</div>
 			{/* for change of password */}
-			<div>
-
+			<div className='border-1 border-[#E4E7E9] rounded-[4px] flex flex-col gap-4'>
+					<h1 style={{padding: '10px 15px 10px'}} className='w-full border-b-1 font-bold border-[#E4E7E9] text-[14px] text-[#191C1F]'>CHANGE PASSWORD</h1>
+					<form style={{padding: '10px 15px'}} action="" onSubmit={passwordformik.handleSubmit}>
+						<div>
+							<div className='w-full flex flex-col gap-1'>
+								<small className='text-[14px] text-[#191C1F] font-bold'>Current Password</small>
+								<input name='currentpassword' onChange={passwordformik.handleChange} value={passwordformik.values.currentpassword} type="password" className='border-1 border-[#E4E7E9] text-[#475156] text-[14px] rounded-[2px] focus:outline-0' style={{padding: '8px'}}/>
+								<small className='text-[red]'>{passwordformik.touched.currentpassword && passwordformik.errors.currentpassword}</small>
+							</div>
+							<div className='w-full flex flex-col gap-1'>
+								<small className='text-[14px] text-[#191C1F] font-bold'>New Password</small>
+								<input name='newpassword' onChange={passwordformik.handleChange} value={passwordformik.values.newpassword} type="password" className='border-1 border-[#E4E7E9] text-[#475156] text-[14px] rounded-[2px] focus:outline-0' style={{padding: '8px'}}/>
+								<small className='text-[red]'>{passwordformik.touched.newpassword && passwordformik.errors.newpassword}</small>
+							</div>
+							<div className='w-full flex flex-col gap-1'>
+								<small className='text-[14px] text-[#191C1F] font-bold'>Confirm Password</small>
+								<input name='confirmpassword' onChange={passwordformik.handleChange} value={passwordformik.values.confirmpassword} type="password" className='border-1 border-[#E4E7E9] text-[#475156] text-[14px] rounded-[2px] focus:outline-0' style={{padding: '8px'}}/>
+								<small className='text-[red]'>{passwordformik.touched.confirmpassword && passwordformik.errors.confirmpassword}</small>
+							</div>
+							<div>
+								<button type='submit' className={`rounded-[2px] bg-[#FA8232] text-white font-bold cursor-pointer hover:bg-[#fa8232b6] active:bg-[#FA8232] ${(!passwordformik.isValid || !passwordformik.dirty) ? 'cursor-not-allowed opacity-50 pointer-events-none' : ''}`} disabled={!passwordformik.isValid || !passwordformik.dirty} style={{padding: '15px'}}>CHANGE PASSWORD</button>
+							</div>
+						</div>
+					</form>
 			</div>
+				<ToastContainer />
     </div>
   )
 }
