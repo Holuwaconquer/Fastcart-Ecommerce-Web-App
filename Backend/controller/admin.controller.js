@@ -452,6 +452,7 @@ const getAllOrdersForAdmin = async (req, res) =>{
     .populate('userId', 'firstname lastname email');
 
     res.status(200).json({
+      status: true,
       message: "All orders fetched successfully",
       data: orders
     })

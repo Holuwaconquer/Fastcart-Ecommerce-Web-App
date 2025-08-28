@@ -26,6 +26,11 @@ import Settings from './Pages/user/Settings';
 import NotFound from './404';
 import ShoppingCart from './Pages/ShoppingCart';
 import Checkout from './components/Checkout';
+import PaymentSuccess from './components/PaymentSuccess';
+import OrderHistory from './Pages/user/OrderHistory';
+import OrderDetails from './Pages/user/OrderDetails';
+import Order from './Pages/admin/adminPages/Order';
+import OrderInfo from './Pages/admin/adminPages/OrderInfo';
 
 
 const App = () => {
@@ -47,6 +52,7 @@ const App = () => {
                 </ProtectedRoute>
               </UserProvider>
             } />
+            <Route path="/shopping-cart/checkout/payment-successful/:orderId" element={<PaymentSuccess />} />
             <Route path="/dashboard/" element={
               <UserProvider>
                 <ProtectedRoute role="user">
@@ -57,6 +63,16 @@ const App = () => {
               <Route path='account' element={
                 <UserProvider>
                   <HomeDashboard />
+                </UserProvider>
+              }/>
+              <Route path='order-history' element={
+                <UserProvider>
+                  <OrderHistory />
+                </UserProvider>
+              }/>
+              <Route path='order-history/:id' element={
+                <UserProvider>
+                  <OrderDetails />
                 </UserProvider>
               }/>
               <Route path='setting' element={
@@ -87,6 +103,16 @@ const App = () => {
           <ProtectedRoute role="admin"><AdminDashboard /></ProtectedRoute>
         }> 
           <Route path='dashboard' element={<Dashboard />}/>
+          <Route path='orders' element={
+            <CategoryProvider>
+              <Order />
+            </CategoryProvider>
+          }/>
+          <Route path='orders/:id' element={
+            <CategoryProvider>
+              <OrderInfo />
+            </CategoryProvider>
+          } />
           <Route path='customer' element={<Customer />} />
           <Route path='customer/:id' element={<CustomerDetails />} />
           <Route path='customer/add-new-customer' element={<AddNewCustomer />} />

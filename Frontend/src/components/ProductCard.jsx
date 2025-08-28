@@ -29,7 +29,7 @@ const ProductCard = ({ product }) => {
         </span>
         {/* for cart action button */}
         <div style={{padding: '0 30px'}} className={`${isHover ? 'flex' : 'hidden'} cursor-pointer absolute w-full h-full bg-[#00000083] flex-col items-center justify-center top-0 left-0`}>
-          <div className='w-full flex items-center justify-between gap-4'>
+          <div className='w-full flex items-center justify-center gap-4'>
             <div className="rounded-[50%] bg-white cursor-pointer transition-all text-[#191C1F] hover:bg-[#FA8232] hover:text-white" style={{ padding: "12px" }}>
               <FaRegHeart size={24} />
             </div>

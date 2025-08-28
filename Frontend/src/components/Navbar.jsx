@@ -25,7 +25,7 @@ const Navbar = () => {
         </div>
         {/* for discount */}
         <div className='w-2/4 text-black'>
-          <div style={{padding: '14px 20px'}} className='flex items-center gap-2 rounded-[2px] bg-white w-full'>
+          <div style={{padding: '14px 20px'}} className='hover:border-3 hover:border-[#FA8232] border-3 border-[#00000000] flex items-center gap-2 rounded-[2px] bg-white w-full'>
             <input type="text" placeholder='Search for anything...' className='focus:outline-0 border-0 w-full' />
             <FiSearch  size={20}/>
           </div>

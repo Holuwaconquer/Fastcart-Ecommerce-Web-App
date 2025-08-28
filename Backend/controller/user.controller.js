@@ -98,8 +98,6 @@ const changePassword = async (req, res) =>{
   }
 }
   
-
-
 const userDashboard = (req, res) =>{
   let token = req.headers.authorization.split(" ")[1]
   jwt.verify(token, process.env.JWT_SECRET, (err, result) =>{
@@ -233,7 +231,7 @@ const orderDetails = async (req, res) => {
 
     await adminOrder.save();
 
-    res.status(200).json({ message: 'Order saved successfully' });
+    res.status(200).json({ message: 'Order saved successfully', orderId: adminOrder._id });
   } catch (err) {
     console.error('Error saving order:', err);
     res.status(500).json({ message: 'Failed to save order' });

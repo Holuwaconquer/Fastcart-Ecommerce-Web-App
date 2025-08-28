@@ -48,7 +48,7 @@ const BestDeals = () => {
   }
   
   return (
-    <div className="w-full grid items-center md:grid-cols-[24%_76%] border-1 border-[#E4E7E9]">
+    <div className="w-full grid items-start md:grid-cols-[24%_76%] border-1 border-[#E4E7E9]">
       <div className="border-r-1 border-[#E4E7E9]" style={{ padding: "10px" }}>
         {/* for higher product */}
         {productWithHighestDiscount && (

@@ -21,9 +21,9 @@ const Checkout = () => {
     
   }, [userData])
   const navigate = useNavigate()
-  
+  const public_key = import.meta.env.VITE_FLUTTERWAVE_PUBLIC_KEY;
   const config = {
-    public_key: 'FLWPUBK_TEST-ce57fa1442ae06eda7f38b37ce889d83-X',
+    public_key: public_key,
     tx_ref: Date.now(),
     amount: subtotal,
     currency: 'NGN',
@@ -170,7 +170,7 @@ const Checkout = () => {
                 handleFlutterPayment({
                   callback: (response) => {
                     console.log(response);
-                    if(response.status === 'completed'){
+                    if(response){
                       axios.post(`http://localhost:5000/user/orderDetails/${userData._id}`, {
                         flutterwaveResponse: response,
                         cartItems: cartItem,
@@ -189,10 +189,11 @@ const Checkout = () => {
                       })
                       .then((res) =>{
                         console.log('order Completed', res);
+                        if(res.status)
+                        navigate(`/shopping-cart/checkout/payment-successful/${res.data.orderId}`)
                         
                       }).catch((err) =>{
                         console.log(err);
-                        
                       })
                     }
                       closePaymentModal()

@@ -37,7 +37,8 @@ const CategoryProvider = ({ children }) => {
       axios.get(ordersURL)
       .then((res) =>{
         if(res.data.status){
-          setAllOrders("these are all orders", res)
+          console.log("Fetched Orders:", res.data.data); // 👈 debug here
+          setAllOrders(res.data.data);
         }
       })
       .catch((err) =>{
@@ -49,7 +50,7 @@ const CategoryProvider = ({ children }) => {
    
 
   return (
-    <CategoryContext.Provider value={{ setAllCategory, allCategory, setallProduct, allProduct }}>
+    <CategoryContext.Provider value={{ setAllCategory, allCategory, setallProduct, allProduct, allOrders, setAllOrders }}>
       {children}
     </CategoryContext.Provider>
   )

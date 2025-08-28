@@ -65,19 +65,19 @@ const Register = () => {
                     <div className='flex flex-col gap-2'>
                       <label htmlFor="firstname" className='w-full flex items-center justify-between text-[12px] text-[#333333]'><span>First name</span><BsFillQuestionOctagonFill className={formik.touched.firstname && formik.errors.firstname ? 'text-[red]' : 'text-zinc-400'} /></label>
                       <input type="text" name='firstname' onChange={formik.handleChange} onBlur={formik.handleBlur} placeholder='John' className='w-full border-1 border-[#D1D1D1]' style={{padding: '10px'}}/>
-                      <p className='text-[red]'>{formik.touched.firstname && formik.errors.firstname}</p>
+                      <small className='text-[red]'>{formik.touched.firstname && formik.errors.firstname}</small>
                     </div>
                     {/* for lastname */}
                     <div className='flex flex-col gap-2'>
                       <label htmlFor="lastname" className='w-full flex items-center justify-between text-[12px] text-[#333333]'><span>Last name</span><BsFillQuestionOctagonFill className={formik.touched.lastname && formik.errors.lastname ? 'text-[red]' : 'text-zinc-400'} /></label>
                       <input type="text" name='lastname' onChange={formik.handleChange} onBlur={formik.handleBlur} placeholder='Doe' className='w-full border-1 border-[#D1D1D1]' style={{padding: '10px'}}/>
-                      <p className='text-[red]'>{formik.touched.lastname && formik.errors.lastname}</p>
+                      <small className='text-[red]'>{formik.touched.lastname && formik.errors.lastname}</small>
                     </div>
                     {/* for email */}
                     <div className='flex flex-col gap-2'>
                       <label htmlFor="email" className='w-full flex items-center justify-between text-[12px] text-[#333333]'><span>Email</span><BsFillQuestionOctagonFill className={formik.touched.email && formik.errors.email ? 'text-[red]' : 'text-zinc-400'} /></label>
                       <input type="email" name='email' onChange={formik.handleChange} onBlur={formik.handleBlur} placeholder='example@email.com' className='w-full border-1 border-[#D1D1D1]' style={{padding: '10px'}}/>
-                      <p className='text-[red]'>{formik.touched.email && formik.errors.email}</p>
+                      <small className='text-[red]'>{formik.touched.email && formik.errors.email}</small>
                     </div>
                   </div>
                   {/* for password */}
@@ -86,7 +86,7 @@ const Register = () => {
                     <div className='flex flex-col gap-2'>
                       <label htmlFor="password" className='w-full flex items-center justify-between text-[12px] text-[#333333]'><span>Password</span><BsFillQuestionOctagonFill className={formik.touched.password && formik.errors.password ? 'text-[red]' : 'text-zinc-400'} /></label>
                       <input type="password" name='password' onChange={formik.handleChange} onBlur={formik.handleBlur} placeholder='passord' className='w-full border-1 border-[#D1D1D1]' style={{padding: '10px'}}/>
-                      <p className='text-[red]'>{formik.touched.password && formik.errors.password}</p>
+                      <small className='text-[red]'>{formik.touched.password && formik.errors.password}</small>
                     </div>
 
                     {/* for confirm password */}
@@ -104,12 +104,12 @@ const Register = () => {
                       <div className='flex gap-2 items-start w-full'>
                         <input type='checkbox' name="agree" id='agree' onChange={formik.handleChange} onBlur={formik.handleBlur} checked={formik.values.agree} className='border-1 border-[#D1D1D1]'/>
                         <label htmlFor="agree" className='text-[12px]'><span>I agree to Fastcart <span className='coloredTxt'>terms of conditions.</span>and <span className='coloredTxt'>Privacy Policy</span> </span></label>
-                        {formik.touched.agree && formik.errors.agree && (
-                          <p className="text-red-500 text-sm">{formik.errors.agree}</p>
-                        )}
                       </div>
+                      {formik.touched.agree && formik.errors.agree && (
+                        <small className="text-red-500 text-sm">{formik.errors.agree}</small>
+                      )}
                     </div>
-                    <div className='w-full'>
+                    <div style={{paddingTop: '20px'}} className='w-full'>
                       <div className='flex flex-col'>
                           <button style={{ padding: '10px 0px' }} className={`bg-[#FA8232] rounded-[2px] cursor-pointer text-white ${(!formik.isValid || !formik.dirty) ? 'cursor-not-allowed opacity-50 pointer-events-none' : ''}`} disabled={!formik.isValid || !formik.dirty} type='submit'>{isLogging ? 'SIGNUP IS IN PROGRESS...' : 'SIGN UP'}</button>
                       </div>

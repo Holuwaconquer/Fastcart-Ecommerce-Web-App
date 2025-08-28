@@ -264,20 +264,27 @@ const Landingpage = () => {
           >
             {slideCategory.map((allCategory, index) => (
               <SwiperSlide key={index}>
-                <div className="w-full grid grid-cols-6 gap-4">
-                  {allCategory.map((category, i) => (
-                    <div
-                      key={i}
-                      className="bg-white border-1 border-[#E4E7E9] rounded-[4px] flex flex-col gap-4 items-center justify-center"
-                      style={{ padding: "24px 12px" }}
-                    >
-                      <img src={category.image} alt="category-image" />
-                      <h1 className="text-[#191C1F] text-[16px] font-bold">
-                        {category.name}
-                      </h1>
-                    </div>
-                  ))}
-                </div>
+                {allCategory ?
+                  <div className="w-full grid grid-cols-6 gap-4">
+                    {allCategory.map((category, i) => (
+                      <div
+                        key={i}
+                        className="bg-white border-1 border-[#E4E7E9] rounded-[4px] flex flex-col gap-4 items-center justify-center"
+                        style={{ padding: "24px 12px" }}
+                      >
+                        <img src={category.image} alt="category-image" />
+                        <h1 className="text-[#191C1F] text-[16px] font-bold">
+                          {category.name}
+                        </h1>
+                      </div>
+                    ))}
+                  </div>
+                 :
+                  <div className="skeleton-loader">
+                    <div className="image"></div>
+                    <div className="title"></div>
+                  </div>
+                }
               </SwiperSlide>
             ))}
           </Swiper>

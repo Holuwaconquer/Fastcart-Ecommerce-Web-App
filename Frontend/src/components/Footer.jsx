@@ -5,8 +5,8 @@ import GetGoogle from '../assets/GetGoogle.png'
 
 const Footer = () => {
   return (
-    <div className='w-full bg-[#191C1F]' style={{padding: '4% 8% 0'}}>
-      <div className='w-full grid grid-cols-[2fr_1fr_1fr_1fr_2fr]'>
+    <div className='w-full bg-[#191C1F]'>
+      <div style={{padding: '2% 8%'}} className='w-full grid grid-cols-[2fr_1fr_1fr_1fr_2fr]'>
         {/* for logo and contact details */}
         <div className='w-full flex flex-col gap-2'>
           <div className='flex items-center gap-2'>

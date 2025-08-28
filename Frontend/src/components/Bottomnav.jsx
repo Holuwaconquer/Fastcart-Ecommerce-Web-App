@@ -18,22 +18,13 @@ const Bottomnav = () => {
   }
   const { allCategory } = useContext(CategoryContext);
 
-  useEffect(() => {
-    if(allCategory){
-      console.log("All Categories:", allCategory);
-    }
-
-    
-  }, [allCategory])
-  
-
   return (
     <div className='w-full bg-white text-white border-b-1 border-[#adb7bc46]' style={{padding: '10px 8%'}}>
       <div className='w-full flex items-center justify-between'>
         {/* for All category */}
         <div className='w-auto flex relative items-center text-[#191C1F]'>
           <div className='relative'>
-            <button onClick={handleClick} className={`bg-[#F2F4F5] active:bg-[#FA8232] cursor-pointer text-[#191C1F] flex gap-[8px] rounded-[2px] items-center ${isClicked ? 'bg-[#FA8232] text-white' : ''}`} style={{padding: '14px 24px'}}><span>All Category</span><span><RxCaretDown className={isClicked ? 'rotateCaret' : ''} size={18}/></span></button>
+            <button onMouseEnter={handleClick} className={`bg-[#F2F4F5] active:bg-[#FA8232] cursor-pointer text-[#191C1F] flex gap-[8px] rounded-[2px] items-center ${isClicked ? 'bg-[#FA8232] text-white' : ''}`} style={{padding: '14px 24px'}}><span>All Category</span><span><RxCaretDown className={isClicked ? 'rotateCaret' : ''} size={18}/></span></button>
           </div>
             <div style={{padding: '10px 0'}} className='absolute top-[130%] left-0 bg-white shadow-sm rounded-[3px]'>
               {
