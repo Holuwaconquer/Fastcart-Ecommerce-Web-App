@@ -78,6 +78,23 @@ const fetchPaginatedCustomers = async (page = 1, limit = 10) => {
     totalPages: Math.ceil(total / limit)
   }
 }
+const fetchAllCustomers = async (req, res) => {
+  try {
+    const customers = await userModel.find({}, '-password');
+    res.status(200).json({
+      status: true,
+      message: 'All customers fetched',
+      data: customers
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: false,
+      message: 'Failed to fetch customers',
+      error: err.message
+    });
+  }
+};
+
 
 // Express route handler
 const adminCustomer = async (req, res) => {
@@ -463,6 +480,120 @@ const getAllOrdersForAdmin = async (req, res) =>{
   }
 }
 
+const updateOrderStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+    const { id } = req.params;
+
+    const order = await AdminOrder.findByIdAndUpdate(
+      id,
+      { orderStatus: status },
+      { new: true }
+    );
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    res.status(200).json({ message: "Order status updated", data: order });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to update order", error: err.message });
+  }
+};
+
+const getOrdersGroupedByMonth = async (req, res) => {
+  try {
+    const groupedOrders = await AdminOrder.aggregate([
+      {
+        $group: {
+          _id: { $dateToString: { format: "%Y-%m", date: "$createdAt" } },
+          totalOrders: { $sum: 1 },
+          totalRevenue: { $sum: "$subtotal" }
+        }
+      },
+      { $sort: { _id: 1 } }
+    ]);
+
+    res.status(200).json({
+      status: true,
+      message: "Orders grouped by month",
+      data: groupedOrders
+    });
+  } catch (err) {
+    console.error("Error grouping orders by month:", err);
+    res.status(500).json({ status: false, message: "Failed to group orders" });
+  }
+};
+const getCustomersGroupedByMonth = async (req, res) => {
+  try {
+    const groupedCustomers = await userModel.aggregate([
+      {
+        $group: {
+          _id: { $dateToString: { format: "%Y-%m", date: "$registrationDate" } },
+          totalCustomers: { $sum: 1 }
+        }
+      },
+      { $sort: { _id: 1 } }
+    ]);
+
+    res.status(200).json({
+      status: true,
+      message: "Customers grouped by month",
+      data: groupedCustomers
+    });
+  } catch (err) {
+    console.error("Error grouping customers by month:", err);
+    res.status(500).json({ status: false, message: "Failed to group customers" });
+  }
+};
+
+const getOrdersGroupedByHour = async (req, res) => {
+  try {
+    const dateParam = req.query.date ? new Date(req.query.date) : new Date();
+
+    const startOfDay = new Date(dateParam.setHours(0, 0, 0, 0));
+    const endOfDay = new Date(dateParam.setHours(23, 59, 59, 999));
+
+    const groupedOrders = await AdminOrder.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: startOfDay, $lte: endOfDay }
+        }
+      },
+      {
+        $group: {
+          _id: { $hour: "$createdAt" }, // extract hour
+          totalOrders: { $sum: 1 },
+          totalRevenue: { $sum: "$subtotal" }
+        }
+      },
+      { $sort: { _id: 1 } }
+    ]);
+
+    const dateString = startOfDay.toISOString().split("T")[0]; 
+
+    const result = Array.from({ length: 24 }, (_, hour) => {
+      const found = groupedOrders.find((g) => g._id === hour);
+      return {
+        date: dateString, // 👈 add date
+        hour: `${String(hour).padStart(2, "0")}:00`,
+        totalOrders: found ? found.totalOrders : 0,
+        totalRevenue: found ? found.totalRevenue : 0
+      };
+    });
+
+    res.status(200).json({
+      status: true,
+      message: "Orders grouped by hour",
+      data: result
+    });
+  } catch (err) {
+    console.error("Error grouping orders by hour:", err);
+    res.status(500).json({ status: false, message: "Failed to group orders" });
+  }
+};
+
+
 module.exports = {
   adminRegister, 
   adminLogin, 
@@ -481,5 +612,10 @@ module.exports = {
   fetchPaginatedCustomers,
   addSubcategory,
   deleteSelectedProduct,
-  getAllOrdersForAdmin
+  getAllOrdersForAdmin,
+  updateOrderStatus,
+  fetchAllCustomers,
+  getOrdersGroupedByMonth,
+  getCustomersGroupedByMonth,
+  getOrdersGroupedByHour
 };

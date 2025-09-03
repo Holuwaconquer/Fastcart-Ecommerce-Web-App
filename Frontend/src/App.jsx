@@ -102,7 +102,11 @@ const App = () => {
         <Route path="/admin/" element={
           <ProtectedRoute role="admin"><AdminDashboard /></ProtectedRoute>
         }> 
-          <Route path='dashboard' element={<Dashboard />}/>
+          <Route path='dashboard' element={
+            <CategoryProvider>
+              <Dashboard />
+            </CategoryProvider>
+          }/>
           <Route path='orders' element={
             <CategoryProvider>
               <Order />

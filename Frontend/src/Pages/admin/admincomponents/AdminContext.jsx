@@ -8,7 +8,10 @@ const AdminProvider = ({ children }) => {
   const [adminDetails, setAdminDetails] = useState(null)
   const [page, setPage] = useState(1)
   const [customers, setCustomers] = useState([])
+  const [allCustomers, setAllCustomers] = useState([])
   const [pagination, setPagination] = useState({ totalPages: 1, currentPage: 1 });
+  const [ordersMontly, setordersMontly] = useState([])
+  const [customersMonthly, setcustomersMonthly] = useState([])
     let token = localStorage.adminToken
     useEffect(() => {
       let url = 'http://localhost:5000/admin/dashboard'
@@ -47,10 +50,47 @@ const AdminProvider = ({ children }) => {
         console.log(err);
       })
     }, [page])
+
+    useEffect(() => {
+      let allUsersURL = "http://localhost:5000/admin/customer/all"
+      axios.get(allUsersURL)
+      .then((res) =>{
+        if(res.data.status){
+          setAllCustomers(res.data.data)
+        }
+      })
+      .catch((err) =>{
+        console.log(err);
+      })
+    }, [])
+    useEffect(() => {
+      let ordersMonthlyURL = "http://localhost:5000/admin/order/monthly"
+      axios.get(ordersMonthlyURL)
+      .then((res) =>{
+        if(res.data.status){
+          setordersMontly(res.data.data)
+        }
+      })
+      .catch((err) =>{
+        console.log(err);
+      })
+    }, [])
+    useEffect(() => {
+      let customersMonthlyURL = "http://localhost:5000/admin/customers/monthly"
+      axios.get(customersMonthlyURL)
+      .then((res) =>{
+        if(res.data.status){
+          setcustomersMonthly(res.data.data)
+        }
+      })
+      .catch((err) =>{
+        console.log(err);
+      })
+    }, [])
     
 
   return (
-    <AdminContext.Provider value={{ adminDetails, setAdminDetails, setCustomers, customers, setPage, page, setPagination, pagination }}>
+    <AdminContext.Provider value={{ adminDetails, setAdminDetails, setCustomers, customers, setPage, page, setPagination, pagination, setAllCustomers, allCustomers, setordersMontly, ordersMontly, setcustomersMonthly, customersMonthly }}>
       {children}
     </AdminContext.Provider>
   )

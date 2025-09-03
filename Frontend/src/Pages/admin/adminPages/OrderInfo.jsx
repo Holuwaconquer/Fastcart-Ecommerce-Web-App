@@ -4,25 +4,29 @@ import { UserAccountContext } from '../../user/UserContext'
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { LuPlus } from "react-icons/lu";
 import { CategoryContext } from '../../../CategoryContext';
+import { toast, ToastContainer } from 'react-toastify';
 
 const OrderInfo = () => {
   const { id } = useParams()
   const [order, setOrder] = useState(null)
   const { allProduct, allOrders } = useContext(CategoryContext)
+  const [loading, setLoading] = useState(false)
 
-  if(allOrders && allOrders.length > 0) {
-    const foundOrder = allOrders.find(
-      (order) => order.transactionId.toString() === id
-    )
-    setOrder(foundOrder)
+  useEffect(() => {
+    if(allOrders && allOrders.length > 0) {
+      const foundOrder = allOrders.find(
+        (order) => order.transactionId.toString() === id
+      )
+      setOrder(foundOrder)
+    }
     console.log(order);
-  }
+  }, [allOrders, id])
   
   return (
     <div className='w-full flex flex-col border border-[#E4E7E9] rounded-[4px]'>
       <div style={{padding:"15px 20px"}} className='w-full flex justify-between items-center border-b border-[#E4E7E9]'>
-        <p onClick={() => window.history.back()} className='flex cursor-pointer gap-1 items-center text-[14px] text-[#191C1F]'><IoIosArrowRoundBack size={24}/><span>ORDER DETAILS</span></p>
-        <p className='flex gap-1 items-center text-[14px] text-[#FA8232]'><span>Leave a Rating</span><LuPlus size={24}/></p>
+        <p onClick={() => window.history.back()} className='flex cursor-pointer gap-1 items-center text-[14px] text-[#191C1F]'><IoIosArrowRoundBack size={24}/><span>ORDER</span></p>
+        <p className='flex gap-1 items-center text-[14px] text-[#FA8232]'><span>View Ratings</span><LuPlus size={24}/></p>
       </div>
       {order ? (
         <div className='w-full flex flex-col gap-4'>
@@ -49,10 +53,48 @@ const OrderInfo = () => {
               <p className='text-[#2DA5F3] text-[28px] font-bold'>₦{order.subtotal.toLocaleString()}</p>
             </div>
           </div>
+          {/* order status */}
+          <div className='w-full flex flex-col gap-4' style={{padding: '0px 20px'}}>
+            <h1 className='text-[18px] font-bold'>Order Status</h1>
+            <select
+              value={order.orderStatus}
+              disabled={order.orderStatus === "delivered"}
+              onChange={async (e) => {
+                const newStatus = e.target.value;
+                setLoading(true);
+                try {
+                  const res = await fetch(`http://localhost:5000/admin/orders/${order._id}/status`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ status: newStatus }),
+                  });
+                  const data = await res.json();
+                  if (res.ok) {
+                    setOrder(data.data);
+                    toast.success("Order status updated successfully");
+                  } else {
+                    toast.error(data.message);
+                  }
+                } catch (error) {
+                  console.error(error);
+                } finally {
+                  setLoading(false);
+                }
+              }}
+              className="border p-2 rounded"
+              style={{ padding: '10px', cursor: order.orderStatus === "delivered" ? "not-allowed" : "pointer" }}
+            >
+              <option value="received">Received</option>
+              <option value="processing">Processing</option>
+              <option value="shipped">Shipped</option>
+              <option value="delivered">Delivered</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+          </div>
           {/* order product */}
           <div className='w-full flex flex-col'>
             <h1 className='text-[18px] border-t border-[#E4E7E9] border-b font-bold' style={{padding: '20px'}}><span className='text-[#191C1F]'>Product</span><span className='text-[#5F6C72]'> ({order.products.length})</span></h1>
-            <div style={{padding:"10px 20px"}} className='w-full grid grid-cols-[3fr_1fr_1fr_1fr] text-[12px] text-[#475156] bg-[#F2F4F5] border border-[#E4E7E9]'>
+            <div style={{padding:"10px 20px"}} className='w-full grid grid-cols-[3fr_1fr_1fr_1fr] text-[12px] text-[#475156] bg-[#F2F4F5] border-b border-[#E4E7E9]'>
               <p>PRODUCTS</p>
               <p>PRICE</p>
               <p>QUANTITY</p>
@@ -90,6 +132,7 @@ const OrderInfo = () => {
       ) : (
         <div style={{padding: '20px'}}>Loading Order details...</div>
       )}
+      <ToastContainer />
     </div>
   )
 }

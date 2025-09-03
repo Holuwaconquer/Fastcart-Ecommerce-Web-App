@@ -27,6 +27,13 @@ const orderSchema = new mongoose.Schema({
     phone: String,
   },
   subtotal: Number,
+
+  orderStatus: {
+    type: String,
+    enum: ["received", "processing", "shipped", "delivered", "cancelled"],
+    default: "received"
+  },
+  
   createdAt: { type: Date, default: Date.now },
 });
 

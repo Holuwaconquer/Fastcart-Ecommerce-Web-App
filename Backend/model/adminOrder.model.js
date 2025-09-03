@@ -32,6 +32,11 @@ const adminOrderSchema = new mongoose.Schema({
   },
 
   subtotal: Number,
+  orderStatus: {
+    type: String,
+    enum: ["Received", "Processing", "Shipped", "Delivered", "Cancelled"],
+    default: "Received"
+  },
   createdAt: {
     type: Date,
     default: Date.now,
