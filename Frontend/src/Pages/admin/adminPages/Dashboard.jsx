@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { IoSettingsOutline } from "react-icons/io5";
 import { TbCurrencyNaira } from "react-icons/tb";
 import { RxCaretUp } from "react-icons/rx";
@@ -6,10 +6,13 @@ import { PiShoppingCartSimple } from "react-icons/pi";
 import { CategoryContext } from '../../../CategoryContext';
 import { AdminContext } from '../admincomponents/AdminContext';
 import DashboardChart from '../admincomponents/DashboardChart';
+import axios from 'axios';
 
 const Dashboard = () => {
   const { allOrders } = useContext(CategoryContext);
   const { allCustomers, ordersMontly, customersMonthly } = useContext(AdminContext)
+  const [dailyTotals, setDailyTotals] = useState({});
+
   useEffect(() => {
     if (allOrders && allCustomers) {
       console.log("All Orders in ProductPage", allOrders);
@@ -18,6 +21,40 @@ const Dashboard = () => {
       console.log("Monthly Customers in ProductPage", customersMonthly);
     }
   }, [allOrders, allCustomers, ordersMontly, customersMonthly]);
+
+  useEffect(() => {
+    const today = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+
+    const formatDate = (d) => d.toISOString().split("T")[0];
+    const todayStr = formatDate(today);
+    const yesterdayStr = formatDate(yesterday);
+
+    const dailyURL = `http://localhost:5000/admin/orders/hourly?dates=${yesterdayStr},${todayStr}`;
+
+    axios.get(dailyURL).then((res) => {
+      if (res.status === 200 && res.data?.data) {
+        const rawData = res.data.data;
+
+        // Extract labels
+        const keys = Object.keys(rawData[0] || {});
+        const orderKeys = keys.filter(k => k.includes("Orders"));
+
+        // Compute totals per date
+        const totals = orderKeys.reduce((acc, key) => {
+          const total = rawData.reduce((sum, row) => sum + (row[key] || 0), 0);
+          acc[key.replace(" Orders", "")] = total;
+          return acc;
+        }, {});
+
+        console.log("Totals:", totals);
+        setDailyTotals(totals);
+      }
+    }).catch(err => console.error("Error fetching daily totals:", err));
+  }, []);
+
+
   const calculatePercentageChange = (current, previous) => {
     if (!previous || previous === 0) return 100;
     return (((current - previous) / previous) * 100).toFixed(2);
@@ -126,10 +163,25 @@ const Dashboard = () => {
         </div>
         {/* for chart and seven days sales */}
         <div className='w-full grid grid-cols-[3fr_1fr] gap-4'>
-          <div className='w-full flex flex-col gap-4 rounded-[6px] bg-white' style={{padding: '40px'}}>
+          <div className='w-full flex flex-col gap-4 rounded-[6px] bg-white' style={{padding: '20px'}}>
             <div className='w-full flex justify-between items-center'>
               <h1 className='text-[16px] text-[#131523] font-bold'>Orders Over Time</h1>
               <p className='text-[14px] text-[#5A607F]'>Last 24 hours</p>
+            </div>
+            <div className='w-full flex justify-between items-center'>
+              {/* for total order for previous and current day */}
+              {/* totals display */}
+              <div className='w-full flex gap-6'>
+                {Object.entries(dailyTotals).map(([day, total]) => {
+                  const formattedDay = day.replace(/, \d{4}$/, "");
+                  return (
+                    <div key={day} className="flex flex-col">
+                      <h1 className="font-bold text-[20px] text-[#131523]">{total}</h1>
+                      <p className="text-[14px] text-[#5A607F]">Orders on {formattedDay}</p>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
             <DashboardChart />
           </div>

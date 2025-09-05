@@ -149,7 +149,7 @@ const Checkout = () => {
                   <div className='w-full'>
                     <p className='font-bold text-[#191C1F] text-[14px]'>{cartProduct?.name.split(' ').splice(0, 5).join(' ')}...</p>
                     <div className='w-full flex items-center gap-2 text-[#5F6C72]'>
-                      <p>{cartProduct.quantity}</p>
+                      <p>{cartProduct.quantity || 1}</p>
                       <p>x</p>
                       <p className='text-[#2DA5F3] text-[14px] font-bold'>
                         ₦{(typeof cartProduct?.discountprice === 'number' ? cartProduct.discountprice : cartProduct?.price)?.toLocaleString()}
