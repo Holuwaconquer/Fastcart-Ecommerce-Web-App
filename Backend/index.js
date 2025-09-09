@@ -1,54 +1,30 @@
-// list of imports
-const express = require('express')
-const userRouter = require('./routes/user.route')
-const adminRouter = require('./routes/admin.route')
-const orderRouter = require('./routes/trackOrder.route')
-const app = express()
-const cors = require('cors')
-require('dotenv').config()
-const mongoose = require('mongoose')
-const serverless = require('serverless-http')
-const { adminRegister } = require('./controller/admin.controller')
-const { adminCustomer, fetchPaginatedCustomers  } = require('./controller/admin.controller')
+const express = require('express');
+const serverless = require('serverless-http');
+const userRouter = require('./routes/user.route');
+const adminRouter = require('./routes/admin.route');
+const orderRouter = require('./routes/trackOrder.route');
+const cors = require('cors');
+require('dotenv').config();
+const mongoose = require('mongoose');
+const { adminRegister, fetchPaginatedCustomers } = require('./controller/admin.controller');
+
+const app = express();
 
 // Middleware
-app.use(cors())
-app.use(express.urlencoded({ extended: true }))
-app.use(express.json())
-app.use("/user", userRouter)
-app.use("/admin", adminRouter)
-app.use("/orders", orderRouter)
+app.use(cors());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
-// Variables
-const PORT = process.env.PORT
-const URI = process.env.URI
+// Routes
+app.use("/user", userRouter);
+app.use("/admin", adminRouter);
+app.use("/orders", orderRouter);
 
-// mongoose.connect(URI)
-// .then(async () =>{
-//   app.listen(PORT, (err) => {
-//   if(err){
-//     console.log("There is an error", err);
-//   }
-//   console.log("Server is running on port ", PORT);
-// })
-//   console.log("Database Connected");
-//   const { adminModel } = require('./model/admin.model');
-//   const existingAdmin = await adminModel.findOne({ username: process.env.admin_username });
-//   if(!existingAdmin){
-//     await adminRegister()
-//   }
-//   await fetchPaginatedCustomers()
-// })
-// .catch((err) =>{
-//   console.log("An Error encountered while connecting to the database", err);
-// }) 
-
-mongoose
-  .connect(process.env.URI)
+// Connect DB once
+mongoose.connect(process.env.URI)
   .then(async () => {
     console.log("Database Connected");
-
-    const { adminModel } = require("./model/admin.model");
+    const { adminModel } = require('./model/admin.model');
     const existingAdmin = await adminModel.findOne({ username: process.env.admin_username });
     if (!existingAdmin) {
       await adminRegister();
@@ -56,10 +32,9 @@ mongoose
     await fetchPaginatedCustomers();
   })
   .catch((err) => {
-    console.log("DB connection error:", err);
+    console.log("DB connection error", err);
   });
 
-
+// 👉 Export handler for Vercel
 module.exports = app;
 module.exports.handler = serverless(app);
-
