@@ -15,7 +15,7 @@ const DashboardSidenav = () => {
     }
   }
   return (
-    <div style={{padding: '16px 0px'}} className='w-[264px] bg-white flex flex-col
+    <div style={{padding: '16px 0px'}} className='md:w-[264px] bg-white flex flex-col
      overflow-x-hidden shadow-md'>
       <div className='w-full text-white flex flex-col gap-[1.3em] h-full'>
         <div className='w-full flex flex-col'>

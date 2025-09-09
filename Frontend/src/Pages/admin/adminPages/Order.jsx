@@ -186,7 +186,7 @@ const Order = () => {
                       </td>
                       <td>{order?.userId.firstname} {order?.userId.lastname}</td>
                       <td><span style={{padding: '10px'}} className='text-[#06A561] rounded-[4px] bg-[#C4F8E2] text-[14px]'>Paid</span> </td>
-                      <td><span style={{padding: '10px'}} className={`${order.orderStatus === 'shipped' ? 'bg-[#5A607F]' : order.orderStatus==='ready' ? 'bg-[#F99600]' : order.orderStatus==='delivered' ? 'bg-[#1E5EFF]' : 'bg-[#E6E9F4]'} text-white rounded-[4px]`}>{order.orderStatus}</span></td>
+                      <td><span style={{padding: '10px'}} className={`${order.orderStatus === 'on_the_road' ? 'bg-[#5A607F]' : order.orderStatus==='packaging' ? 'bg-[#F99600]' : order.orderStatus==='delivered' ? 'bg-[#1E5EFF]' : 'bg-[#E6E9F4]'} text-white rounded-[4px]`}>{order.orderStatus}</span></td>
                       <td>₦{order.subtotal.toLocaleString()}</td>
 
                       <td className='dAndE text-[#1E5EFF] flex gap-2'>

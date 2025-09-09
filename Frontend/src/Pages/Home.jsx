@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar'
 import Bottomnav from '../components/Bottomnav'
 import Footer from '../components/Footer'
 import { Outlet } from 'react-router-dom'
+import BreadCrumb from '../components/BreadCrumb'
 
 const Home = () => {
   return (
@@ -13,6 +14,7 @@ const Home = () => {
       <Tagnav />
       <Navbar />
       <Bottomnav />
+      <BreadCrumb />
       <Outlet />
       <Footer />
     </div>

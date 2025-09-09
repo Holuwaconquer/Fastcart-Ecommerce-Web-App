@@ -115,9 +115,11 @@ const Settings = () => {
 			axios.put(`http://localhost:5000/user/updateBilling/${userData._id}`, values)
 			.then((res) => {
 				console.log(res);
+				toast.success("Billing address updated successfully");
 			})
 			.catch((err) =>{
-				console.log('cannot update user', err);	
+				console.log('cannot update user', err);
+				toast.error("Failed to update billing address");
 			})
 		}
 	})
@@ -152,9 +154,11 @@ const Settings = () => {
 			axios.put(`http://localhost:5000/user/updateShipping/${userData._id}`, values)
 			.then((res) => {
 				console.log(res);
+				toast.success("Shipping address updated successfully");
 			})
 			.catch((err) =>{
-				console.log('cannot update user', err);	
+				console.log('cannot update user', err);
+				toast.error("Failed to update shipping address");
 			})
 		}
 	})

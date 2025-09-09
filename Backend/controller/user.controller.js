@@ -8,7 +8,6 @@ const greetingUser = (req, res) =>{
   const form = new userModel(userData)
   form.save()
   .then(() => {
-    console.log('User Information saved in our database');
     res.status(201).json({
       status: true,
       message: 'User Register Successfully',
@@ -16,7 +15,6 @@ const greetingUser = (req, res) =>{
     })
   })
   .catch((err) =>{
-    console.log('There is an error while saving to the database', err);
     if (err.code === 11000) {
       return res.status(400).json({ error: "Duplicate field: email already exists" });
     }
@@ -25,24 +23,20 @@ const greetingUser = (req, res) =>{
 }
 
 const userLogin = (req, res) => {
-  console.log('Welcome to sign in page');
   const { password } = req.body;
 
   userModel.findOne({ email: req.body.email })
     .then((user) => {
       if (!user) {
-        console.log("User does not exist");
         return res.status(404).json({ error: "This email is not registered" });
       }
 
       user.validatePassword(password, (err, isMatch) => {
         if (err) {
-          console.log("Error validating password:", err);
           return res.status(500).json({ error: "Error validating password" });
         }
 
         if (!isMatch) {
-          console.log("Password does not match");
           return res.status(401).json({ message: "Password is incorrect" });
         }
 
@@ -63,7 +57,6 @@ const userLogin = (req, res) => {
       });
     })
     .catch((err) => {
-      console.log("Error finding the user:", err);
       res.status(500).json({ error: "Server error" });
     });
 };
@@ -79,7 +72,6 @@ const changePassword = async (req, res) =>{
 
     user.validatePassword(currentpassword, async (err, isMatch) => {
       if(err){
-        console.log('Error validating password: ', err);
         return res.status(500).json({ error: "Server error while validating password" });
       }
       if (!isMatch) {
@@ -112,7 +104,6 @@ const userDashboard = (req, res) =>{
       .then((user) => {
         if(user){
           const { password, ...newUser } = user.toObject()
-          console.log(newUser);
           res.send({
             status: true,
             message: 'token is valid',
@@ -121,7 +112,6 @@ const userDashboard = (req, res) =>{
         }
       })
       .catch((err) =>{
-        console.log('error occured', err);
       })
     }
   })
@@ -158,7 +148,6 @@ const billingDetails = async (req, res) =>{
     if(!billingData){
       return res.status(404).json({ error: 'User not found'})
     }
-    console.log(billingData);
     
     res.status(200).json({
       message: "Billing Details added successfully",
@@ -181,7 +170,6 @@ const shippingDetails = async (req, res) =>{
     if(!shippingData){
       return res.status(404).json({ error: 'User not found'}) 
     }
-    console.log(shippingData);
     
     res.status(200).json({
       message: "shipping Details added successfully",

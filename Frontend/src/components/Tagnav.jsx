@@ -24,7 +24,7 @@ const Tagnav = () => {
           |
           <div className='flex gap-2 text-white'>
             <div><p>ENG</p></div>
-            <div><p>USD</p></div>
+            <div><p>NGN</p></div>
           </div>
         </div>
       </div>

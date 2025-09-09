@@ -31,6 +31,8 @@ import OrderHistory from './Pages/user/OrderHistory';
 import OrderDetails from './Pages/user/OrderDetails';
 import Order from './Pages/admin/adminPages/Order';
 import OrderInfo from './Pages/admin/adminPages/OrderInfo';
+import OrderTrack from './Pages/OrderTrack';
+import OrderTrackDetails from './Pages/OrderTrackDetails';
 
 
 const App = () => {
@@ -44,6 +46,8 @@ const App = () => {
           }>
             <Route index element={<Landingpage />} />
             <Route path='/shop' element={<ShopPage />} />
+            <Route path='/order-tracking' element={<OrderTrack />} />
+            <Route path='/order-tracking/:id' element={<OrderTrackDetails />} />
             <Route path='/shopping-cart' element={<ShoppingCart />} />
             <Route path='/shopping-cart/checkout' element={
               <UserProvider>

@@ -85,8 +85,8 @@ const OrderInfo = () => {
               style={{ padding: '10px', cursor: order.orderStatus === "delivered" ? "not-allowed" : "pointer" }}
             >
               <option value="received">Received</option>
-              <option value="processing">Processing</option>
-              <option value="shipped">Shipped</option>
+              <option value="packaging">Packaging</option>
+              <option value="on_the_road">On The Road</option>
               <option value="delivered">Delivered</option>
               <option value="cancelled">Cancelled</option>
             </select>

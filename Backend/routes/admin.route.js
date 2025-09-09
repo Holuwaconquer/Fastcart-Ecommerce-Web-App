@@ -1,5 +1,5 @@
 const express = require('express')
-const { adminLogin, adminDashboard, adminCustomer, deleteCustomer, productCategory, getCategory, createProduct, getAllProducts, getCategoriesWithProducts, deleteCategory, editCategory, editProduct, deleteProduct, addSubcategory, deleteSelectedProduct, getAllOrdersForAdmin, updateOrderStatus, fetchAllCustomers, getOrdersGroupedByMonth, getCustomersGroupedByMonth, getOrdersGroupedByHour } = require('../controller/admin.controller')
+const { adminLogin, adminDashboard, adminCustomer, deleteCustomer, productCategory, getCategory, createProduct, getAllProducts, getCategoriesWithProducts, deleteCategory, editCategory, editProduct, deleteProduct, addSubcategory, deleteSelectedProduct, getAllOrdersForAdmin, updateOrderStatus, fetchAllCustomers, getOrdersGroupedByMonth, getCustomersGroupedByMonth, getOrdersGroupedByHour, getOrdersGroupedByHourForDates } = require('../controller/admin.controller')
 const { authenticate } = require('../auth')
 const { authorizeRoles } = require('../authorizesRole')
 const router = express.Router()
@@ -24,9 +24,12 @@ router.get('/orders', getAllOrdersForAdmin)
 router.put('/orders/:id/status', updateOrderStatus)
 router.get('/order/monthly', getOrdersGroupedByMonth)
 router.get('/customers/monthly', getCustomersGroupedByMonth)
-router.get('/orders/hourly', getOrdersGroupedByHour)
+// router.get('/orders/hourly', getOrdersGroupedByHour)
+router.get('/orders/hourly/', getOrdersGroupedByHourForDates)
 
 
 module.exports = router
+
+
 
 

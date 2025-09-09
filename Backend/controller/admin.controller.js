@@ -7,7 +7,6 @@ const admin_username = process.env.admin_username;
 const admin_password = process.env.admin_password;
 
 const adminRegister = async (req, res) => {
-  console.log('Welcome to admin sign in page');
   let admin = await adminModel.findOne({username: 'admin'});
   if(admin){
     console.log('Admin already exist');
@@ -23,19 +22,15 @@ const adminRegister = async (req, res) => {
 }
 
 const adminLogin = (req, res) => {
-  console.log('welcome to admin login');
   adminModel.findOne({username: req.body.username})
   .then((admin) => {
     if(admin){
       admin.validatePassword(req.body.password, (err, isMatch) => {
         if(err){
-          console.log("an error while validating the password", err);
           return res.status(500).json({error: "Error validating password"});
         }
         if(isMatch){
-          console.log("Password matches");
           let token = jwt.sign({ id: admin._id, username: admin.username, role: admin.role }, process.env.JWT_SECRET, { expiresIn: '1h' })
-          console.log(token);
           res.status(200).json({
             status: true,
             message: 'Admin Login Successfully',
@@ -43,12 +38,10 @@ const adminLogin = (req, res) => {
             token
           });
         }else{
-          console.log("Password does not match");
           res.status(401).json({error: "Invalid username or password"});
         }
       });
     }else{
-      console.log("Admin does not exist");
       res.status(404).json({error: "Admin not found"});
     }
   })
@@ -124,14 +117,12 @@ const adminCustomer = async (req, res) => {
 const deleteCustomer = (req, res) =>{
   const deletedUser = userModel.findByIdAndDelete(req.body._id)
   .then((response) =>{
-    console.log('user information deleted', response);
     res.status(201).json({
       status: true,
       message: "User Information Deleted Successfully",
     })
   })
   .catch((err) =>{
-    console.log('cannot delete user');
     res.status(500).json({
       status: false,
       message: 'User cannot be deleted'
@@ -150,7 +141,6 @@ const productCategory = (req, res) => {
         message: 'Category created successfully',
         data: category
       });
-      console.log('Category created:', category);
     })
     .catch((err) => {
       console.error('Error creating category:', err);
@@ -165,7 +155,6 @@ const productCategory = (req, res) => {
 const getCategory = (req, res) =>{
   const fetchingCategory = categoryModel.find()
   .then((fetchedCategory) =>{
-    console.log(fetchedCategory);
     res.status(200).json({
       status: true,
       message: 'These are all the categories',
@@ -173,7 +162,6 @@ const getCategory = (req, res) =>{
     })
   })
   .catch((err) =>{
-    console.log(err);
     res.status(500).json({
       status: false,
       message: 'Failed to fetch category',
@@ -203,7 +191,6 @@ const createProduct = async (req, res) =>{
       discountPercentage
     });
     const savedProduct = await newProduct.save()
-    console.log('product created successfully');
     
     res.status(201).json({
       status: true,
@@ -320,7 +307,7 @@ const deleteCategory = async (req, res) =>{
   try{
     const deletedCategory = await categoryModel.findByIdAndDelete(id)
 
-    if(!deleteCategory){
+    if(!deletedCategory){
       return res.status(404).json({
         status: false,
         message: 'Category not found',
@@ -335,7 +322,7 @@ const deleteCategory = async (req, res) =>{
     res.status(201).json({
       status: true,
       message: "Category Deleted Successfully",
-      data: deleteCategory
+      data: deletedCategory
     })
   }
   catch(err) {
@@ -434,7 +421,6 @@ const editProduct = async (req, res) => {
   }
 };
 const addSubcategory = async (req, res) => {
-  console.log('Received body:', req.body);
   const { id } = req.params;
   const { name } = req.body;
 
@@ -473,7 +459,6 @@ const getAllOrdersForAdmin = async (req, res) =>{
       message: "All orders fetched successfully",
       data: orders
     })
-    console.log(orders)
   }catch (err) {
     console.error("Error fetching admin orders:", err);
     res.status(500).json({ message: 'Failed to fetch orders' });
@@ -493,6 +478,21 @@ const updateOrderStatus = async (req, res) => {
 
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
+    }
+    
+    if (order.userId && order.flutterwaveResponse?.transaction_id) {
+      const txnId = String(order.flutterwaveResponse.transaction_id);
+
+      const result = await userModel.updateOne(
+        { _id: order.userId },
+        { $set: { "productOrder.$[elem].orderStatus": status } },
+        {
+          arrayFilters: [
+            { "elem.flutterwaveResponse.transaction_id": txnId }
+          ]
+        }
+      );
+
     }
 
     res.status(200).json({ message: "Order status updated", data: order });
@@ -562,7 +562,7 @@ const getOrdersGroupedByHour = async (req, res) => {
       },
       {
         $group: {
-          _id: { $hour: "$createdAt" }, // extract hour
+          _id: { $hour: "$createdAt" },
           totalOrders: { $sum: 1 },
           totalRevenue: { $sum: "$subtotal" }
         }
@@ -592,6 +592,87 @@ const getOrdersGroupedByHour = async (req, res) => {
     res.status(500).json({ status: false, message: "Failed to group orders" });
   }
 };
+const getOrdersGroupedByHourForDates = async (req, res) => {
+  try {
+    // ?dates=2025-05-21,2025-05-22  (optional)
+    const inputDates = (req.query.dates || "")
+      .split(",")
+      .map(s => s.trim())
+      .filter(Boolean);
+
+    // Default: today + yesterday if no dates provided
+    const dates = inputDates.length
+      ? inputDates.map(d => new Date(d)) // or parse ISO safely if needed
+      : [new Date(), new Date(Date.now() - 24 * 60 * 60 * 1000)];
+
+    // Pre-generate hours
+    const baseHours = Array.from({ length: 24 }, (_, h) => `${String(h).padStart(2, "0")}:00`);
+
+    // { "00:00": { time: "00:00" }, ... }
+    const mergedResult = baseHours.reduce((acc, hour) => {
+      acc[hour] = { time: hour };
+      return acc;
+    }, {});
+
+    for (const date of dates) {
+      // clone before setHours (avoid mutating original Date)
+      const startOfDay = new Date(date);
+      startOfDay.setHours(0, 0, 0, 0);
+
+      const endOfDay = new Date(date);
+      endOfDay.setHours(23, 59, 59, 999);
+
+      const groupedOrders = await AdminOrder.aggregate([
+        { $match: { createdAt: { $gte: startOfDay, $lte: endOfDay } } },
+        {
+          $group: {
+            _id: { $hour: "$createdAt" },
+            totalOrders: { $sum: 1 },
+            totalRevenue: { $sum: "$subtotal" },
+          },
+        },
+        { $sort: { _id: 1 } },
+      ]);
+
+      const label = startOfDay.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
+
+      groupedOrders.forEach(g => {
+        const hourKey = `${String(g._id).padStart(2, "0")}:00`;
+        mergedResult[hourKey][`${label} Orders`] = g.totalOrders;
+        mergedResult[hourKey][`${label} Revenue`] = g.totalRevenue;
+      });
+
+      // fill missing hours for this date
+      baseHours.forEach(hour => {
+        if (mergedResult[hour][`${label} Orders`] === undefined) {
+          mergedResult[hour][`${label} Orders`] = 0;
+        }
+        if (mergedResult[hour][`${label} Revenue`] === undefined) {
+          mergedResult[hour][`${label} Revenue`] = 0;
+        }
+      });
+    } // <-- close the for..of loop
+
+    // send response AFTER processing all dates
+    return res.status(200).json({
+      status: true,
+      message: "Orders grouped by hour for given dates",
+      data: Object.values(mergedResult),
+    });
+  } catch (err) {
+    console.error("Error grouping orders by hour for multiple dates:", err);
+    return res.status(500).json({
+      status: false,
+      message: "Failed to group orders",
+      error: err.message,
+    });
+  }
+};
+
 
 
 module.exports = {
@@ -617,5 +698,6 @@ module.exports = {
   fetchAllCustomers,
   getOrdersGroupedByMonth,
   getCustomersGroupedByMonth,
-  getOrdersGroupedByHour
+  getOrdersGroupedByHour,
+  getOrdersGroupedByHourForDates
 };

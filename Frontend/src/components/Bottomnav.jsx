@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 import { useContext } from 'react';
 import { RxCaretRight } from "react-icons/rx";
 import { useState } from 'react';
+import { NavLink } from 'react-router-dom';
 
 const Bottomnav = () => {
 
@@ -38,7 +39,28 @@ const Bottomnav = () => {
               }
             </div>
           <div>
-            <button className='text-[#191C1F] flex gap-[8px] rounded-[2px] items-center' style={{padding: '14px 24px'}}><span><CiLocationOn size={18}/></span><span>Track Order</span></button>
+            <NavLink
+              to="/order-tracking"
+              className={({ isActive }) =>
+                `cursor-pointer flex gap-[8px] items-center ${
+                  isActive ? "text-[#FA8232] font-semibold" : "text-[#191C1F]"
+                }`
+              }
+            >
+              {({ isActive }) => (
+                <button
+                  className={`flex gap-[8px] items-center cursor-pointer ${
+                    isActive ? "text-[#FA8232] font-semibold" : "text-[#191C1F]"
+                  }`}
+                  style={{ padding: "14px 24px" }}
+                >
+                  <span>
+                    <CiLocationOn size={18} />
+                  </span>
+                  <span>Track Order</span>
+                </button>
+              )}
+            </NavLink>
           </div>
           <div>
             <button className='text-[#191C1F] flex gap-[8px] rounded-[2px] items-center' style={{padding: '14px 24px'}}><span><SlEarphonesAlt size={18}/></span><span>Customer Support</span></button>
