@@ -15,6 +15,7 @@ const AddProduct = () => {
   const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/dimlar6iu/image/upload';
   const UPLOAD_PRESET = 'Fastcart';
   const [uploading, setUploading] = useState(false);
+  const API_URL = import.meta.env.VITE_API_URL;
   // const [previewImage, setPreviewImage] = useState(null);
   const [imgeURLS, setImgeURLS] = useState([])
 
@@ -64,7 +65,7 @@ const AddProduct = () => {
     },
     onSubmit: (values) =>{
       values.category = selected;
-      axios.post("http://localhost:5000/admin/createProduct", values)
+      axios.post(`${API_URL}/admin/createProduct`, values)
       .then((res) =>{
         console.log(res);
         if(res.data.status){

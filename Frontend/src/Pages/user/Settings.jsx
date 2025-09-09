@@ -19,6 +19,7 @@ const Settings = () => {
 	const [billingstate, setBillingState] = useState([]);
 	const [shippingstate, setShippingState] = useState([]);
 	const { userData } = useContext(UserAccountContext)
+	const API_URL = import.meta.env.VITE_API_URL;
 	useEffect(() => {
 		if (userData) {
 			const countryList = Country.getAllCountries();
@@ -74,7 +75,7 @@ const Settings = () => {
 		}),
 		onSubmit: (values) => {
 			console.log(userData._id);
-			axios.put(`http://localhost:5000/user/update/${userData._id}`, values)
+			axios.put(`${API_URL}/user/update/${userData._id}`, values)
 			.then((res) => {
 				console.log(res);
 			})
@@ -112,7 +113,7 @@ const Settings = () => {
 		}),
 		onSubmit: (values) => {
 			console.log(values);	
-			axios.put(`http://localhost:5000/user/updateBilling/${userData._id}`, values)
+			axios.put(`${API_URL}/user/updateBilling/${userData._id}`, values)
 			.then((res) => {
 				console.log(res);
 				toast.success("Billing address updated successfully");
@@ -151,7 +152,7 @@ const Settings = () => {
 		}),
 		onSubmit: (values) => {
 			console.log(values);	
-			axios.put(`http://localhost:5000/user/updateShipping/${userData._id}`, values)
+			axios.put(`${API_URL}/user/updateShipping/${userData._id}`, values)
 			.then((res) => {
 				console.log(res);
 				toast.success("Shipping address updated successfully");
@@ -181,7 +182,7 @@ const Settings = () => {
 				confirmpassword: true
 			});
 			 try {
-				const response = await axios.put(`http://localhost:5000/user/changepassword/${userData._id}`, values);
+				const response = await axios.put(`${API_URL}/user/changepassword/${userData._id}`, values);
 				console.log(response);
 				toast.success("Password changed successfully");
 			} catch (err) {

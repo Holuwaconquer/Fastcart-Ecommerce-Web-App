@@ -14,6 +14,7 @@ const Signin = () => {
   const { login, isAuthenticated } = useAuth();
   const location = useLocation();
   const from = location.state?.from?.pathname ?? '/';
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const formik = useFormik({
     initialValues: {
@@ -22,7 +23,7 @@ const Signin = () => {
     },
     onSubmit: (values) => {
       setIsLogging(true);
-      const url = 'http://localhost:5000/user/login';
+      const url =  `${API_URL}/user/login`;
       axios.post(url, values)
         .then((res) => {
           if (res.data?.token) {

@@ -10,6 +10,7 @@ const Register = () => {
 
   const navigate = useNavigate()
   const [isLogging, setisLogging] = useState(false)
+  const API_URL = import.meta.env.VITE_API_URL;
 
   let formik = useFormik({
     initialValues: {
@@ -22,7 +23,7 @@ const Register = () => {
     },
     onSubmit: (values) =>{
       setisLogging(true)
-      const url = 'http://localhost:5000/user/register'
+      const url = `${API_URL}/user/register`
       axios.post(url, values)
       .then((res) =>{
         setisLogging(false)

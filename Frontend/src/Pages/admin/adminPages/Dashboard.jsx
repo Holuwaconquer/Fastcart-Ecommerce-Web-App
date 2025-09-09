@@ -30,8 +30,9 @@ const Dashboard = () => {
     const formatDate = (d) => d.toISOString().split("T")[0];
     const todayStr = formatDate(today);
     const yesterdayStr = formatDate(yesterday);
+    const API_URL = import.meta.env.VITE_API_URL;
 
-    const dailyURL = `http://localhost:5000/admin/orders/hourly?dates=${yesterdayStr},${todayStr}`;
+    const dailyURL = `${API_URL}/admin/orders/hourly?dates=${yesterdayStr},${todayStr}`;
 
     axios.get(dailyURL).then((res) => {
       if (res.status === 200 && res.data?.data) {

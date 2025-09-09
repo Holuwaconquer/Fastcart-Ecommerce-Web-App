@@ -24,7 +24,7 @@ const Categories = () => {
   const UPLOAD_PRESET = 'Fastcart';
   const [uploading, setUploading] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
-
+  const API_URL = import.meta.env.VITE_API_URL;
 
 
   const validationSchema = useMemo(() => Yup.object({
@@ -54,7 +54,7 @@ const Categories = () => {
     onSubmit: (values) => {
       if(selectedCategory){
         console.log("editing:", values);
-        axios.put(`http://localhost:5000/admin/editCategory/${selectedCategory._id}`, {
+        axios.put(`${API_URL}/admin/editCategory/${selectedCategory._id}`, {
           name: formik.values.name,
           description: formik.values.description,
           image: formik.values.image,
@@ -72,7 +72,7 @@ const Categories = () => {
           console.log(err);
         })
       }else{
-        let categoryURL = "http://localhost:5000/admin/addCategory"
+        let categoryURL = `${API_URL}/admin/addCategory`
         axios.post(categoryURL, values)
         .then((res) =>{
           setIsOpen(false)
@@ -103,7 +103,7 @@ const Categories = () => {
   const trashCategory = (id) =>{
     
     if(window.confirm("Are you sure you want to delete this category?")){
-      axios.delete(`http://localhost:5000/admin/category/${id}`)
+      axios.delete(`${API_URL}/admin/category/${id}`)
       .then((res) =>{
         console.log(res);
         if(res.data.status){

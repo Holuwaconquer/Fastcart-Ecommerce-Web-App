@@ -34,6 +34,7 @@ const DashboardChart = () => {
   const [ordersDaily, setOrdersDaily] = useState([]);
   const [showPrevious, setShowPrevious] = useState(false);
   const [todayLabel, setTodayLabel] = useState("");
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const today = new Date();
@@ -44,7 +45,7 @@ const DashboardChart = () => {
     const todayStr = formatDate(today);
     const yesterdayStr = formatDate(yesterday);
 
-    const dailyURL = `http://localhost:5000/admin/orders/hourly?dates=${yesterdayStr},${todayStr}`;
+    const dailyURL = `${API_URL}/admin/orders/hourly?dates=${yesterdayStr},${todayStr}`;
 
     axios.get(dailyURL)
       .then((res) => {

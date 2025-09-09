@@ -5,8 +5,9 @@ export const UserAccountContext = createContext()
 const UserProvider = ({ children }) => {
 
   const [userData, setUserData] = useState(null)
+  const API_URL = import.meta.env.VITE_API_URL;
     useEffect(() => {
-    const url = 'http://localhost:5000/user/dashboard';
+    const url = `${API_URL}/user/dashboard`;
     const token = localStorage.userToken;
 
     axios.get(url, {

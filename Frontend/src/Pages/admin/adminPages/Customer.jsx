@@ -15,6 +15,7 @@ const Customer = () => {
   const [AllCustomers, setAllCustomers] = useState([])
   const navigate = useNavigate()
   const [searchItem, setSearchItem] = useState('')
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const customer = customers?.data?.find(user => user._id === id)
 
@@ -34,7 +35,7 @@ const Customer = () => {
   }
 
   const deleteUser = () =>{
-    let deleteURL = 'http://localhost:5000/admin/deleteCustomers'
+    let deleteURL = `${API_URL}/admin/deleteCustomers`
     axios.post(deleteURL, customer)
     .then((res) =>{
       if(res.data.status){

@@ -9,9 +9,10 @@ const OrderTrackDetails = () => {
   console.log(id);
   const [order, setOrder] = useState(null);
   const expectedDate = order ? new Date(new Date(order.createdAt).getTime() + 7*24*60*60*1000) : null;
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/orders/track/${id}`)
+    axios.get(`${API_URL}/orders/track/${id}`)
     .then(response => {
       console.log(response.data);
       setOrder(response.data.order);

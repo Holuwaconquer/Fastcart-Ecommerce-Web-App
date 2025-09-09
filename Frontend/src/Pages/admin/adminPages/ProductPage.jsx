@@ -19,6 +19,7 @@ const ProductPage = () => {
   const [selectedProductIds, setSelectedProductIds] = useState([])
   const [isconfirmDelete, setIsConfirmDelete] = useState(false)
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     if (allProduct) {
@@ -81,7 +82,7 @@ const ProductPage = () => {
     onSubmit: async (values) => {
       values.category = selected;
       try {
-        const res = await axios.put(`http://localhost:5000/admin/editproduct/${selectedProduct._id}`, values);
+        const res = await axios.put(`${API_URL}/admin/editproduct/${selectedProduct._id}`, values);
         if (res.data.status) {
           toast.success('Product updated successfully');
           setIsOpen(false);
@@ -95,7 +96,7 @@ const ProductPage = () => {
   });
   const deleteProduct = (id) =>{
     if(window.confirm("Are you sure you want to delete this category?")){
-      axios.delete(`http://localhost:5000/admin/deleteproduct/${id}`)
+      axios.delete(`${API_URL}/admin/deleteproduct/${id}`)
       .then((res) =>{
         console.log(res);
         if(res.data.status){
@@ -119,7 +120,7 @@ const ProductPage = () => {
   };
   const deleteAllProduct = () =>{
     console.log(selectedProductIds);
-    axios.delete('http://localhost:5000/admin/deleteSelectedProduct', {data: selectedProductIds} )
+    axios.delete(`${API_URL}/admin/deleteSelectedProduct`, {data: selectedProductIds} )
     .then((res) =>{
       console.log(res);
       if(res.status){

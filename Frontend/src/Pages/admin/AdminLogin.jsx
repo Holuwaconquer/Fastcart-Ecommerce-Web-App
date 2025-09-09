@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom'
 const AdminLogin = () => {
   const navigate = useNavigate()
   const [isLogging, setIsLogging] = useState(false)
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const formik = useFormik({
     initialValues: {
@@ -18,7 +19,7 @@ const AdminLogin = () => {
     },
     onSubmit: (values) =>{
       setIsLogging(true)
-      const url = 'http://localhost:5000/admin/login'
+      const url = `${API_URL}/admin/login`
       axios.post(url, values)
       .then((res) =>{
         setIsLogging(false)

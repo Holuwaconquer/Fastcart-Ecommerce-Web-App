@@ -12,6 +12,7 @@ import { MdKeyboardBackspace } from "react-icons/md";
 const AddNewCustomer = () => {
 
   const navigate = useNavigate()
+  const API_URL = import.meta.env.VITE_API_URL;
 
   let formik = useFormik({
     initialValues: {
@@ -28,7 +29,7 @@ const AddNewCustomer = () => {
       country: ''
     },
     onSubmit: (values) =>{
-      const url = 'http://localhost:5000/user/register'
+      const url = `${API_URL}/user/register`
       axios.post(url, values)
       .then((res) =>{
         console.log(res.data.message);

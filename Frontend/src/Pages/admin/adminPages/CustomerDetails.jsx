@@ -18,9 +18,10 @@ const CustomerDetails = () => {
   const goBack = () =>{
     window.history.back()
   }
+  const API_URL = import.meta.env.VITE_API_URL;
   
   const deleteUser = () =>{
-    let deleteURL = 'http://localhost:5000/admin/deleteCustomers'
+    let deleteURL = `${API_URL}/admin/deleteCustomers`
     axios.post(deleteURL, customer)
     .then((res) =>{
       console.log(res);

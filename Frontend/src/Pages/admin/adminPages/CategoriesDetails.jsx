@@ -18,6 +18,7 @@ const CategoriesDetails = () => {
   const { allCategory } = useContext(CategoryContext);
   const location = useLocation();
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [existingSubName, setExistingSubName] = useState([]);
@@ -75,7 +76,7 @@ const CategoriesDetails = () => {
         return;
       }
 
-      axios.put(`http://localhost:5000/admin/categories/${singleCategory._id}`, {
+      axios.put(`${API_URL}/admin/categories/${singleCategory._id}`, {
         name: trimmedName
       })
         .then((res) => {

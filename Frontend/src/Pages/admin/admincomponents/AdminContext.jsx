@@ -12,9 +12,10 @@ const AdminProvider = ({ children }) => {
   const [pagination, setPagination] = useState({ totalPages: 1, currentPage: 1 });
   const [ordersMontly, setordersMontly] = useState([])
   const [customersMonthly, setcustomersMonthly] = useState([])
+  const API_URL = import.meta.env.VITE_API_URL;
     let token = localStorage.adminToken
     useEffect(() => {
-      let url = 'http://localhost:5000/admin/dashboard'
+      let url = `${API_URL}/admin/dashboard`
       axios.get(url, {
         headers:{
           'Authorization': `Bearer ${token}`,
@@ -38,7 +39,7 @@ const AdminProvider = ({ children }) => {
     }, [])
     
     useEffect(() => {
-      let userUrl = `http://localhost:5000/admin/allCustomers/?page=${page}&limit=10`
+      let userUrl = `${API_URL}/admin/allCustomers/?page=${page}&limit=10`
       axios.get(userUrl)
       .then((res) =>{
         if(res.data.status){
@@ -52,7 +53,7 @@ const AdminProvider = ({ children }) => {
     }, [page])
 
     useEffect(() => {
-      let allUsersURL = "http://localhost:5000/admin/customer/all"
+      let allUsersURL = `${API_URL}/admin/customer/all`
       axios.get(allUsersURL)
       .then((res) =>{
         if(res.data.status){
@@ -64,7 +65,7 @@ const AdminProvider = ({ children }) => {
       })
     }, [])
     useEffect(() => {
-      let ordersMonthlyURL = "http://localhost:5000/admin/order/monthly"
+      let ordersMonthlyURL = `${API_URL}/admin/order/monthly`
       axios.get(ordersMonthlyURL)
       .then((res) =>{
         if(res.data.status){
@@ -76,7 +77,7 @@ const AdminProvider = ({ children }) => {
       })
     }, [])
     useEffect(() => {
-      let customersMonthlyURL = "http://localhost:5000/admin/customers/monthly"
+      let customersMonthlyURL = `${API_URL}/admin/customers/monthly`
       axios.get(customersMonthlyURL)
       .then((res) =>{
         if(res.data.status){

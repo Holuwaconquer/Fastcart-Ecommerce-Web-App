@@ -11,6 +11,7 @@ const OrderInfo = () => {
   const [order, setOrder] = useState(null)
   const { allProduct, allOrders } = useContext(CategoryContext)
   const [loading, setLoading] = useState(false)
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     if(allOrders && allOrders.length > 0) {
@@ -63,7 +64,7 @@ const OrderInfo = () => {
                 const newStatus = e.target.value;
                 setLoading(true);
                 try {
-                  const res = await fetch(`http://localhost:5000/admin/orders/${order._id}/status`, {
+                  const res = await fetch(`${API_URL}/admin/orders/${order._id}/status`, {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ status: newStatus }),

@@ -2,7 +2,7 @@ import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 
-const PUBLIC_PATHS = ['/login', '/register', '/forgot-password']; // add your public-only routes
+const PUBLIC_PATHS = ['/login', '/register', '/forgot-password'];
 
 const PublicRoute = ({ children }) => {
   const location = useLocation();

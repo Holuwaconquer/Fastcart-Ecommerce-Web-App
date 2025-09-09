@@ -18,6 +18,7 @@ const Order = () => {
   const [selected, setSelected] = useState([]);
   const [selectedProductIds, setSelectedProductIds] = useState([])
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     if (allProduct) {
@@ -41,7 +42,7 @@ const Order = () => {
  
   const deleteProduct = (id) =>{
     if(window.confirm("Are you sure you want to delete this category?")){
-      axios.delete(`http://localhost:5000/admin/deleteproduct/${id}`)
+      axios.delete(`${API_URL}/admin/deleteproduct/${id}`)
       .then((res) =>{
         console.log(res);
         if(res.data.status){
@@ -65,7 +66,7 @@ const Order = () => {
   };
   const deleteAllProduct = () =>{
     console.log(selectedProductIds);
-    axios.delete('http://localhost:5000/admin/deleteSelectedProduct', {data: selectedProductIds} )
+    axios.delete(`${API_URL}/admin/deleteSelectedProduct`, {data: selectedProductIds} )
     .then((res) =>{
       console.log(res);
       if(res.status){

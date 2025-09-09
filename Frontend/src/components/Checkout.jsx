@@ -8,6 +8,7 @@ import axios from 'axios';
 
 const Checkout = () => {
   const cartItem = useSelector(state => state.cart.cartItem)
+  const API_URL = import.meta.env.VITE_API_URL;
   const dispatch = useDispatch()
   const subtotal = cartItem.reduce((acc, item) => {
     const price = typeof item.discountprice === 'number' ? item.discountprice : item.price;
@@ -171,7 +172,7 @@ const Checkout = () => {
                   callback: (response) => {
                     console.log(response);
                     if(response){
-                      axios.post(`http://localhost:5000/user/orderDetails/${userData._id}`, {
+                      axios.post(`${API_URL}/user/orderDetails/${userData._id}`, {
                         flutterwaveResponse: response,
                         cartItems: cartItem,
                         billingDetails: {
