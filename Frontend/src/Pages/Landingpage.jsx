@@ -23,6 +23,7 @@ import Banner from "../assets/Banner.png";
 import { useContext } from "react";
 import { CategoryContext } from "../CategoryContext";
 import BestDeals from "../components/BestDeals";
+import FeaturedProducts from '../components/FeaturedProducts'
 
 const Landingpage = () => {
   const prevRef = useRef(null);
@@ -30,20 +31,6 @@ const Landingpage = () => {
 
   const {allCategory} = useContext(CategoryContext)
   const { allProduct } = useContext(CategoryContext)
-  const categories = [
-    "Phones",
-    "Consoles",
-    "Headphones",
-    "Laptops",
-    "Drones",
-    "Accessories",
-    "Watches",
-    "Smart TVs",
-    "Cameras",
-    "Speakers",
-    "Monitors",
-    "Chargers",
-  ];
   const chunkArray = (arr, size) => {
     const result = [];
     for (let i = 0; i < arr.length; i += size) {
@@ -480,6 +467,7 @@ const Landingpage = () => {
           </div>
         </div>
       </div>
+      <FeaturedProducts />
     </div>
   );
 };

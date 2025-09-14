@@ -15,6 +15,8 @@ const Signin = () => {
   const location = useLocation();
   const from = location.state?.from?.pathname ?? '/';
   const API_URL = import.meta.env.VITE_API_URL;
+  console.log(API_URL);
+  
 
   const formik = useFormik({
     initialValues: {
@@ -28,7 +30,7 @@ const Signin = () => {
         .then((res) => {
           if (res.data?.token) {
             localStorage.setItem('userToken', res.data.token);
-            login(); // updates context state
+            login();
             toast.success('Logged in successfully!');
             setTimeout(() => {
               navigate(from, { replace: true });

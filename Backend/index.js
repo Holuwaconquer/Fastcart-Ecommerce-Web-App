@@ -7,7 +7,7 @@ const cors = require('cors');
 require('dotenv').config();
 const mongoose = require('mongoose');
 const { adminRegister, fetchPaginatedCustomers } = require('./controller/admin.controller');
-
+const PORT = process.env.PORT
 const app = express();
 
 // Middleware
@@ -35,6 +35,9 @@ mongoose.connect(process.env.URI)
     console.log("DB connection error", err);
   });
 
-// 👉 Export handler for Vercel
-module.exports = app;
-module.exports.handler = serverless(app);
+app.listen(PORT, ()=>{
+  console.log('app running on Port', PORT);
+})
+// // 👉 Export handler for Vercel
+// module.exports = app;
+// module.exports.handler = serverless(app);
