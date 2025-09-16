@@ -41,3 +41,10 @@ app.listen(PORT, ()=>{
 // // 👉 Export handler for Vercel
 // module.exports = app;
 // module.exports.handler = serverless(app);
+
+
+PORT = 5000
+admin_username = admin
+admin_password = admin
+URI = mongodb+srv://holuwaconquer488:mongodb@cluster0.ikmidho.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=Cluster0
+JWT_SECRET= secret
