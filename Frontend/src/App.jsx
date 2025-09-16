@@ -33,6 +33,7 @@ import Order from './Pages/admin/adminPages/Order';
 import OrderInfo from './Pages/admin/adminPages/OrderInfo';
 import OrderTrack from './Pages/OrderTrack';
 import OrderTrackDetails from './Pages/OrderTrackDetails';
+import Productdetails from './Pages/Productdetails';
 
 
 const App = () => {
@@ -46,6 +47,11 @@ const App = () => {
           }>
             <Route index element={<Landingpage />} />
             <Route path='/shop' element={<ShopPage />} />
+            <Route path='/product-page/:id' element={
+              <CategoryProvider>
+                <Productdetails />
+              </CategoryProvider>
+            } />
             <Route path='/order-tracking' element={<OrderTrack />} />
             <Route path='/order-tracking/:id' element={<OrderTrackDetails />} />
             <Route path='/shopping-cart' element={<ShoppingCart />} />

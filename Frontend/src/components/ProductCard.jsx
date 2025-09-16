@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom';
 import { FaRegHeart } from "react-icons/fa";
 import { FiShoppingCart } from "react-icons/fi";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
@@ -11,7 +12,7 @@ const ProductCard = ({ product }) => {
   const [isHover, setIsHover] = useState(false)
   const cartItem = useSelector(state => state.cart.cartItem);
   const isAddedToCart = cartItem.some(item => item._id === product._id)
-
+  const navigate = useNavigate();
   const handleCartToggle = () =>{
     if(isAddedToCart){
       dispatch(removeFromCart(product))
@@ -20,13 +21,19 @@ const ProductCard = ({ product }) => {
     }
   }
 
+  const productDetails = (product) =>{
+    navigate(`/product-page/${product._id}`)
+
+  }
   return (
-    <div onMouseLeave={() => setIsHover(false)} onMouseEnter={() => setIsHover(true)} className="w-full flex flex-col gap-2 border-1 border-[#E4E7E9]" style={{ padding: "10px" }} >
+    <div onClick={() => productDetails(product)} onMouseLeave={() => setIsHover(false)} onMouseEnter={() => setIsHover(true)} className="w-full flex flex-col gap-2 border-1 border-[#E4E7E9]" style={{ padding: "10px" }} >
       <div className="relative h-[172px]">
         <img className='hover:rounded-[3px] h-full w-full object-contain' src={product?.image[0]} alt="product-image" />
-        <span className="absolute top-0 left-0 rounded-[2px] bg-[#EFD33D] text-black" style={{ padding: "5px 10px" }}>
-          {product?.discountPercentage}% OFF
-        </span>
+        {product.discountPercentage &&
+          <span className="absolute top-0 left-0 rounded-[2px] bg-[#EFD33D] text-black" style={{ padding: "5px 10px" }}>
+            {product?.discountPercentage}% OFF
+          </span>
+        }
         {/* for cart action button */}
         <div style={{padding: '0 30px'}} className={`${isHover ? 'flex' : 'hidden'} cursor-pointer absolute w-full h-full bg-[#00000083] flex-col items-center justify-center top-0 left-0`}>
           <div className='w-full flex items-center justify-center gap-4'>

@@ -38,7 +38,6 @@ const CategoryProvider = ({ children }) => {
       axios.get(ordersURL)
       .then((res) =>{
         if(res.data.status){
-          console.log("Fetched Orders:", res.data.data); // 👈 debug here
           setAllOrders(res.data.data);
         }
       })

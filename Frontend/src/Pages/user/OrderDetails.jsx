@@ -141,10 +141,10 @@ const OrderDetails = () => {
             <div style={{padding:"20px"}} className='w-full grid md:grid-cols-[1fr_1fr_1fr] text-[12px] text-[#475156]'>
               <div className='w-full flex flex-col gap-4 border-r border-[#E4E7E9]'>
                 <h1 className='text-[18px] font-bold text-[#191C1F]'>Billing Address</h1>
-                <p className='text-[14px] font-medium text-[#191C1F]'>{order.billingDetails.firstname} {order.billingDetails.lastname}</p>
-                <p className='text-[14px] text-[#5F6C72]'>{order.billingDetails.address}, {order.billingDetails.city}, {order.billingDetails.state}, {order.billingDetails.country}</p>
-                <p className='text-[14px] text-[#5F6C72]'><span className='font-semibold'>Phone number:</span> {order.billingDetails.phone}</p>
-                <p className='text-[14px] text-[#5F6C72]'><span className='font-semibold'>Email:</span> {order.billingDetails.email}</p>
+                <p className='text-[14px] font-medium text-[#191C1F]'>{order?.billingDetails?.firstname} {order?.billingDetails?.lastname}</p>
+                <p className='text-[14px] text-[#5F6C72]'>{order?.billingDetails?.address}, {order?.billingDetails?.city}, {order?.billingDetails?.state}, {order?.billingDetails?.country}</p>
+                <p className='text-[14px] text-[#5F6C72]'><span className='font-semibold'>Phone number:</span> {order?.billingDetails?.phone}</p>
+                <p className='text-[14px] text-[#5F6C72]'><span className='font-semibold'>Email:</span> {order?.billingDetails?.email}</p>
               </div>
 
             </div>

@@ -170,7 +170,6 @@ const Checkout = () => {
               onClick={() => {
                 handleFlutterPayment({
                   callback: (response) => {
-                    console.log(response);
                     if(response){
                       axios.post(`${API_URL}/user/orderDetails/${userData._id}`, {
                         flutterwaveResponse: response,
