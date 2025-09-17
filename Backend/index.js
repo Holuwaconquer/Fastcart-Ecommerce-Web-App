@@ -35,9 +35,9 @@ mongoose.connect(process.env.URI)
     console.log("DB connection error", err);
   });
 
-app.listen(PORT, ()=>{
-  console.log('app running on Port', PORT);
-})
-// // 👉 Export handler for Vercel
-// module.exports = app;
-// module.exports.handler = serverless(app);
+// app.listen(PORT, ()=>{
+//   console.log('app running on Port', PORT);
+// })
+// 👉 Export handler for Vercel
+module.exports = app;
+module.exports.handler = serverless(app);
