@@ -11,7 +11,7 @@ import ProductCard from './ProductCard';
 const FeaturedProducts = () => {
   const [productWithHighestDiscount, setProductWithHighestDiscount] = useState(null)
   const [bestDealsProduct, setBestDealsProduct] = useState([])
-  const [featuredProducts, setFeaturedProducts] = useState([]) // 👈 featured products
+  const [featuredProducts, setFeaturedProducts] = useState([])
 
   const { allProduct } = useContext(CategoryContext)
 
@@ -69,11 +69,11 @@ const FeaturedProducts = () => {
   }
 
   return (
-    <div className="w-full flex flex-col gap-8">
+    <div className="w-full flex flex-col gap-4" style={{marginBottom: '20px'}}>
       {/* Featured Products Section */}
-      <div>
         <h2 className="text-xl font-bold mb-4">Featured Products</h2>
-        <div className="w-full grid md:grid-cols-5 gap-4">
+      <div>
+        <div className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {featuredProducts.map(fp => (
             <ProductCard key={fp._id} product={fp} />
           ))}

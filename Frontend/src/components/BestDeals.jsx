@@ -48,8 +48,8 @@ const BestDeals = () => {
   }
   
   return (
-    <div className="w-full grid items-start md:grid-cols-[24%_76%] border-1 border-[#E4E7E9]">
-      <div className="border-r-1 border-[#E4E7E9]" style={{ padding: "10px" }}>
+    <div className="w-full gap-4 md:gap-0 grid items-start lg:grid-cols-[24%_76%] lg:border-1 lg:border-[#E4E7E9]">
+      <div className="border border-[#E4E7E9] md:border-0 md:border-r-1 md:border-[#E4E7E9]" style={{ padding: "10px" }}>
         {/* for higher product */}
         {productWithHighestDiscount && (
           <div className="w-full flex flex-col">
@@ -117,7 +117,7 @@ const BestDeals = () => {
       </div>
 
       {/* for other best deal product */}
-      <div className='w-full grid md:grid-cols-4 grid-rows-auto'>
+      <div className='w-full items-start md:items-stretch grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 grid-rows-auto gap-2 lg:gap-0'>
       {bestDealsProduct.map((bestProducts, index) => (
         <ProductCard key={bestProducts._id} product={bestProducts}/>
       ))}

@@ -9,8 +9,10 @@ import { useContext } from 'react';
 import { RxCaretRight } from "react-icons/rx";
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { IoMdArrowDropright, IoMdClose } from "react-icons/io";
+import Fastcart from '../assets/fastcartLogo.png'
 
-const Bottomnav = () => {
+const Menubar = ({ closeMenu }) => {
 
   const [isClicked, setIsClicked] = useState(false);
 
@@ -18,26 +20,37 @@ const Bottomnav = () => {
     setIsClicked(!isClicked); 
   }
   const { allCategory } = useContext(CategoryContext);
+  const [isOpen, setIsOpen] = useState(false)
+
+  const closeBottomNav = () =>{
+    setIsOpen(!isOpen)
+  }
 
   return (
-    <div className='w-full hidden md:block bg-white text-white border-b-1 border-[#adb7bc46]' style={{padding: '10px 8%'}}>
-      <div className='w-full flex items-center justify-between'>
+    <div className='w-3/4 fixed top-0 left-0 h-[100vh] overflow-auto z-1000 bg-white text-white border-b-1 border-[#adb7bc46]' style={{padding: '10px 6%'}}>
+      <div className='w-full flex flex-col md:flex-row md:items-center justify-between'>
         {/* for All category */}
-        <div className='w-auto flex relative items-center text-[#191C1F]'>
-          <div className='relative'>
-            <button onMouseEnter={handleClick} className={`bg-[#F2F4F5] active:bg-[#FA8232] cursor-pointer text-[#191C1F] flex gap-[8px] rounded-[2px] items-center ${isClicked ? 'bg-[#FA8232] text-white' : ''}`} style={{padding: '14px 24px'}}><span>All Category</span><span><RxCaretDown className={isClicked ? 'rotateCaret' : ''} size={18}/></span></button>
-          </div>
-            <div style={{padding: '10px 0'}} className='absolute top-[130%] left-0 bg-white shadow-sm rounded-[3px]'>
-              {
+        <div className='w-auto flex flex-col md:flex-row relative md:items-center text-[#191C1F]'>
+          <div className={`${isOpen ? 'block' : 'hidden' }md:hidden`}>
+            <div className='w-full flex items-center gap-4 border-b border-[#E4E7E9]' style={{paddingBottom: '10px', marginBottom:'10px'}}>
+              <IoMdClose className='cursor-pointer' onClick={closeMenu} size={24}/>
+              <div className='flex items-center gap-2 cursor-pointer'>
+                <img src={Fastcart} alt='logo' />
+                <h1 className='logoTxt text-black text-[25px]'>fastcart</h1>
+              </div>
+            </div>
+            <h1>All Category</h1>
+            {
                 allCategory && (
                   allCategory.map((category, index) => (
-                    <div key={index} className={isClicked ? 'block' : 'hidden'}>
-                      <p style={{padding: '10px 25px'}} className='categoryText flex justify-between items-center gap-5 text-[#5F6C72] hover:bg-[#F2F4F5] text-[16px] hover:font-bold cursor-pointer'><span>{category.name}</span><RxCaretRight className='categoryCaret opacity-0' size={16}/></p>
+                    <div key={index} className='flex items-center gap-2'>
+                      <IoMdArrowDropright />
+                      <p style={{padding: '10px 0'}} className='categoryText flex justify-between items-center gap-5 text-[#5F6C72] hover:bg-[#F2F4F5] text-[16px] hover:font-bold cursor-pointer'><span>{category.name}</span><RxCaretRight className='categoryCaret opacity-0' size={16}/></p>
                     </div>
                   ))
                 )
               }
-            </div>
+          </div>
           <div>
             <NavLink
               to="/order-tracking"
@@ -79,4 +92,4 @@ const Bottomnav = () => {
   )
 }
 
-export default Bottomnav
+export default Menubar

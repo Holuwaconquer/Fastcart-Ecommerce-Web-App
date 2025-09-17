@@ -17,7 +17,7 @@ const Productdetails = () => {
   }, [id, allProduct])
   
   return (
-    <div className='w-full flex flex-col gap-4' style={{ padding: "10px 8%" }}>
+    <div className='w-full flex flex-col gap-4' style={{ padding: "10px 6%" }}>
       <div className='w-full grid md:grid-cols-2 gap-8'>
         {/* this is for product image */}
         <div className='w-full flex flex-col gap-4'>

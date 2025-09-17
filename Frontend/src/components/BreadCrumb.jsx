@@ -9,7 +9,7 @@ const BreadCrumb = () => {
   const pathnames = location.pathname.split("/").filter((x) => x);
 
   return (
-    <div className='w-full bg-[#F2F4F5] text-[#5F6C72]' style={{padding: '10px 8%'}}>
+    <div className='w-full bg-[#F2F4F5] text-[#5F6C72]' style={{padding: '10px 6%'}}>
       <div className='flex gap-4 items-center'>
         <NavLink to="/" className="hover:text-[#191C1F]">
           Home

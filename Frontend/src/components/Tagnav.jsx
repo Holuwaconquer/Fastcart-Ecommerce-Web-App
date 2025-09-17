@@ -5,7 +5,7 @@ import { FaInstagram } from "react-icons/fa6";
 
 const Tagnav = () => {
   return (
-    <div className='w-full bg-[#1B6392] text-white border-b-1 border-[#adb7bc46]' style={{padding: '10px 8%'}}>
+    <div className='w-full hidden md:block bg-[#1B6392] text-white border-b-1 border-[#adb7bc46]' style={{padding: '10px 6%'}}>
       <div className='w-full flex items-center justify-between'>
         {/* for black friday */}
         <div>

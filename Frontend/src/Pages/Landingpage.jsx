@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { GoArrowRight } from "react-icons/go";
 import Xbox from "../assets/xbox.png";
 import GooglePixel from "../assets/googlePixel.png";
@@ -17,13 +17,12 @@ import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
-import { useRef, useEffect } from "react";
 import Computer from "../assets/computer.png";
 import Banner from "../assets/Banner.png";
-import { useContext } from "react";
 import { CategoryContext } from "../CategoryContext";
 import BestDeals from "../components/BestDeals";
 import FeaturedProducts from '../components/FeaturedProducts'
+import FewProduct from "../components/FewProduct";
 
 const Landingpage = () => {
   const prevRef = useRef(null);
@@ -31,6 +30,23 @@ const Landingpage = () => {
 
   const {allCategory} = useContext(CategoryContext)
   const { allProduct } = useContext(CategoryContext)
+  const [chunkSize, setChunkSize] = useState(6);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 640) {
+        setChunkSize(2);
+      } else if (window.innerWidth < 1024) {
+        setChunkSize(4);
+      } else {
+        setChunkSize(6);
+      }
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const chunkArray = (arr, size) => {
     const result = [];
     for (let i = 0; i < arr.length; i += size) {
@@ -38,13 +54,13 @@ const Landingpage = () => {
     }
     return result;
   };
-  const slideCategory = chunkArray(allCategory, 6);
+  const slideCategory = chunkArray(allCategory, chunkSize);
 
 
   return (
     <div
       className="w-full h-auto flex flex-col gap-y-[2em]"
-      style={{ padding: "10px 8%" }}
+      style={{ padding: "10px 6%" }}
     >
       <div className="w-full grid md:grid-cols-[2fr_1fr] gap-[2em]">
         {/* for the xbox section */}
@@ -161,14 +177,14 @@ const Landingpage = () => {
       </div>
       {/* for fast delivery and ... */}
       <div
-        className="w-full border-1 border-[#E4E7E9] rounded-[6px]"
+        className="w-full md:border-1 md:border-[#E4E7E9] rounded-[6px]"
         style={{ padding: "16px" }}
       >
-        <div className="w-full grid grid-cols-4">
+        <div className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-0">
           {/* for fastest delivery */}
-          <div className="flex items-center justify-center gap-3 border-r-1 border-[#E4E7E9]">
+          <div style={{padding: '10px'}} className="border-1 border-[#E4E7E9] md:border-0 rounded-[6px] flex flex-col md:flex-row items-center justify-center gap-3 md:border-r-1 md:border-[#E4E7E9]">
             <GoPackage size={40} />
-            <div>
+            <div className="text-center md:text-left">
               <p className="text-[14px] text-[#191C1F] font-bold">
                 FASTEST DELIVERY
               </p>
@@ -176,9 +192,9 @@ const Landingpage = () => {
             </div>
           </div>
           {/* for 24h return */}
-          <div className="flex items-center justify-center gap-3 border-r-1 border-[#E4E7E9]">
+          <div style={{padding: '10px'}} className="border-1 border-[#E4E7E9] md:border-0 rounded-[6px] flex flex-col md:flex-row items-center justify-center gap-3 md:border-r-1 md:border-[#E4E7E9]">
             <PiTrophyThin size={40} />
-            <div>
+            <div className="text-center md:text-left">
               <p className="text-[14px] text-[#191C1F] font-bold">
                 24 HOURS RETURN
               </p>
@@ -188,9 +204,9 @@ const Landingpage = () => {
             </div>
           </div>
           {/* for secure payment */}
-          <div className="flex items-center justify-center gap-3 border-r-1 border-[#E4E7E9]">
+          <div style={{padding: '10px'}} className="border-1 border-[#E4E7E9] md:border-0 rounded-[6px] flex flex-col md:flex-row items-center justify-center gap-3 md:border-r-1 md:border-[#E4E7E9]">
             <GoCreditCard size={40} />
-            <div>
+            <div className="text-center md:text-left">
               <p className="text-[14px] text-[#191C1F] font-bold">
                 SECURE PAYMENT
               </p>
@@ -198,9 +214,9 @@ const Landingpage = () => {
             </div>
           </div>
           {/* for support 24/7 */}
-          <div className="flex items-center justify-center gap-3 border-r-1 border-[#E4E7E9]">
+          <div style={{padding: '10px'}} className="border-1 border-[#E4E7E9] md:border-0 rounded-[6px] flex flex-col md:flex-row items-center justify-center gap-3 md:border-r-1 md:border-[#E4E7E9]">
             <SlEarphonesAlt size={40} />
-            <div>
+            <div className="text-center md:text-left">
               <p className="text-[14px] text-[#191C1F] font-bold">
                 SUPPORT 24/7
               </p>
@@ -248,11 +264,12 @@ const Landingpage = () => {
               });
             }}
             className="w-full"
+            
           >
             {slideCategory.map((allCategory, index) => (
               <SwiperSlide key={index}>
                 {allCategory ?
-                  <div className="w-full grid grid-cols-6 gap-4">
+                  <div className={`w-full grid gap-4 grid-cols-2 sm:grid-cols-4 lg:grid-cols-6`}>
                     {allCategory.map((category, i) => (
                       <div
                         key={i}
@@ -291,182 +308,9 @@ const Landingpage = () => {
           </div>
         </div>
       </div>
-
+      {/* for few product from store */}
+      <FewProduct />
       {/* for featured products */}
-      <div className="w-full flex flex-col gap-4" style={{ marginTop: "30px" }}>
-        {/* for best deal products */}
-        <div className="w-full grid md:grid-cols-[24%_76%]">
-          {/* for playstation product */}
-          <div className="">
-            <div className="w-full flex flex-col">
-              {/* for discount flyer*/}
-              <div className="relative">
-                <img src={Banner} alt="" />
-              </div>
-            </div>
-          </div>
-          {/* for second best deal product */}
-          <div className="w-full flex flex-col border-r-1 border-[#E4E7E9]">
-            {/* for best deals and countdown */}
-            <div className="w-full flex items-center justify-between">
-              <div className="flex gap-4 items-center">
-                <p className="text-[#191C1F] text-[24px] font-bold">
-                  Flash Sales
-                </p>
-                <small className="text-[14px] text-black">Deals ends in</small>
-                <div
-                  className="bg-[#F3DE6D] rounded-[2px]"
-                  style={{ padding: "6px 12px" }}
-                >
-                  <span>16d : 21h : 57m : 23s</span>
-                </div>
-              </div>
-              <div className="text-[14px] text-[#2DA5F3] flex gap-2 font-bold">
-                <span>Browse All Product</span>
-                <IoIosArrowRoundForward size={20} />
-              </div>
-            </div>
-            <div className="w-full grid grid-cols-4 gap-4">
-              {/* for first featured product top */}
-              <div
-                className="w-full flex flex-col gap-2 border-b-1 border-[#E4E7E9] rounded-[3px]"
-                style={{ padding: "10px" }}
-              >
-                <div className="relative">
-                  <img src={Drone} alt="product-image" />
-                  <span
-                    className="absolute top-0 left-0 rounded-[2px] bg-[#929FA5] text-white"
-                    style={{ padding: "5px 10px" }}
-                  >
-                    SOLD OUT
-                  </span>
-                </div>
-                <p className="text-[14px] text-[#191C1F]">
-                  Bose Sport Earbuds - Wireless Earphones - Bluetooth In Ear...
-                </p>
-                <p className="text-[#2DA5F3] text-[14px]">$2,300</p>
-              </div>
-
-              {/* for second featured product bottom */}
-              <div
-                className="w-full flex flex-col gap-2 border-1 border-[#E4E7E9] rounded-[3px]"
-                style={{ padding: "10px" }}
-              >
-                <div className="relative">
-                  <img src={Samsung} alt="product-image" />
-                </div>
-                <p className="text-[14px] text-[#191C1F]">
-                  Dell Optiplex 7000x7480 All-in-One Computer Monitor
-                </p>
-                <p className="text-[#2DA5F3] text-[14px]">$299</p>
-              </div>
-
-              {/* for third product top */}
-              <div
-                className="w-full flex flex-col gap-2 border-1 border-[#E4E7E9] rounded-[3px]"
-                style={{ padding: "10px" }}
-              >
-                <div className="relative">
-                  <img src={Drone} alt="product-image" />
-                  <span
-                    className="absolute top-0 left-0 rounded-[2px] bg-[#929FA5] text-white"
-                    style={{ padding: "5px 10px" }}
-                  >
-                    SOLD OUT
-                  </span>
-                </div>
-                <p className="text-[14px] text-[#191C1F]">
-                  Bose Sport Earbuds - Wireless Earphones - Bluetooth In Ear...
-                </p>
-                <p className="text-[#2DA5F3] text-[14px]">$2,300</p>
-              </div>
-              {/* for fourth featured post */}
-              <div
-                className="w-full flex flex-col gap-2 border-1 border-[#E4E7E9] rounded-[3px]"
-                style={{ padding: "10px" }}
-              >
-                <div className="relative">
-                  <img src={Samsung} alt="product-image" />
-                </div>
-                <p className="text-[14px] text-[#191C1F]">
-                  Dell Optiplex 7000x7480 All-in-One Computer Monitor
-                </p>
-                <p className="text-[#2DA5F3] text-[14px]">$299</p>
-              </div>
-
-              {/* for fifth product top */}
-              <div
-                className="w-full flex flex-col gap-2 border-1 border-[#E4E7E9] rounded-[3px]"
-                style={{ padding: "10px" }}
-              >
-                <div className="relative">
-                  <img src={Drone} alt="product-image" />
-                  <span
-                    className="absolute top-0 left-0 rounded-[2px] bg-[#929FA5] text-white"
-                    style={{ padding: "5px 10px" }}
-                  >
-                    SOLD OUT
-                  </span>
-                </div>
-                <p className="text-[14px] text-[#191C1F]">
-                  Bose Sport Earbuds - Wireless Earphones - Bluetooth In Ear...
-                </p>
-                <p className="text-[#2DA5F3] text-[14px]">$2,300</p>
-              </div>
-
-              {/* for sixth product bottom */}
-              <div
-                className="w-full flex flex-col gap-2 border-1 border-[#E4E7E9] rounded-[3px]"
-                style={{ padding: "10px" }}
-              >
-                <div className="relative">
-                  <img src={Samsung} alt="product-image" />
-                </div>
-                <p className="text-[14px] text-[#191C1F]">
-                  Dell Optiplex 7000x7480 All-in-One Computer Monitor
-                </p>
-                <p className="text-[#2DA5F3] text-[14px]">$299</p>
-              </div>
-
-              {/* for seventh product */}
-              <div
-                className="w-full flex flex-col gap-2 border-1 border-[#E4E7E9] rounded-[3px]"
-                style={{ padding: "10px" }}
-              >
-                <div className="relative">
-                  <img src={Drone} alt="product-image" />
-                  <span
-                    className="absolute top-0 left-0 rounded-[2px] bg-[#929FA5] text-white"
-                    style={{ padding: "5px 10px" }}
-                  >
-                    SOLD OUT
-                  </span>
-                </div>
-                <p className="text-[14px] text-[#191C1F]">
-                  Bose Sport Earbuds - Wireless Earphones - Bluetooth In Ear...
-                </p>
-                <p className="text-[#2DA5F3] text-[14px]">$2,300</p>
-              </div>
-              {/* end of seventh product */}
-
-              {/* for eight product */}
-              <div
-                className="w-full flex flex-col gap-2 border-1 border-[#E4E7E9] rounded-[3px]"
-                style={{ padding: "10px" }}
-              >
-                <div className="relative">
-                  <img src={Samsung} alt="product-image" />
-                </div>
-                <p className="text-[14px] text-[#191C1F]">
-                  Dell Optiplex 7000x7480 All-in-One Computer Monitor
-                </p>
-                <p className="text-[#2DA5F3] text-[14px]">$299</p>
-              </div>
-              {/* end of the eight product */}
-            </div>
-          </div>
-        </div>
-      </div>
       <FeaturedProducts />
     </div>
   );

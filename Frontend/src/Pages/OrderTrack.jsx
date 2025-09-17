@@ -17,7 +17,7 @@ const OrderTrack = () => {
     }
   }
   return (
-    <div className='w-full flex flex-col gap-4' style={{padding: '5% 8%'}}>
+    <div className='w-full flex flex-col gap-4' style={{padding: '5% 6%'}}>
       <h1 className='text-[32px] font-semibold text-[#191C1F]'>Track Order</h1>
       <p className='text-[#5F6C72]'>To track your order please enter your order ID in the input field below and press the “Track Order” <br className='hidden md:block'/>button. this was given to you on your receipt and in the confirmation email you should have received.</p>
       <div className='w-full md:w-3/4 grid md:grid-cols-2 gap-4'>

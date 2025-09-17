@@ -46,7 +46,7 @@ const Checkout = () => {
   const handleFlutterPayment = useFlutterwave(config);
 
   return (
-    <div style={{ padding: "30px 8%" }} className='w-full flex flex-col'>
+    <div style={{ padding: "30px 6%" }} className='w-full flex flex-col'>
       <div className='w-full grid md:grid-cols-[2fr_1fr] gap-7 items-start'>
         {/* for billing information and and payment option */}
         <div className='w-full flex flex-col gap-4'>

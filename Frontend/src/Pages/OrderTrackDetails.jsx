@@ -25,7 +25,7 @@ const OrderTrackDetails = () => {
   
 
   return (
-    <div style={{padding: '3% 8%'}} className='w-full flex flex-col gap-4 items-center justify-center'>
+    <div style={{padding: '3% 6%'}} className='w-full flex flex-col gap-4 items-center justify-center'>
       <div className='w-full md:w-3/4 border border-[#E4E7E9] flex flex-col items-center justify-center gap-4'>
         {order ? (
           <div className='w-full flex flex-col gap-4'>

@@ -17,7 +17,7 @@ import CategoryProvider from './CategoryContext';
 import CategoriesDetails from './Pages/admin/adminPages/CategoriesDetails';
 import ProductPage from './Pages/admin/adminPages/ProductPage';
 import AddProduct from './Pages/admin/adminPages/AddProduct';
-import ShopPage from './components/ShopPage';
+import ShopPage from './Pages/ShopPage';
 import Landingpage from './Pages/Landingpage';
 import Account from './Pages/user/Account';
 import HomeDashboard from './Pages/user/HomeDashboard';

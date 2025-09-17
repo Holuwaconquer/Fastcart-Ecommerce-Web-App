@@ -11,22 +11,22 @@ const Adsbar = () => {
   }
 
   return (
-    <div className='w-full bg-[#191C1F] relative' style={{padding: '10px 8%', ...(isAdsOpen ? {} : {display: 'none'}) }}>
+    <div className='w-full bg-[#191C1F] relative' style={{padding: '10px 6%', ...(isAdsOpen ? {} : {display: 'none'}) }}>
       <div className='w-full flex items-center justify-between'>
         {/* for black friday */}
         <div>
-          <p className='text-[24px] flex gap-2 items-center'><span className='bg-[#F3DE6D] text-[#191C1F]' style={{padding: '5px 10px', transform: 'rotate(-2deg)'}}>Black</span><span className='text-white'>Friday</span></p>
+          <p className='text-[14px] flex gap-2 items-center'><span className='bg-[#F3DE6D] text-[#191C1F]' style={{padding: '5px 10px', transform: 'rotate(-2deg)'}}>Black</span><span className='text-white'>Friday</span></p>
         </div>
         {/* for discount */}
         <div>
-          <p className='text-[14px] text-white flex items-center gap-1'>Up to <span className='text-[#EBC80C] text-[40px]'> 59% </span> OFF</p>
+          <p className='text-[14px] text-white flex items-center gap-1'>Up to <span className='text-[#EBC80C] text-[20px]'> 59% </span> OFF</p>
         </div>
         {/* for shop now */}
         <div>
-          <p className='flex gap-2 bg-[#EBC80C] text-[#191C1F] items-center rounded-[2px]' style={{padding: '10px'}}><span>SHOP NOW</span><FaArrowRightLong /></p>
+          <p className='flex gap-2 bg-[#EBC80C] text-[#191C1F] items-center rounded-[2px]' style={{padding: '5px'}}><span>SHOP Now</span><FaArrowRightLong  className='hidden md:flex'/></p>
         </div>
         <div className='absolute right-[10px]'>
-          <p onClick={closeAds} className='flex gap-2 bg-[#303639] text-white items-center rounded-[2px] cursor-pointer' style={{padding: '10px'}}><IoClose /></p>
+          <p onClick={closeAds} className='flex gap-2 bg-[#303639] text-white items-center rounded-[2px] cursor-pointer' style={{padding: '5px'}}><IoClose /></p>
         </div>
       </div>
     </div>

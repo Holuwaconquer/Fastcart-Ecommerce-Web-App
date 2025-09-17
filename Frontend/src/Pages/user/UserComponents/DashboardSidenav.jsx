@@ -35,14 +35,14 @@ const DashboardSidenav = () => {
           </div>
           {/* for products */}
           <div className='w-full '>
-            <NavLink style={{padding: '10px'}} to='/dashboard/track-order' className={({ isActive }) => `w-full flex items-center gap-2 transition-all duration-300 ${ isActive ? 'bg-[#FA8232] text-[#white] shadow-md scale-[1.03]' : 'text-[#5F6C72] hover:bg-[#FFF3EB]' }` }>
+            <NavLink style={{padding: '10px'}} to='/order-tracking' className={({ isActive }) => `w-full flex items-center gap-2 transition-all duration-300 ${ isActive ? 'bg-[#FA8232] text-[#white] shadow-md scale-[1.03]' : 'text-[#5F6C72] hover:bg-[#FFF3EB]' }` }>
              <PiMapPinLineLight  size={24} />
              <span className='text-[14px]'>Track Order</span>
             </NavLink>
           </div>
           {/* for categories */}
           <div className='w-full '>
-            <NavLink style={{padding: '10px'}} to='/dashboard/shopping-cart' className={({ isActive }) => `w-full flex items-center gap-2 transition-all duration-300 ${ isActive ? 'bg-[#FA8232] text-[#white] shadow-md scale-[1.03]' : 'text-[#5F6C72] hover:bg-[#FFF3EB]' }` }>
+            <NavLink style={{padding: '10px'}} to='/shopping-cart' className={({ isActive }) => `w-full flex items-center gap-2 transition-all duration-300 ${ isActive ? 'bg-[#FA8232] text-[#white] shadow-md scale-[1.03]' : 'text-[#5F6C72] hover:bg-[#FFF3EB]' }` }>
              <PiShoppingCartSimple   size={24} />
              <span className='text-[14px]'>Shopping Cart</span>
             </NavLink>

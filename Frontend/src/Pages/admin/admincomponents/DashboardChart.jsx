@@ -5,23 +5,16 @@ import {
   Tooltip, ResponsiveContainer, Legend
 } from "recharts";
 
-// ✅ Custom tooltip
 const CustomToolTip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
-    const [hourStr] = label.split(":");
-    const hour = parseInt(hourStr, 10);
-    const ampm = hour >= 12 ? "PM" : "AM";
-    const displayHour = hour % 12 === 0 ? 12 : hour % 12;
-    const formattedLabel = `${displayHour} ${ampm}`;
+    const [year, month] = label.split('-');
+    const formattedLabel = new Date(`${year}-${month}-01`).toLocaleString('default', { month: 'short', year: 'numeric' });
     return (
       <div style={{padding: '20px'}} className="bg-[#333752] rounded-[4px] text-white flex flex-col items-center justify-center">
         {payload.map((entry) => (
           <p className="flex flex-col items-center justify-center" key={entry.dataKey}>
             <strong>{entry.value} Orders</strong>
-            <span >{entry.dataKey
-            .replace(" Orders", "")
-            .replace(/, \d{4}$/, "")} {formattedLabel}
-            </span>
+            <span>{formattedLabel}</span>
           </p>
         ))}
       </div>
@@ -31,115 +24,85 @@ const CustomToolTip = ({ active, payload, label }) => {
 };
 
 const DashboardChart = () => {
-  const [ordersDaily, setOrdersDaily] = useState([]);
-  const [showPrevious, setShowPrevious] = useState(false);
-  const [todayLabel, setTodayLabel] = useState("");
+  const [ordersMonthly, setOrdersMonthly] = useState([]);
   const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    const today = new Date();
-    const yesterday = new Date();
-    yesterday.setDate(today.getDate() - 1);
+    const monthlyURL = `${API_URL}/admin/order/monthly`;
 
-    const formatDate = (d) => d.toISOString().split("T")[0];
-    const todayStr = formatDate(today);
-    const yesterdayStr = formatDate(yesterday);
-
-    const dailyURL = `${API_URL}/admin/orders/hourly?dates=${yesterdayStr},${todayStr}`;
-
-    axios.get(dailyURL)
+    axios.get(monthlyURL)
       .then((res) => {
-    if (res.status === 200 && res.data?.data) {
-      const rawData = res.data.data;
+        if (res.status === 200 && res.data?.data) {
+          const rawData = res.data.data;
 
-      // Extract today’s label string
-      const keys = Object.keys(rawData[0] || {});
-      const ordersKeys = keys.filter(k => k.includes("Orders"));
-      const todayFormatted = today.toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-      });
+          // Generate all months from Jan to Dec
+          const months = [
+            "2025-01", "2025-02", "2025-03", "2025-04", "2025-05",
+            "2025-06", "2025-07", "2025-08", "2025-09", "2025-10",
+            "2025-11", "2025-12"
+          ];
 
-      const todayKey = ordersKeys.find(k => k.startsWith(todayFormatted));
-      setTodayLabel(todayKey?.replace(" Orders", "") || "");
+          // Fill missing months with zero values
+          const filledData = months.map(month => {
+            const existingMonth = rawData.find(item => item._id === month);
+            if (existingMonth) {
+              return {
+                month: existingMonth._id,
+                totalOrders: existingMonth.totalOrders,
+              };
+            } else {
+              return {
+                month: month,
+                totalOrders: 0,
+              };
+            }
+          });
 
-      // ✅ Filter last 12 hours relative to now
-      const now = new Date();
-      const last12Hours = rawData.filter(d => {
-        const [hourStr] = d.time.split(":");
-        const hour = parseInt(hourStr, 10);
-
-        // Construct a Date using today's date + that hour
-        const pointDate = new Date(today);
-        pointDate.setHours(hour, 0, 0, 0);
-
-        return (now - pointDate) <= 12 * 60 * 60 * 1000 && pointDate <= now;
-      });
-
-      setOrdersDaily(last12Hours);
-    }
-  })
-      .catch((err) => console.error("Error fetching daily orders:", err));
+          setOrdersMonthly(filledData);
+        }
+      })
+      .catch((err) => console.error("Error fetching monthly orders:", err));
   }, []);
 
   return (
     <div>
-      {/* ✅ Toggle button */}
-      <button
-        className="mb-4 px-4 py-2 bg-blue-500 text-white rounded"
-        onClick={() => setShowPrevious((prev) => !prev)}
-      >
-        {showPrevious ? "Hide Previous Day" : "Show Previous Day"}
-      </button>
-
       <ResponsiveContainer width="100%" height={400}>
-        <LineChart data={ordersDaily}>
-          <CartesianGrid strokeDasharray="2 2" vertical={false}/>
+        <LineChart data={ordersMonthly}>
+          <CartesianGrid strokeDasharray="2 2" vertical={false} />
           <XAxis
-            dataKey="time"
+            dataKey="month"
             axisLine={false}
             tickLine={false}
-            tickFormatter={(time) => {
-              // "00:00" → "12 AM", "13:00" → "1 PM"
-              const [hour] = time.split(":");
-              const h = parseInt(hour, 10);
-              const ampm = h >= 12 ? "PM" : "AM";
-              const displayHour = h % 12 === 0 ? 12 : h % 12;
-              return `${displayHour} ${ampm}`;
+            tickFormatter={(month) => {
+              // Format month (e.g., "2025-01" → "Jan 2025")
+              const [year, monthNum] = month.split('-');
+              const date = new Date(`${year}-${monthNum}-01`);
+              return date.toLocaleString('default', { month: 'short', year: 'numeric' });
             }}
             interval={0}
             tick={{ fontSize: 12, fill: "#5A607F" }}
           />
-
-          <YAxis axisLine={false}
-            tickLine={false} />
+          <YAxis axisLine={false} tickLine={false} />
           <Tooltip content={<CustomToolTip />} />
           <Legend />
-
-          {/* ✅ Dynamically add only Orders lines */}
-          {ordersDaily.length > 0 &&
-            Object.keys(ordersDaily[0])
-              .filter((key) => key !== "time" && key.includes("Orders"))
-              .map((metric) => {
-                const isCurrent = metric.startsWith(todayLabel);
-
-                if (!isCurrent && !showPrevious) {
-                  return null;
-                }
-
-                return (
-                  <Line
-                    key={metric}
-                    type="monotone"
-                    dataKey={metric}
-                    name={metric.replace(" Orders", "").replace(/, \d{4}$/, "")}
-                    stroke={isCurrent ? "#1E5EFF" : "#A3AED0"}
-                    strokeWidth={2}
-                    dot={false}
-                  />
-                );
-              })}
+          <Line
+            key="totalOrders"
+            type="monotone"
+            dataKey="totalOrders"
+            name="Total Orders"
+            stroke="#1E5EFF"
+            strokeWidth={2}
+            dot={false}
+          />
+          <Line
+            key="totalRevenue"
+            type="monotone"
+            dataKey="totalRevenue"
+            name="Total Revenue"
+            stroke="#A3AED0"
+            strokeWidth={2}
+            dot={false}
+          />
         </LineChart>
       </ResponsiveContainer>
     </div>
@@ -147,3 +110,4 @@ const DashboardChart = () => {
 };
 
 export default DashboardChart;
+  

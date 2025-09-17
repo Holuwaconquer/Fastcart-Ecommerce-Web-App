@@ -233,7 +233,7 @@ const ProductPage = () => {
                       <td>{product?.inventory} in stock</td>
                       <td>{product?.color || '-'}</td>
                       <td>₦{product?.price.toLocaleString()}</td>
-                      <td>₦{product?.discountprice.toLocaleString()}</td>
+                      <td>₦{product?.discountprice?.toLocaleString()}</td>
                       <td className='dAndE text-[#1E5EFF] flex gap-2'>
                         <MdOpenInNew size={24} onClick={() => handleEdit(product)} className='cursor-pointer'/>
                         <FaRegTrashCan onClick={() => deleteProduct(product._id)} className='cursor-pointer' size={24} />

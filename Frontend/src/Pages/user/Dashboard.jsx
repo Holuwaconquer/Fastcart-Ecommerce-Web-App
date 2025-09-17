@@ -10,7 +10,7 @@ const Dashboard = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div style={{ padding: "40px 8%" }} className="w-full h-auto items-start flex flex-col lg:flex-row gap-5 overflow-x-hidden relative">
+    <div style={{ padding: "40px 6%" }} className="w-full h-auto items-start flex flex-col lg:flex-row gap-5 overflow-x-hidden relative">
       
       {/* Hamburger button (only on small screens) */}
       <button 
