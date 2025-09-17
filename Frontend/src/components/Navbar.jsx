@@ -51,13 +51,13 @@ const Navbar = () => {
             <div style={{padding: '10px'}} className='absolute top-[-12px] right-[-12px] border-4 w-[20px] h-[20px] bg-white border-[#1B6392] rounded-[50%] flex flex-col items-center justify-center text-[#1B6392]'><span>{cartItem.length}</span></div>
             }
             {cartShown && 
-              <div className='z-10 absolute w-[376px] top-[120%] shadow-md right-0'>
+              <div className='z-10 absolute w-auto md:w-[376px] top-[120%] shadow-md md:right-0'>
                 <CartCard />
               </div>
             }
           </div>
-          <FaRegHeart size={25}/>
-          <FaRegUser onClick={() => window.location='/dashboard/account'} className='cursor-pointer active:text-white hover:text-[#C9CFD2] transition-all'  size={25}/>
+          <FaRegHeart className='text-[18px] md:text-25px]'/>
+          <FaRegUser onClick={() => window.location='/dashboard/account'} className='text-[18px] md:text-25px] cursor-pointer active:text-white hover:text-[#C9CFD2] transition-all'/>
         </div>
       </div>
     </div>

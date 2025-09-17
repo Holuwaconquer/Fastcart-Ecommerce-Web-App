@@ -23,6 +23,7 @@ import { CategoryContext } from "../CategoryContext";
 import BestDeals from "../components/BestDeals";
 import FeaturedProducts from '../components/FeaturedProducts'
 import FewProduct from "../components/FewProduct";
+import { useNavigate } from "react-router-dom";
 
 const Landingpage = () => {
   const prevRef = useRef(null);
@@ -55,6 +56,7 @@ const Landingpage = () => {
     return result;
   };
   const slideCategory = chunkArray(allCategory, chunkSize);
+  const navigate = useNavigate()
 
 
   return (
@@ -232,7 +234,7 @@ const Landingpage = () => {
           <div className="flex gap-4 items-center">
             <p className="text-[#191C1F] text-[24px] font-bold">Best Deals</p>
           </div>
-          <div className="text-[14px] text-[#2DA5F3] flex gap-2 font-bold">
+          <div onClick={() => Navigate('/shop')} className="text-[14px] text-[#2DA5F3] flex gap-2 font-bold">
             <span>Browse All Product</span>
             <IoIosArrowRoundForward size={20} />
           </div>
