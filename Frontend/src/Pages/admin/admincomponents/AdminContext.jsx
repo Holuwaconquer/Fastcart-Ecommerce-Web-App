@@ -33,6 +33,8 @@ const AdminProvider = ({ children }) => {
         if (err.response?.status === 401 || err.response?.status === 403) {
           localStorage.removeItem("token");
           window.location.href = '/admin/login';
+        }else if(err.status===403){
+          toast.error('Access Forbidden!')
         }
       })
 

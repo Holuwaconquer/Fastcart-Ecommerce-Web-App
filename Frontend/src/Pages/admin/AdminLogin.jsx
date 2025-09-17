@@ -40,6 +40,8 @@ const AdminLogin = () => {
           toast.error('Admin not found');
         } else if(err.message == "Network Error"){
           toast.error('Network Error! pls try again');
+        } else if(err.status===403){
+          toast.error('Access Forbidden!')
         }
       })
     },
