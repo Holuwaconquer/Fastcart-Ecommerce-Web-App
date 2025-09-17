@@ -8,12 +8,6 @@ import { GoGear } from "react-icons/go";
 
 const DashboardSidenav = () => {
 
-  const logOut = () =>{
-    if(window.confirm("are you sure you want to log out")){
-      localStorage.removeItem("userToken")
-      window.location.href = '/dashboard/account'
-    }
-  }
   return (
     <div style={{padding: '16px 0px'}} className='md:w-[264px] bg-white flex flex-col
      overflow-x-hidden shadow-md'>
@@ -82,7 +76,7 @@ const DashboardSidenav = () => {
             </NavLink>
           </div>
         {/* for knowledge base */}
-          <div className='w-full ' onClick={logOut}>
+          <div className='w-full'>
            <NavLink style={{padding: '10px'}} to='/dashboard/logout' className={({ isActive }) => `w-full flex items-center gap-2 transition-all duration-300 ${ isActive ? 'bg-[#FA8232] text-[#white] shadow-md scale-[1.03]' : 'text-[#5F6C72] hover:bg-[#FFF3EB]' }`}>
            <PiSignOutLight  size={24} />
            <span className='text-[14px]'>Log Out</span>

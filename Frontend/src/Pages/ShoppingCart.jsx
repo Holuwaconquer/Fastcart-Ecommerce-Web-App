@@ -5,6 +5,7 @@ import { removeFromCart, updateQuantity } from '../redux/Cart';
 import { FaPlus, FaMinus } from "react-icons/fa6";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { CgArrowRight } from "react-icons/cg";
+import { FiShoppingCart  } from "react-icons/fi";
 import { useNavigate } from 'react-router-dom';
 
 const ShoppingCart = () => {
@@ -16,9 +17,10 @@ const ShoppingCart = () => {
     return acc + (price * qty);
   }, 0);
   const navigate = useNavigate()
+  document.title = 'Shopping Cart | Fastcart Online Store'
 
   return (
-    <div className='w-full flex flex-col' style={{ padding: "30px 6%" }}>
+    <div className={`w-full ${cartItem.length === 0  && 'justify-center items-center'} flex flex-col`} style={{ padding: "30px 6%" }}>
       {cartItem?.length > 0 ? 
         <div>
             <div className='w-full grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-7 items-start'>
@@ -142,8 +144,15 @@ const ShoppingCart = () => {
             </div>
         </div>
       : 
-        <div className='w-full flex flex-col items-center justify-center text-center' style={{ padding: '5% 0' }}>
-          <p>Your cart is empty</p>
+        <div  style={{padding: '5% 1%'}} className='w-full md:w-2/4 text-black flex flex-col items-center justify-center text-center gap-4 border-b-1 border-[#E4E7E9]'>
+          <div className='w-[80px] h-[80px] rounded-[50%] flex flex-col items-center justify-center bg-[#f9d7c0a9]'>
+            <FiShoppingCart className='text-[#FA8232]' size={45}/>
+          </div>
+          <div>
+            <h1>Your Cart is Empty!</h1>
+            <p className='text-[14px]'>Browse our categories and discover our best deals!</p>
+          </div>
+          <button onClick={() => navigate('/shop') } className='w-full cursor-pointer hover:bg-[#fa8232cf] active:bg-[#fa8232d3] rounded-[4px] bg-[#FA8232] text-white' style={{padding: '10px'}}>Start Shopping</button>
         </div>
       }
     </div>

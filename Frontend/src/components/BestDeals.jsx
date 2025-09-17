@@ -7,6 +7,7 @@ import { CategoryContext } from '../CategoryContext';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart, removeFromCart } from '../redux/Cart';
 import ProductCard from './ProductCard';
+import { useNavigate } from 'react-router-dom';
 const BestDeals = () => {
   
   const [productWithHighestDiscount, setProductWithHighestDiscount] = useState(null)
@@ -46,9 +47,12 @@ const BestDeals = () => {
       dispatch(addToCart(productWithHighestDiscount))
     }
   }
-  
+  const navigate  = useNavigate()
+  const productDetails = (productWithHighestDiscount) =>{
+    navigate(`/product-page/${productWithHighestDiscount._id}`)
+  }
   return (
-    <div className="w-full gap-4 md:gap-0 grid items-start lg:grid-cols-[24%_76%] lg:border-1 lg:border-[#E4E7E9]">
+    <div onClick={() => productDetails(productWithHighestDiscount)} className="w-full gap-4 md:gap-0 grid items-start lg:grid-cols-[24%_76%] lg:border-1 lg:border-[#E4E7E9]">
       <div className="border border-[#E4E7E9] md:border-0 md:border-r-1 md:border-[#E4E7E9]" style={{ padding: "10px" }}>
         {/* for higher product */}
         {productWithHighestDiscount && (

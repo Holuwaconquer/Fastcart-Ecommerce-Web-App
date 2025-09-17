@@ -24,6 +24,44 @@ const Navbar = () => {
     setIsOpen(false)
   }
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    // Check if screen width is less than or equal to 768px (mobile breakpoint)
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    // Initial check
+    checkScreenSize();
+
+    // Add event listener for window resize to handle dynamic screen size change
+    window.addEventListener('resize', checkScreenSize);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener('resize', checkScreenSize);
+    };
+  }, []);
+
+  const handleMouseEnter = () => {
+    if (!isMobile) {
+      setCartShown(true)
+    }
+  };
+  
+  const handleMouseLeave = () => {
+    if (!isMobile) {
+      setCartShown(false)
+    }
+  };
+
+  const handleClick = () => {
+    if (isMobile) {
+      navigate('/shopping-cart')
+    }
+  };
+
   return (
     <div className='w-full bg-[#1B6392] text-white' style={{padding: '10px 6%'}}>
       <div className='w-full flex items-center justify-between'>
@@ -45,7 +83,7 @@ const Navbar = () => {
         </div>
         {/* for shop now */}
         <div className='flex items-center gap-4'>
-          <div onMouseLeave={() => setCartShown(false)} onMouseEnter={() => setCartShown(true)} className='relative cursor-pointer'>
+          <div onClick={handleClick} onMouseLeave={handleMouseLeave} onMouseEnter={handleMouseEnter} className='relative cursor-pointer'>
             <FiShoppingCart className='active:text-white hover:text-[#C9CFD2] transition-all' size={25}/>
             {cartItem.length > 0 &&
             <div style={{padding: '10px'}} className='absolute top-[-12px] right-[-12px] border-4 w-[20px] h-[20px] bg-white border-[#1B6392] rounded-[50%] flex flex-col items-center justify-center text-[#1B6392]'><span>{cartItem.length}</span></div>

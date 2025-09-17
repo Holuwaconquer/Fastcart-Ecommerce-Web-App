@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Styles from './PaymetSuccess.module.css'
 import { IoCheckmarkDoneOutline } from "react-icons/io5";
 import { useNavigate, useParams } from 'react-router-dom';
@@ -7,6 +7,12 @@ import { GoStack, GoArrowRight } from "react-icons/go";
 const PaymentSuccess = () => {
   const { orderId } = useParams()
   const navigate = useNavigate()
+  useEffect(() => {
+    document.title = `${orderId} Payment Successful | Fastcart Online Store`
+
+  }, [orderId])
+  
+
   return (
     <div style={{padding: '5%'}} className='w-full flex flex-col items-center justify-center'>
       <div className='w-3/4 flex flex-col gap-10 items-center justify-center'>

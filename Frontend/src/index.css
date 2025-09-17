@@ -60,3 +60,59 @@ body{
   0% { background-position: -400px 0; }
   100% { background-position: 400px 0; }
 }
+
+
+
+/* Hide default radio button */
+input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #C9CFD2;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+  background-color: #fff;
+}
+
+
+input[type="radio"]:checked {
+  border-color: #FA8232;
+}
+
+/* Add a checkmark effect inside the radio button */
+input[type="radio"]:checked::after {
+  content: '';
+  position: absolute;
+  top: 51%;
+  left: 51%;
+  width: 10px;
+  height: 10px;
+  background-color: #FA8232;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+input[type="radio"] + label {
+  font-size: 16px;
+  color: #333;
+  cursor: pointer;
+  padding: 5px 10px;
+}
+
+input[type="radio"]:hover::after {
+  width: 30px;
+  height: 30px;
+  content: '';
+  position: absolute;
+  top: 51%;
+  left: 51%;
+  background-color: #fa823271;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+}

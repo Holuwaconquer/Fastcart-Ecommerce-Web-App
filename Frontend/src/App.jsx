@@ -35,6 +35,7 @@ import OrderTrack from './Pages/OrderTrack';
 import OrderTrackDetails from './Pages/OrderTrackDetails';
 import Productdetails from './Pages/Productdetails';
 import ScrollToTop from './components/ScrollToTop';
+import Logout from './Pages/user/Logout';
 
 
 const App = () => {
@@ -50,6 +51,7 @@ const App = () => {
           }>
             <Route index element={<Landingpage />} />
             <Route path='/shop' element={<ShopPage />} />
+            <Route path='/shop/:categoryName' element={<ShopPage />} />
             <Route path='/product-page/:id' element={
               <CategoryProvider>
                 <Productdetails />
@@ -93,6 +95,7 @@ const App = () => {
                   <Settings />
                 </UserProvider>
               }/>
+              <Route path='logout' element={<Logout />} />
             </Route>
             <Route path='/account' element={<Account />}>
               <Route path="register" element={<Register />} />

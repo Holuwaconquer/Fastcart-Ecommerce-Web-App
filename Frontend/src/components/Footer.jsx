@@ -12,7 +12,7 @@ const Footer = () => {
   const navigate = useNavigate()
   return (
     <div className='w-full bg-[#191C1F]'>
-      <div style={{padding: '2% 6%'}} className='w-full text-center md:text-left gap-8 md:gap-0 justify-center md:justify-start md:items-start grid md:grid-cols-[1fr_1fr_1fr_1fr]'>
+      <div style={{padding: '4% 6%'}} className='w-full text-center md:text-left gap-8 md:gap-0 justify-center md:justify-start md:items-start grid md:grid-cols-[1fr_1fr_1fr_1fr]'>
         {/* for logo and contact details */}
         <div className='w-full flex flex-col gap-2'>
           <div className='flex items-center gap-2'>
@@ -35,12 +35,12 @@ const Footer = () => {
             {allCategory && allCategory.slice(0,6).map((cat) => (
               <li key={cat._id}>{cat.name}</li>
             ))}
-            <p onClick={() =>navigate('/shop')} className='font-semibold cursor-pointer text-[#FA8232] text-[14px] flex gap-2 item-center justify-center md:justify-start'> <span>Browse All Product</span><IoIosArrowRoundForward size={20}/></p>
+            <p onClick={() =>navigate('/shop')} className='font-semibold cursor-pointer text-[#EBC80C] text-[14px] flex gap-2 item-center justify-center md:justify-start'> <span>Browse All Product</span><IoIosArrowRoundForward size={20}/></p>
           </ul>
         </div>
         {/* for quick links */}
         <div className='flex flex-col gap-4'>
-          <h1 className='text-[16px] text-white font-bold'>TOP CATEGORY</h1>
+          <h1 className='text-[16px] text-white font-bold'>QUICK LINKS</h1>
           <ul className='list text-white flex flex-col gap-2'>
             <li className='cursor-pointer' onClick={() => navigate('/shop')}>Shop Product</li>
             <li className='cursor-pointer' onClick={() => navigate('/shopping-cart')}>Shopping Cart</li>
@@ -53,7 +53,7 @@ const Footer = () => {
         </div>
         {/* end of top category */}
         {/* for download app */}
-        <div className='flex flex-col gap-4'>
+        <div className='flex flex-col md:items-start items-center gap-4'>
           <h1 className='text-[16px] text-white font-bold'>DOWNLOAD APP</h1>
           <div>
             <img src={GetGoogle} alt="" />

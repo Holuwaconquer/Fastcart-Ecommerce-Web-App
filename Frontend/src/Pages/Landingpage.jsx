@@ -47,6 +47,7 @@ const Landingpage = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+  document.title = 'Fastcart | Online Store for Fastcart E-commerce'
 
   const chunkArray = (arr, size) => {
     const result = [];
@@ -57,7 +58,6 @@ const Landingpage = () => {
   };
   const slideCategory = chunkArray(allCategory, chunkSize);
   const navigate = useNavigate()
-
 
   return (
     <div
@@ -234,7 +234,7 @@ const Landingpage = () => {
           <div className="flex gap-4 items-center">
             <p className="text-[#191C1F] text-[24px] font-bold">Best Deals</p>
           </div>
-          <div onClick={() => Navigate('/shop')} className="text-[14px] text-[#2DA5F3] flex gap-2 font-bold">
+          <div onClick={() => navigate('/shop')} className="text-[14px] text-[#2DA5F3] flex gap-2 font-bold">
             <span>Browse All Product</span>
             <IoIosArrowRoundForward size={20} />
           </div>
@@ -273,7 +273,7 @@ const Landingpage = () => {
                 {allCategory ?
                   <div className={`w-full grid gap-4 grid-cols-2 sm:grid-cols-4 lg:grid-cols-6`}>
                     {allCategory.map((category, i) => (
-                      <div
+                      <div onClick={()  => navigate(`/shop/${category.name}`)}
                         key={i}
                         className="bg-white border-1 border-[#E4E7E9] rounded-[4px] flex flex-col gap-4 items-center justify-center"
                         style={{ padding: "24px 12px" }}
