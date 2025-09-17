@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, Navigate, BrowserRouter as Router } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Register from './Pages/user/Register';
 import Home from './Pages/Home';
 import Signin from './Pages/user/Signin';
@@ -40,124 +40,122 @@ import ScrollToTop from './components/ScrollToTop';
 const App = () => {
   return (
     <div>
-      <Router>
-        <ScrollToTop />
-        <Routes>
-            <Route path="/" element={
+      <ScrollToTop />
+      <Routes>
+          <Route path="/" element={
+            <CategoryProvider>
+              <Home />
+            </CategoryProvider>
+          }>
+            <Route index element={<Landingpage />} />
+            <Route path='/shop' element={<ShopPage />} />
+            <Route path='/product-page/:id' element={
               <CategoryProvider>
-                <Home />
+                <Productdetails />
               </CategoryProvider>
+            } />
+            <Route path='/order-tracking' element={<OrderTrack />} />
+            <Route path='/order-tracking/:id' element={<OrderTrackDetails />} />
+            <Route path='/shopping-cart' element={<ShoppingCart />} />
+            <Route path='/shopping-cart/checkout' element={
+              <UserProvider>
+                <ProtectedRoute role="user">
+                  <Checkout />
+                </ProtectedRoute>
+              </UserProvider>
+            } />
+            <Route path="/shopping-cart/checkout/payment-successful/:orderId" element={<PaymentSuccess />} />
+            <Route path="/dashboard/" element={
+              <UserProvider>
+                <ProtectedRoute role="user">
+                  <UserDashboard />
+                </ProtectedRoute>
+              </UserProvider>
             }>
-              <Route index element={<Landingpage />} />
-              <Route path='/shop' element={<ShopPage />} />
-              <Route path='/product-page/:id' element={
-                <CategoryProvider>
-                  <Productdetails />
-                </CategoryProvider>
-              } />
-              <Route path='/order-tracking' element={<OrderTrack />} />
-              <Route path='/order-tracking/:id' element={<OrderTrackDetails />} />
-              <Route path='/shopping-cart' element={<ShoppingCart />} />
-              <Route path='/shopping-cart/checkout' element={
+              <Route path='account' element={
                 <UserProvider>
-                  <ProtectedRoute role="user">
-                    <Checkout />
-                  </ProtectedRoute>
+                  <HomeDashboard />
                 </UserProvider>
-              } />
-              <Route path="/shopping-cart/checkout/payment-successful/:orderId" element={<PaymentSuccess />} />
-              <Route path="/dashboard/" element={
+              }/>
+              <Route path='order-history' element={
                 <UserProvider>
-                  <ProtectedRoute role="user">
-                    <UserDashboard />
-                  </ProtectedRoute>
+                  <OrderHistory />
                 </UserProvider>
-              }>
-                <Route path='account' element={
-                  <UserProvider>
-                    <HomeDashboard />
-                  </UserProvider>
-                }/>
-                <Route path='order-history' element={
-                  <UserProvider>
-                    <OrderHistory />
-                  </UserProvider>
-                }/>
-                <Route path='order-history/:id' element={
-                  <UserProvider>
-                    <OrderDetails />
-                  </UserProvider>
-                }/>
-                <Route path='setting' element={
-                  <UserProvider>
-                    <Settings />
-                  </UserProvider>
-                }/>
-              </Route>
-              <Route path='/account' element={<Account />}>
-                <Route path="register" element={<Register />} />
-              
-                <Route path="login" element={
-                  <PublicRoute><Signin /></PublicRoute>
-                } />
-              </Route>
-              <Route path='*' element={<NotFound />} />
-          </Route>
+              }/>
+              <Route path='order-history/:id' element={
+                <UserProvider>
+                  <OrderDetails />
+                </UserProvider>
+              }/>
+              <Route path='setting' element={
+                <UserProvider>
+                  <Settings />
+                </UserProvider>
+              }/>
+            </Route>
+            <Route path='/account' element={<Account />}>
+              <Route path="register" element={<Register />} />
+            
+              <Route path="login" element={
+                <PublicRoute><Signin /></PublicRoute>
+              } />
+            </Route>
+            <Route path='*' element={<NotFound />} />
+        </Route>
 
 
-          <Route path="/admin/login" element={
-            <PublicRoute><AdminLogin /></PublicRoute>
+        <Route path="/admin/login" element={
+          <PublicRoute><AdminLogin /></PublicRoute>
+        } />
+
+        {/* Protected Routes */}
+        
+
+        <Route path="/admin/" element={
+          <ProtectedRoute role="admin"><AdminDashboard /></ProtectedRoute>
+        }> 
+          <Route path='dashboard' element={
+            <CategoryProvider>
+              <Dashboard />
+            </CategoryProvider>
+          }/>
+          <Route path='orders' element={
+            <CategoryProvider>
+              <Order />
+            </CategoryProvider>
+          }/>
+          <Route path='orders/:id' element={
+            <CategoryProvider>
+              <OrderInfo />
+            </CategoryProvider>
           } />
+          <Route path='customer' element={<Customer />} />
+          <Route path='customer/:id' element={<CustomerDetails />} />
+          <Route path='customer/add-new-customer' element={<AddNewCustomer />} />
 
-          {/* Protected Routes */}
-          
-
-          <Route path="/admin/" element={
-            <ProtectedRoute role="admin"><AdminDashboard /></ProtectedRoute>
-          }> 
-            <Route path='dashboard' element={
-              <CategoryProvider>
-                <Dashboard />
-              </CategoryProvider>
-            }/>
-            <Route path='orders' element={
-              <CategoryProvider>
-                <Order />
-              </CategoryProvider>
-            }/>
-            <Route path='orders/:id' element={
-              <CategoryProvider>
-                <OrderInfo />
-              </CategoryProvider>
-            } />
-            <Route path='customer' element={<Customer />} />
-            <Route path='customer/:id' element={<CustomerDetails />} />
-            <Route path='customer/add-new-customer' element={<AddNewCustomer />} />
-
-            <Route path='categories' element={
-              <CategoryProvider>
-                <Categories />
-              </CategoryProvider>
-            }/>
-            <Route path='categories/:name' element={
-              <CategoryProvider>
-                <CategoriesDetails />
-              </CategoryProvider>
-            } />
-            <Route path='products' element={ 
-              <CategoryProvider>
-                <ProductPage />
-              </CategoryProvider>
-            } />
-            <Route path='product/add-product' element={ 
-              <CategoryProvider>
-                <AddProduct />
-              </CategoryProvider>
-            } />
-          </Route>
-          
-        </Routes>
-      </Router>
+          <Route path='categories' element={
+            <CategoryProvider>
+              <Categories />
+            </CategoryProvider>
+          }/>
+          <Route path='categories/:name' element={
+            <CategoryProvider>
+              <CategoriesDetails />
+            </CategoryProvider>
+          } />
+          <Route path='products' element={ 
+            <CategoryProvider>
+              <ProductPage />
+            </CategoryProvider>
+          } />
+          <Route path='product/add-product' element={ 
+            <CategoryProvider>
+              <AddProduct />
+            </CategoryProvider>
+          } />
+        </Route>
+        
+      </Routes>
     </div>
   );
 };
