@@ -41,6 +41,7 @@ const App = () => {
   return (
     <div>
       <ScrollToTop />
+      
       <Routes>
           <Route path="/" element={
             <CategoryProvider>

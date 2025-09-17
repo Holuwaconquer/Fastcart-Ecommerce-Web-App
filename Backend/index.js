@@ -10,6 +10,28 @@ const { adminRegister, fetchPaginatedCustomers } = require('./controller/admin.c
 const PORT = process.env.PORT
 const app = express();
 
+const ALLOWED_IPS = ['203.0.113.45', '198.51.100.7'];
+
+// const checkAdminIP = (req, res, next) => {
+//   const userIP = req.ip;
+  
+//   if (!ALLOWED_IPS.includes(userIP)) {
+//     return res.status(403).json({ message: 'Access Forbidden: Invalid IP Address' });
+//   }
+//   next();
+// };
+
+const checkAdminIP = (req, res, next) => {
+  const forwarded = req.headers['x-forwarded-for'];
+  const userIP = forwarded ? forwarded.split(',')[0] : req.ip;
+ 
+  if (!ALLOWED_IPS.includes(userIP)) {
+    return res.status(403).json({ message: 'Access Forbidden: Invalid IP Address' });
+  }
+
+  next();
+};
+
 // Middleware
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
@@ -17,7 +39,7 @@ app.use(express.json());
 
 // Routes
 app.use("/user", userRouter);
-app.use("/admin", adminRouter);
+app.use("/admin", checkAdminIP, adminRouter);
 app.use("/orders", orderRouter);
 
 // Connect DB once
