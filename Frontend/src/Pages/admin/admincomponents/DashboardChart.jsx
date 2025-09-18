@@ -89,7 +89,7 @@ const DashboardChart = () => {
   return (
     <div>
       <ResponsiveContainer width="100%" height={400}>
-  <LineChart data={ordersWeekly}>
+        <LineChart data={ordersWeekly}>
           <CartesianGrid strokeDasharray="2 2" vertical={false} />
           <XAxis
             dataKey="week"
