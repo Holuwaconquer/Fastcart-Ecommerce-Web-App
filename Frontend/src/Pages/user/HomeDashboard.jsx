@@ -9,7 +9,6 @@ const HomeDashboard = () => {
   const [userOrder, setUserOrder] = useState([])
   const navigate = useNavigate();
   useEffect(() => {
-    console.log("These are user data", userData);
     if(userData){
       setUserOrder(userData.productOrder)
     }
@@ -102,7 +101,7 @@ const HomeDashboard = () => {
             <div className='w-full rounded-[4px] border border-[#E4E7E9]'>
               <div className='w-full flex flex-col gap-2'>
                 <h1 style={{padding: '10px 15px'}} className='w-full border-b-1 font-bold border-[#E4E7E9] text-[14px] text-[#191C1F]'>RECENT ORDERS</h1>
-                <div style={{padding:"10px 20px"}} className='w-full grid grid-cols-5 text-[12px] text-[#475156] bg-[#F2F4F5] border border-[#E4E7E9]'>
+                <div style={{padding:"10px 20px"}} className='w-full hidden md:grid md:grid-cols-5 text-[12px] text-[#475156] bg-[#F2F4F5] border border-[#E4E7E9]'>
                   <p>ORDER ID</p>
                   <p>STATUS</p>
                   <p>DATE</p>
@@ -113,22 +112,34 @@ const HomeDashboard = () => {
                   userOrder?.sort((a,b) => new Date(b.flutterwaveResponse.created_at) - new Date(a.flutterwaveResponse.created_at))
                   .slice(0,7)
                   .map((order, index) => (
-                    <div key={index} style={{padding:"10px 20px"}} className='w-full grid grid-cols-5 text-[14px] text-[#475156]'>
-                      <p className='text-[#191C1F]'>#{order.flutterwaveResponse.transaction_id}</p>
-                      <p className={`${order.orderStatus === "delivered" ? "text-[#2DB224] font-bold" : "text-[#EE5858] font-bold"}`}>{order.orderStatus==='delivered' ? 'COMPLETED' : order.orderStatus==='on_the_road' ? 'ON THE ROAD' : order.orderStatus==='packaging' ? 'PACKAGING' : 'RECEIVED'}</p>
-                      <p className='text-[#5F6C72]'>
-                        {new Date(order.flutterwaveResponse.created_at)
-                          .toLocaleString("en-US", {
-                            year: "numeric",
-                            month: "short",
-                            day: "2-digit",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            hour12: false,
-                          })
-                          .replace(',', '')}
-                      </p>
-                      <p className='text-[#475156]'>₦{order.subtotal.toLocaleString()} ({order.products.length} Products)</p>
+                    <div key={index} style={{padding:"10px 20px"}} className='w-full md:grid md:grid-cols-5 gap-10 text-[14px] text-[#475156]'>
+                      <div className="flex md:block">
+                        <span className="font-medium text-gray-500 w-28 md:hidden">Order ID:</span>
+                        <p className="text-[#191C1F]">#{order.flutterwaveResponse.transaction_id}</p>
+                      </div>
+                      <div className="flex md:block">
+                        <span className="font-medium text-gray-500 w-28 md:hidden">Order Status:</span>
+                        <p className={`${order.orderStatus === "delivered" ? "text-[#2DB224] font-bold" : "text-[#EE5858] font-bold"}`}>{order.orderStatus==='delivered' ? 'COMPLETED' : order.orderStatus==='on_the_road' ? 'ON THE ROAD' : order.orderStatus==='packaging' ? 'PACKAGING' : 'RECEIVED'}</p>
+                      </div>
+                      <div className="flex md:block">
+                        <span className="font-medium text-gray-500 w-28 md:hidden">Order Date:</span>
+                        <p className='text-[#5F6C72]'>
+                          {new Date(order.flutterwaveResponse.created_at)
+                            .toLocaleString("en-US", {
+                              year: "numeric",
+                              month: "short",
+                              day: "2-digit",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              hour12: false,
+                            })
+                            .replace(',', '')}
+                        </p>
+                      </div>
+                      <div className="flex md:block">
+                        <span className="font-medium text-gray-500 w-28 md:hidden">Total:</span>
+                        <p className='text-[#475156]'>₦{order.subtotal.toLocaleString()} ({order.products.length} Products)</p>
+                      </div>
                       <p onClick={() => navigate(`/dashboard/order-history/${order.flutterwaveResponse.transaction_id}`)} className='text-[#2DA5F3] flex items-center gap-2 cursor-pointer'><span>View Details</span><IoIosArrowRoundForward size={16}/></p>
                     </div>
                   ))

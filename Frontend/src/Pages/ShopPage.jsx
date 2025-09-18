@@ -116,7 +116,7 @@ const ShopPage = () => {
 
   return (
     <div className='w-full' style={{padding: '2% 6%'}}>
-      {Array.isArray(allProduct) ? (
+      {allProduct.length !== 0 ?(
         <div className='w-full grid md:grid-cols-[20%_80%] grid-rows-auto'>
           {/* for filter section */}
           <div className={`${showFilter ? 'hidden' : 'block'} md:block`}>
@@ -294,13 +294,15 @@ const ShopPage = () => {
           )}
           </div>
 
-          <div onClick={filterPanel} className='fixed bottom-[20px] md:hidden bg-[#1d1d1d] rounded-[30px] text-white border border-[#E4E7E9]' style={{padding: '10px 20px'}}>
+          <div onClick={filterPanel} className='fixed bottom-[10px] left-1/2 -translate-x-1/2 md:hidden bg-[#1d1d1d] rounded-[30px] text-white border border-[#E4E7E9]' style={{padding: '10px 20px'}}>
             <p className='flex items-center justify-center gap-4'><span>Filter</span><IoFilter size={18}/></p>
           </div>
         </div>
       )
-      :
-      <Loader />
+      :(
+
+        <Loader />
+      )
       }
     </div>
   )

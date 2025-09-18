@@ -7,11 +7,6 @@ import { useNavigate } from 'react-router-dom';
 const FewProduct = () => {
   const { allProduct, allCategory } = useContext(CategoryContext)
 
-  useEffect(() => {
-    console.log(allProduct);
-    console.log(allCategory);
-    
-  }, [allProduct, allCategory])
   const [productShowName, setProductShowName] = useState('Product')
 
   const topCategories = allCategory?.slice(0, 4) || []

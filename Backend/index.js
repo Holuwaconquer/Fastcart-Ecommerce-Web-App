@@ -1,4 +1,5 @@
 const express = require('express');
+const app = express();
 const serverless = require('serverless-http');
 const userRouter = require('./routes/user.route');
 const adminRouter = require('./routes/admin.route');
@@ -8,10 +9,16 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const { adminRegister, fetchPaginatedCustomers } = require('./controller/admin.controller');
 const PORT = process.env.PORT
-const app = express();
+const helmet = require('helmet')
+const rateLimit = require('express-rate-limit')
 
 // Middleware
-app.use(cors());
+app.use(helmet())
+app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100}))
+app.use(cors({
+  origin: ['http://localhost:5173', 'https://fastcartonlinestore.vercel.app'],
+  credentials: true
+}));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -21,7 +28,10 @@ app.use(`/${process.env.ADMIN_ROUTE_NAME}`, adminRouter);
 app.use("/orders", orderRouter);
 
 // Connect DB once
-mongoose.connect(process.env.URI)
+mongoose.connect(process.env.URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
   .then(async () => {
     console.log("Database Connected");
     const { adminModel } = require('./model/admin.model');
@@ -35,9 +45,9 @@ mongoose.connect(process.env.URI)
     console.log("DB connection error", err);
   });
 
-// app.listen(PORT, ()=>{
-//   console.log('app running on Port', PORT);
-// })
+app.listen(PORT, ()=>{
+  console.log('app running on Port', PORT);
+})
 // 👉 Export handler for Vercel
-module.exports = app;
-module.exports.handler = serverless(app);
+// module.exports = app;
+// module.exports.handler = serverless(app);

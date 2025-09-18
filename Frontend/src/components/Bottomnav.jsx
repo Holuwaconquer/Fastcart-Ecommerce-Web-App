@@ -32,7 +32,7 @@ const Bottomnav = () => {
                 allCategory && (
                   allCategory.map((category, index) => (
                     <div key={index} className={isClicked ? 'block' : 'hidden'}>
-                      <p style={{padding: '10px 25px'}} className='categoryText flex justify-between items-center gap-5 text-[#5F6C72] hover:bg-[#F2F4F5] text-[16px] hover:font-bold cursor-pointer'><span>{category.name}</span><RxCaretRight className='categoryCaret opacity-0' size={16}/></p>
+                      <a href={`/shop/${category.name}`} style={{padding: '10px 25px'}} className='categoryText flex justify-between items-center gap-5 text-[#5F6C72] hover:bg-[#F2F4F5] text-[16px] hover:font-bold cursor-pointer'><span>{category.name}</span><RxCaretRight className='categoryCaret opacity-0' size={16}/></a>
                     </div>
                   ))
                 )
