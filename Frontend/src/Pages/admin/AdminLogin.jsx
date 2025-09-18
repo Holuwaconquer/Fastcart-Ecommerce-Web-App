@@ -1,3 +1,4 @@
+const ADMIN_ROUTE = import.meta.env.VITE_ADMIN_ROUTE_NAME;
 import React, { useState } from 'react'
 import { useFormik } from 'formik'
 import axios from 'axios'
@@ -19,7 +20,7 @@ const AdminLogin = () => {
     },
     onSubmit: (values) =>{
       setIsLogging(true)
-      const url = `${API_URL}/admin/login`
+  const url = `${API_URL}/${ADMIN_ROUTE}/login`
       axios.post(url, values)
       .then((res) =>{
         setIsLogging(false)
@@ -28,7 +29,7 @@ const AdminLogin = () => {
           localStorage.adminToken = res.data.token
           toast.success('Admin has Successfully Logged In!');
           setTimeout(() => {
-            window.location.href= '/admin/dashboard'
+            window.location.href= `/${ADMIN_ROUTE}/dashboard`
           }, 3000);
         }
       }).catch((err) =>{

@@ -1,3 +1,4 @@
+const ADMIN_ROUTE = import.meta.env.VITE_ADMIN_ROUTE_NAME;
 import React, { useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { UserAccountContext } from '../../user/UserContext'
@@ -64,7 +65,7 @@ const OrderInfo = () => {
                 const newStatus = e.target.value;
                 setLoading(true);
                 try {
-                  const res = await fetch(`${API_URL}/admin/orders/${order._id}/status`, {
+                  const res = await fetch(`${API_URL}/${ADMIN_ROUTE}/orders/${order._id}/status`, {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ status: newStatus }),

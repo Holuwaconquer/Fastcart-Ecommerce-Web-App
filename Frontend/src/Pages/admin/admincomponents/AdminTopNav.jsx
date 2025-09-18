@@ -1,3 +1,4 @@
+const ADMIN_ROUTE = import.meta.env.VITE_ADMIN_ROUTE_NAME;
 import React, { useContext, useEffect, useState } from 'react'
 import { FiSearch } from 'react-icons/fi'
 import Fastcart from '../AdminAsset/fastcartLogo.png'
@@ -26,7 +27,7 @@ const AdminTopNav = () => {
       setMenuShow(false)
       toast.success('Admin has Successfully Logged Out!');
       setTimeout(() =>{
-        window.location.href = '/admin/login'
+  window.location.href = `/${ADMIN_ROUTE}/login`
       }, 3000)
     }
     

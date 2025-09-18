@@ -1,3 +1,4 @@
+const ADMIN_ROUTE = import.meta.env.VITE_ADMIN_ROUTE_NAME;
 import React from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { RiHomeOfficeLine } from "react-icons/ri";
@@ -16,7 +17,7 @@ const Adminsidenav = () => {
         <div className='w-full flex flex-col'>
           {/* for dashboard */}
           <div className='w-full '>
-            <NavLink style={{padding: '10px'}} to='/admin/dashboard' className={({ isActive }) => `w-full flex items-center gap-2 px-4 py-2 rounded-l-md transition-all duration-300 ${ isActive ? 'bg-[#F5F6FA] text-[#7E84A3] shadow-md scale-[1.03]' : 'text-white hover:bg-[#2d3864]' }` }>
+            <NavLink style={{padding: '10px'}} to={`/${ADMIN_ROUTE}/dashboard`} className={({ isActive }) => `w-full flex items-center gap-2 px-4 py-2 rounded-l-md transition-all duration-300 ${ isActive ? 'bg-[#F5F6FA] text-[#7E84A3] shadow-md scale-[1.03]' : 'text-white hover:bg-[#2d3864]' }` }>
              <RiHomeOfficeLine size={24} />
              <span className='text-[14px]'>Dashboard</span>
             </NavLink>

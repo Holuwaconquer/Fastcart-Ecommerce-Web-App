@@ -1,3 +1,4 @@
+const ADMIN_ROUTE = import.meta.env.VITE_ADMIN_ROUTE_NAME;
 import React, { useState, useContext } from 'react';
 import { MdKeyboardBackspace } from "react-icons/md";
 import { CategoryContext } from '../../../CategoryContext';
@@ -65,7 +66,7 @@ const AddProduct = () => {
     },
     onSubmit: (values) =>{
       values.category = selected;
-      axios.post(`${API_URL}/admin/createProduct`, values)
+  axios.post(`${API_URL}/${ADMIN_ROUTE}/createProduct`, values)
       .then((res) =>{
         console.log(res);
         if(res.data.status){

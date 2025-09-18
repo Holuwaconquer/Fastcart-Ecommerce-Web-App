@@ -268,7 +268,11 @@ const Checkout = () => {
                       }
                         closePaymentModal()
                     },
-                    onClose: () => {},
+                    onClose: () => {
+                      setIsProcessing(false)
+                      console.log('payment was not made');
+                      
+                    },
                   });
                 }}
               style={{padding: '15px 0'}} className={`rounded-[2px] transition-all ${paymentMethod=='' ? 'bg-[#f7be98] cursor-not-allowed' : "bg-[#FA8232]  cursor-pointer hover:bg-[#f76f14] active:bg-[#fd9752]"} font-bold  text-white w-full flex items-center justify-center gap-4`}><span>{isProcessing ? 'Processing...' : "PLACE ORDER"}</span><CgArrowRight className={`${isProcessing ? 'hidden' : 'flex'} text-white`} size={24} /></button>

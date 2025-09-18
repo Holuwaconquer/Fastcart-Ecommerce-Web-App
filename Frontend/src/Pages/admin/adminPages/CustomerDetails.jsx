@@ -1,3 +1,4 @@
+const ADMIN_ROUTE = import.meta.env.VITE_ADMIN_ROUTE_NAME;
 import { useNavigate, useParams } from 'react-router-dom';
 import { useContext } from 'react';
 import { AdminContext } from '../admincomponents/AdminContext';
@@ -21,7 +22,7 @@ const CustomerDetails = () => {
   const API_URL = import.meta.env.VITE_API_URL;
   
   const deleteUser = () =>{
-    let deleteURL = `${API_URL}/admin/deleteCustomers`
+  let deleteURL = `${API_URL}/${ADMIN_ROUTE}/deleteCustomers`
     axios.post(deleteURL, customer)
     .then((res) =>{
       console.log(res);

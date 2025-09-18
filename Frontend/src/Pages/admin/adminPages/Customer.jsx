@@ -1,3 +1,4 @@
+const ADMIN_ROUTE = import.meta.env.VITE_ADMIN_ROUTE_NAME;
 import React, { useContext, useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom';
 import { FaPlus, FaRegTrashCan } from "react-icons/fa6"
@@ -31,17 +32,17 @@ const Customer = () => {
   }, [page]);
 
   const viewUser = (eachCustomers) =>{
-    navigate(`/admin/customer/${eachCustomers._id}`, {state: {eachCustomers}})
+  navigate(`/${ADMIN_ROUTE}/customer/${eachCustomers._id}`, {state: {eachCustomers}})
   }
 
   const deleteUser = () =>{
-    let deleteURL = `${API_URL}/admin/deleteCustomers`
+  let deleteURL = `${API_URL}/${ADMIN_ROUTE}/deleteCustomers`
     axios.post(deleteURL, customer)
     .then((res) =>{
       if(res.data.status){
         toast.success('Customer Information has been Deleted Successfully')
         setTimeout(() => {
-          window.location.href = '/admin/dashboard/customer'
+          window.location.href = `/${ADMIN_ROUTE}/dashboard/customer`
         }, 3000);
       }
     }).catch((err) =>{

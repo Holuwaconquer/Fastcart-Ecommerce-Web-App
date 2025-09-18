@@ -17,7 +17,7 @@ app.use(express.json());
 
 // Routes
 app.use("/user", userRouter);
-app.use("/admin", adminRouter);
+app.use(`/${process.env.ADMIN_ROUTE_NAME}`, adminRouter);
 app.use("/orders", orderRouter);
 
 // Connect DB once
@@ -35,9 +35,9 @@ mongoose.connect(process.env.URI)
     console.log("DB connection error", err);
   });
 
-// app.listen(PORT, ()=>{
-//   console.log('app running on Port', PORT);
-// })
+app.listen(PORT, ()=>{
+  console.log('app running on Port', PORT);
+})
 // 👉 Export handler for Vercel
-module.exports = app;
-module.exports.handler = serverless(app);
+// module.exports = app;
+// module.exports.handler = serverless(app);

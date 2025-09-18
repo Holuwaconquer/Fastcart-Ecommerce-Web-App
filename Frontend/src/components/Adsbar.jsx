@@ -22,7 +22,7 @@ const Adsbar = () => {
           <p className='text-[14px] text-white flex items-center gap-1'>Up to <span className='text-[#EBC80C] text-[20px]'> 59% </span> OFF</p>
         </div>
         {/* for shop now */}
-        <div>
+        <div className='hidden md:flex'>
           <p className='flex gap-2 bg-[#EBC80C] text-[#191C1F] items-center rounded-[2px]' style={{padding: '5px'}}><span>SHOP Now</span><FaArrowRightLong  className='hidden md:flex'/></p>
         </div>
         <div className='absolute right-[10px]'>

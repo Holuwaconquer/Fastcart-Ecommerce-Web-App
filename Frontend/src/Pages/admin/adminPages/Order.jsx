@@ -1,3 +1,4 @@
+const ADMIN_ROUTE = import.meta.env.VITE_ADMIN_ROUTE_NAME;
 import React, { useContext, useEffect, useState } from 'react';
 import { CategoryContext } from '../../../CategoryContext';
 import { FaRegTrashCan } from "react-icons/fa6";
@@ -27,7 +28,7 @@ const Order = () => {
   }, [allProduct]);
 
   const addProduct = () => {
-    navigate("/admin/product/add-product");
+  navigate(`/${ADMIN_ROUTE}/product/add-product`);
   };
 
   const handleCheckboxChange = (event) => {
@@ -42,7 +43,7 @@ const Order = () => {
  
   const deleteProduct = (id) =>{
     if(window.confirm("Are you sure you want to delete this category?")){
-      axios.delete(`${API_URL}/admin/deleteproduct/${id}`)
+  axios.delete(`${API_URL}/${ADMIN_ROUTE}/deleteproduct/${id}`)
       .then((res) =>{
         console.log(res);
         if(res.data.status){
@@ -66,7 +67,7 @@ const Order = () => {
   };
   const deleteAllProduct = () =>{
     console.log(selectedProductIds);
-    axios.delete(`${API_URL}/admin/deleteSelectedProduct`, {data: selectedProductIds} )
+  axios.delete(`${API_URL}/${ADMIN_ROUTE}/deleteSelectedProduct`, {data: selectedProductIds} )
     .then((res) =>{
       console.log(res);
       if(res.status){
@@ -191,7 +192,7 @@ const Order = () => {
                       <td>₦{order.subtotal.toLocaleString()}</td>
 
                       <td className='dAndE text-[#1E5EFF] flex gap-2'>
-                        <span className='cursor-pointer' onClick={() => navigate(`/admin/orders/${order.transactionId}`)}>View Details</span>
+                        <span className='cursor-pointer' onClick={() => navigate(`/${ADMIN_ROUTE}/orders/${order.transactionId}`)}>View Details</span>
                       </td>
                     </tr>
                   ))

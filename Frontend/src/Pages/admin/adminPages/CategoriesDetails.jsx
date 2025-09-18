@@ -1,3 +1,4 @@
+const ADMIN_ROUTE = import.meta.env.VITE_ADMIN_ROUTE_NAME;
 import React, { useEffect, useMemo } from 'react'
 import { useContext } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
@@ -76,7 +77,7 @@ const CategoriesDetails = () => {
         return;
       }
 
-      axios.put(`${API_URL}/admin/categories/${singleCategory._id}`, {
+  axios.put(`${API_URL}/${ADMIN_ROUTE}/categories/${singleCategory._id}`, {
         name: trimmedName
       })
         .then((res) => {

@@ -7,6 +7,7 @@ import UserDashboard from './Pages/user/Dashboard';
 import AdminLogin from './Pages/admin/AdminLogin';
 import AdminDashboard from './Pages/admin/AdminDashboard';
 import Dashboard from './Pages/admin/adminPages/Dashboard'
+const ADMIN_ROUTE = import.meta.env.VITE_ADMIN_ROUTE_NAME;
 import ProtectedRoute from './ProtectedRoute';
 import PublicRoute from './PublicRoute';
 import Customer from './Pages/admin/adminPages/Customer';
@@ -98,7 +99,9 @@ const App = () => {
               <Route path='logout' element={<Logout />} />
             </Route>
             <Route path='/account' element={<Account />}>
-              <Route path="register" element={<Register />} />
+              <Route path="register" element={
+                <PublicRoute><Register /></PublicRoute>
+              } />
             
               <Route path="login" element={
                 <PublicRoute><Signin /></PublicRoute>
@@ -108,14 +111,13 @@ const App = () => {
         </Route>
 
 
-        <Route path="/admin/login" element={
+        <Route path={`/${ADMIN_ROUTE}/login`} element={
           <PublicRoute><AdminLogin /></PublicRoute>
         } />
 
         {/* Protected Routes */}
-        
 
-        <Route path="/admin/" element={
+        <Route path={`/${ADMIN_ROUTE}/`} element={
           <ProtectedRoute role="admin"><AdminDashboard /></ProtectedRoute>
         }> 
           <Route path='dashboard' element={

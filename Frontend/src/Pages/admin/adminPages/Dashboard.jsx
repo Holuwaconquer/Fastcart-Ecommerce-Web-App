@@ -1,3 +1,4 @@
+const ADMIN_ROUTE = import.meta.env.VITE_ADMIN_ROUTE_NAME;
 import React, { useContext, useEffect, useState } from 'react'
 import { IoSettingsOutline } from "react-icons/io5";
 import { TbCurrencyNaira } from "react-icons/tb";
@@ -32,7 +33,7 @@ const Dashboard = () => {
     const yesterdayStr = formatDate(yesterday);
     const API_URL = import.meta.env.VITE_API_URL;
 
-    const dailyURL = `${API_URL}/admin/orders/hourly?dates=${yesterdayStr},${todayStr}`;
+  const dailyURL = `${API_URL}/${ADMIN_ROUTE}/orders/hourly?dates=${yesterdayStr},${todayStr}`;
 
     axios.get(dailyURL).then((res) => {
       if (res.status === 200 && res.data?.data) {

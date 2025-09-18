@@ -1,3 +1,4 @@
+const ADMIN_ROUTE = import.meta.env.VITE_ADMIN_ROUTE_NAME;
 import React from 'react'
 import { FaPlus } from "react-icons/fa6"
 import { useNavigate } from 'react-router-dom'
@@ -54,7 +55,7 @@ const Categories = () => {
     onSubmit: (values) => {
       if(selectedCategory){
         console.log("editing:", values);
-        axios.put(`${API_URL}/admin/editCategory/${selectedCategory._id}`, {
+  axios.put(`${API_URL}/${ADMIN_ROUTE}/editCategory/${selectedCategory._id}`, {
           name: formik.values.name,
           description: formik.values.description,
           image: formik.values.image,
@@ -72,7 +73,7 @@ const Categories = () => {
           console.log(err);
         })
       }else{
-        let categoryURL = `${API_URL}/admin/addCategory`
+  let categoryURL = `${API_URL}/${ADMIN_ROUTE}/addCategory`
         axios.post(categoryURL, values)
         .then((res) =>{
           setIsOpen(false)
@@ -98,12 +99,12 @@ const Categories = () => {
   }, [allCategory])
   
   const checkCategory = (eachCategory) =>{
-    navigate(`/admin/categories/${eachCategory.name}`, {state: {eachCategory}})
+  navigate(`/${ADMIN_ROUTE}/categories/${eachCategory.name}`, {state: {eachCategory}})
   }
   const trashCategory = (id) =>{
     
     if(window.confirm("Are you sure you want to delete this category?")){
-      axios.delete(`${API_URL}/admin/category/${id}`)
+  axios.delete(`${API_URL}/${ADMIN_ROUTE}/category/${id}`)
       .then((res) =>{
         console.log(res);
         if(res.data.status){

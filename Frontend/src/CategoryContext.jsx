@@ -6,13 +6,14 @@ export const CategoryContext = createContext()
 
 const CategoryProvider = ({ children }) => {
   const API_URL = import.meta.env.VITE_API_URL;
+  const ADMIN_ROUTE = import.meta.env.VITE_ADMIN_ROUTE_NAME;
 
   const [allCategory, setAllCategory] = useState([])
   const [allProduct, setallProduct] = useState([])
   const [allOrders, setAllOrders] = useState([])
 
     useEffect(() => {
-      let newURL = `${API_URL}/admin/getCategoriesWithProducts`
+  let newURL = `${API_URL}/${ADMIN_ROUTE}/getCategoriesWithProducts`
       axios.get(newURL)
       .then((res) =>{
         if(res.data.status){
@@ -23,7 +24,7 @@ const CategoryProvider = ({ children }) => {
         console.log(err);
       })
 
-      let allProductURL = `${API_URL}/admin/getAllProducts`
+  let allProductURL = `${API_URL}/${ADMIN_ROUTE}/getAllProducts`
       axios.get(allProductURL)
       .then((res) =>{
         if(res.data.status){
@@ -34,7 +35,7 @@ const CategoryProvider = ({ children }) => {
         console.log("Error Encountered while fetching all product", err);
       })
 
-      let ordersURL = `${API_URL}/admin/orders`
+  let ordersURL = `${API_URL}/${ADMIN_ROUTE}/orders`
       axios.get(ordersURL)
       .then((res) =>{
         if(res.data.status){

@@ -1,3 +1,4 @@
+const ADMIN_ROUTE = import.meta.env.VITE_ADMIN_ROUTE_NAME;
 import React, { createContext, useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -15,7 +16,7 @@ const AdminProvider = ({ children }) => {
   const API_URL = import.meta.env.VITE_API_URL;
     let token = localStorage.adminToken
     useEffect(() => {
-      let url = `${API_URL}/admin/dashboard`
+  let url = `${API_URL}/${ADMIN_ROUTE}/dashboard`
       axios.get(url, {
         headers:{
           'Authorization': `Bearer ${token}`,
@@ -32,7 +33,7 @@ const AdminProvider = ({ children }) => {
         console.log(err);
         if (err.response?.status === 401 || err.response?.status === 403) {
           localStorage.removeItem("token");
-          window.location.href = '/admin/login';
+          window.location.href = `/${ADMIN_ROUTE}/login`;
         }else if(err.status===403){
           toast.error('Access Forbidden!')
         }
@@ -41,7 +42,7 @@ const AdminProvider = ({ children }) => {
     }, [])
     
     useEffect(() => {
-      let userUrl = `${API_URL}/admin/allCustomers/?page=${page}&limit=10`
+  let userUrl = `${API_URL}/${ADMIN_ROUTE}/allCustomers/?page=${page}&limit=10`
       axios.get(userUrl)
       .then((res) =>{
         if(res.data.status){
@@ -55,7 +56,7 @@ const AdminProvider = ({ children }) => {
     }, [page])
 
     useEffect(() => {
-      let allUsersURL = `${API_URL}/admin/customer/all`
+  let allUsersURL = `${API_URL}/${ADMIN_ROUTE}/customer/all`
       axios.get(allUsersURL)
       .then((res) =>{
         if(res.data.status){
@@ -67,7 +68,7 @@ const AdminProvider = ({ children }) => {
       })
     }, [])
     useEffect(() => {
-      let ordersMonthlyURL = `${API_URL}/admin/order/monthly`
+  let ordersMonthlyURL = `${API_URL}/${ADMIN_ROUTE}/order/monthly`
       axios.get(ordersMonthlyURL)
       .then((res) =>{
         if(res.data.status){
@@ -79,7 +80,7 @@ const AdminProvider = ({ children }) => {
       })
     }, [])
     useEffect(() => {
-      let customersMonthlyURL = `${API_URL}/admin/customers/monthly`
+  let customersMonthlyURL = `${API_URL}/${ADMIN_ROUTE}/customers/monthly`
       axios.get(customersMonthlyURL)
       .then((res) =>{
         if(res.data.status){

@@ -1,3 +1,4 @@
+const ADMIN_ROUTE = import.meta.env.VITE_ADMIN_ROUTE_NAME;
 import axios from "axios";
 import { useEffect, useState } from "react";
 import {
@@ -24,66 +25,82 @@ const CustomToolTip = ({ active, payload, label }) => {
 };
 
 const DashboardChart = () => {
-  const [ordersMonthly, setOrdersMonthly] = useState([]);
+  const [ordersWeekly, setOrdersWeekly] = useState([]);
   const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    const monthlyURL = `${API_URL}/admin/order/monthly`;
-
-    axios.get(monthlyURL)
+    const weeklyURL = `${API_URL}/${ADMIN_ROUTE}/order/weekly`;
+    axios.get(weeklyURL)
       .then((res) => {
         if (res.status === 200 && res.data?.data) {
           const rawData = res.data.data;
-
-          // Generate all months from Jan to Dec
-          const months = [
-            "2025-01", "2025-02", "2025-03", "2025-04", "2025-05",
-            "2025-06", "2025-07", "2025-08", "2025-09", "2025-10",
-            "2025-11", "2025-12"
-          ];
-
-          // Fill missing months with zero values
-          const filledData = months.map(month => {
-            const existingMonth = rawData.find(item => item._id === month);
-            if (existingMonth) {
-              return {
-                month: existingMonth._id,
-                totalOrders: existingMonth.totalOrders,
-              };
-            } else {
-              return {
-                month: month,
-                totalOrders: 0,
-              };
+          // Get last 8 weeks, ending with the next coming week
+          let weeks = [];
+          // Find the latest week/year in data, or use current week/year
+          let lastWeek = 1, lastYear = new Date().getFullYear();
+          if (rawData.length > 0) {
+            const last = rawData[rawData.length - 1];
+            const match = last.week.match(/Week (\d+), (\d+)/);
+            if (match) {
+              lastWeek = parseInt(match[1]);
+              lastYear = parseInt(match[2]);
             }
-          });
-
-          setOrdersMonthly(filledData);
+          } else {
+            // If no data, use current week/year
+            const now = new Date();
+            lastWeek = getWeekNumber(now);
+            lastYear = now.getFullYear();
+          }
+          // Advance to next week
+          let nextWeek = lastWeek + 1;
+          let nextYear = lastYear;
+          if (nextWeek > 52) {
+            nextWeek = 1;
+            nextYear += 1;
+          }
+          // Fill 8 weeks ending with next coming week
+          for (let i = 7; i >= 0; i--) {
+            let week = nextWeek - i;
+            let year = nextYear;
+            if (week <= 0) {
+              week += 52;
+              year -= 1;
+            }
+            const label = `Week ${week}, ${year}`;
+            const found = rawData.find(w => w.week === label);
+            weeks.push(found || { week: label, totalOrders: 0, totalRevenue: 0 });
+          }
+          setOrdersWeekly(weeks);
         }
       })
-      .catch((err) => console.error("Error fetching monthly orders:", err));
+      .catch((err) => console.error("Error fetching weekly orders:", err));
   }, []);
+
+  // Helper to get ISO week number
+  function getWeekNumber(date) {
+    const tempDate = new Date(date.getTime());
+    tempDate.setHours(0, 0, 0, 0);
+    tempDate.setDate(tempDate.getDate() + 4 - (tempDate.getDay() || 7));
+    const yearStart = new Date(tempDate.getFullYear(), 0, 1);
+    const weekNo = Math.ceil((((tempDate - yearStart) / 86400000) + 1) / 7);
+    return weekNo;
+  }
 
   return (
     <div>
       <ResponsiveContainer width="100%" height={400}>
-        <LineChart data={ordersMonthly}>
+  <LineChart data={ordersWeekly}>
           <CartesianGrid strokeDasharray="2 2" vertical={false} />
           <XAxis
-            dataKey="month"
+            dataKey="week"
             axisLine={false}
             tickLine={false}
-            tickFormatter={(month) => {
-              // Format month (e.g., "2025-01" → "Jan 2025")
-              const [year, monthNum] = month.split('-');
-              const date = new Date(`${year}-${monthNum}-01`);
-              return date.toLocaleString('default', { month: 'short', year: 'numeric' });
-            }}
+            tickFormatter={(week) => week}
             interval={0}
             tick={{ fontSize: 12, fill: "#5A607F" }}
           />
           <YAxis axisLine={false} tickLine={false} />
-          <Tooltip content={<CustomToolTip />} />
+          <Tooltip />
           <Legend />
           <Line
             key="totalOrders"
@@ -97,7 +114,7 @@ const DashboardChart = () => {
           <Line
             key="totalRevenue"
             type="monotone"
-            dataKey="totalRevenue"
+            dataKey="totalOrder"
             name="Total Revenue"
             stroke="#A3AED0"
             strokeWidth={2}

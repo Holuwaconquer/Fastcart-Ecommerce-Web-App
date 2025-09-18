@@ -23,8 +23,8 @@ router.put('/categories/:id', addSubcategory)
 router.get('/orders', getAllOrdersForAdmin)
 router.put('/orders/:id/status', updateOrderStatus)
 router.get('/order/monthly', getOrdersGroupedByMonth)
+router.get('/order/weekly', require('../controller/admin.controller').getOrdersGroupedByWeek)
 router.get('/customers/monthly', getCustomersGroupedByMonth)
-// router.get('/orders/hourly', getOrdersGroupedByHour)
 router.get('/orders/hourly/', getOrdersGroupedByHourForDates)
 
 

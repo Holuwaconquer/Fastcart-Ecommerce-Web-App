@@ -40,7 +40,8 @@ const BestDeals = () => {
   const isAddedToCart = productWithHighestDiscount && cartItem.some(item => item._id === productWithHighestDiscount._id);
 
 
-  const handleCartToggle = () =>{
+  const handleCartToggle = (e) =>{
+    e.stopPropagation()
     if(isAddedToCart){
       dispatch(removeFromCart(productWithHighestDiscount))
     }else{
@@ -99,7 +100,7 @@ const BestDeals = () => {
                   <FaRegHeart size={24} />
                 </button>
                 <button
-                  onClick={handleCartToggle}
+                  onClick={(e)=> handleCartToggle(e)}
                   className="rounded-[2px] bg-[#FA8232] text-white flex items-center gap-[8px] cursor-pointer transition-all hover:bg-[#f7751f] active:bg-[#f89e62]"
                   style={{ padding: "12px" }}
                 >

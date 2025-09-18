@@ -1,3 +1,4 @@
+const ADMIN_ROUTE = import.meta.env.VITE_ADMIN_ROUTE_NAME;
 import React, { useContext, useEffect, useState } from 'react';
 import { CategoryContext } from '../../../CategoryContext';
 import { FaRegTrashCan } from "react-icons/fa6";
@@ -28,7 +29,7 @@ const ProductPage = () => {
   }, [allProduct]);
 
   const addProduct = () => {
-    navigate("/admin/product/add-product");
+  navigate(`/${ADMIN_ROUTE}/product/add-product`);
   };
 
   const handleEdit = (product) => {
@@ -82,7 +83,7 @@ const ProductPage = () => {
     onSubmit: async (values) => {
       values.category = selected;
       try {
-        const res = await axios.put(`${API_URL}/admin/editproduct/${selectedProduct._id}`, values);
+  const res = await axios.put(`${API_URL}/${ADMIN_ROUTE}/editproduct/${selectedProduct._id}`, values);
         if (res.data.status) {
           toast.success('Product updated successfully');
           setIsOpen(false);
@@ -96,7 +97,7 @@ const ProductPage = () => {
   });
   const deleteProduct = (id) =>{
     if(window.confirm("Are you sure you want to delete this category?")){
-      axios.delete(`${API_URL}/admin/deleteproduct/${id}`)
+  axios.delete(`${API_URL}/${ADMIN_ROUTE}/deleteproduct/${id}`)
       .then((res) =>{
         console.log(res);
         if(res.data.status){
@@ -120,7 +121,7 @@ const ProductPage = () => {
   };
   const deleteAllProduct = () =>{
     console.log(selectedProductIds);
-    axios.delete(`${API_URL}/admin/deleteSelectedProduct`, {data: selectedProductIds} )
+  axios.delete(`${API_URL}/${ADMIN_ROUTE}/deleteSelectedProduct`, {data: selectedProductIds} )
     .then((res) =>{
       console.log(res);
       if(res.status){

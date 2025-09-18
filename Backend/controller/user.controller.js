@@ -2,25 +2,128 @@ const userModel = require("../model/user.model");
 const AdminOrder = require("../model/adminOrder.model")
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
+const nodemailer = require('nodemailer')
+const dotenv = require('dotenv')
+const axios = require('axios')
+dotenv.config()
 
-const greetingUser = (req, res) =>{
-  const {confirmPassword, ...userData} = req.body
-  const form = new userModel(userData)
-  form.save()
-  .then(() => {
-    res.status(201).json({
-      status: true,
-      message: 'User Register Successfully',
-      data: userData
-    })
-  })
-  .catch((err) =>{
-    if (err.code === 11000) {
-      return res.status(400).json({ error: "Duplicate field: email already exists" });
+
+const greetingUser = async (req, res) => {
+  const { confirmPassword, ...userData } = req.body;
+  const rawEmail = req.body.email;
+
+  if (!rawEmail || typeof rawEmail !== 'string') {
+    return res.status(400).json({ message: 'Invalid email input.' });
+  }
+
+  const email = rawEmail.trim().toLowerCase();
+
+  try {
+    const emailCheck = await axios.get('http://apilayer.net/api/check', {
+      params: {
+        access_key: process.env.EMAIL_CHECK_ACCESS_KEY,
+        email,
+        smtp: 1,
+        format: 1,
+      },
+    });
+
+    const { format_valid, smtp_check, mx_found } = emailCheck.data;
+    const isValid = format_valid && smtp_check && mx_found;
+
+    if (!isValid) {
+      return res.status(400).json({
+        valid: false,
+        message: 'Email appears invalid or undeliverable.',
+        reasons: { format_valid, smtp_check, mx_found },
+      });
     }
-    res.status(500).json({ error: err.message });
-  })
-}
+
+    const form = new userModel(userData);
+
+    try {
+      await form.save();
+
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.EMAIL_ADDRESS_TO_SEND_CODE,
+          pass: process.env.PASSWORD_TO_EMAIL_ADDRESS_TO_SEND_CODE,
+        },
+      });
+
+      const htmlContent = welcomeEmail(req.body);
+
+      const info = await transporter.sendMail({
+        from: "Fastcart Online Store",
+        to: email,
+        subject: "Registration Successful ✅",
+        html: htmlContent,
+      });
+
+      console.log("Email sent:", info);
+
+      return res.status(201).json({
+        status: true,
+        message: 'User registered successfully.',
+        data: userData,
+      });
+
+    } catch (err) {
+      if (err.code === 11000) {
+        return res.status(400).json({ error: "Duplicate field: email already exists" });
+      }
+      return res.status(500).json({ error: err.message });
+    }
+
+  } catch (error) {
+    console.error("Error in greetingUser:", error?.response?.data || error.message || error);
+    return res.status(500).json({ message: "Something went wrong during email verification or registration." });
+  }
+};
+
+
+const welcomeEmail = (user) => {
+  return `
+    <div style="font-family: Arial, sans-serif; padding: 10px; background-color: #f9f9f9;">
+      <div style="max-width: 600px; margin: auto; background-color: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+        <h2 style="color: #2d2d2d;">Welcome to Fastcart, ${user.firstname}!</h2>
+        <p style="font-size: 16px; color: #333;">
+          Thank you for creating an account with us. 🎉<br />
+          You're now part of a growing community of smart shoppers and savvy sellers.
+        </p>
+
+        <p style="font-size: 16px; color: #333;">
+          Here's what you can do on Fastcart:
+          <ul style="padding-left: 20px; color: #333;">
+            <li>🛍️ Explore top trending products at great prices</li>
+            <li>💳 Shop securely with multiple payment options</li>
+            <li>🚚 Track your orders and manage deliveries</li>
+            <li>📱 Seamless experience across web and mobile</li>
+          </ul>
+        </p>
+
+        <p style="font-size: 16px; color: #333;">
+          Ready to get started? Just log in and start shopping!
+        </p>
+
+        <div style="margin-top: 30px; text-align: center;">
+          <a href="https://fastcart-ecommerce-web-app.vercel.app" style="background-color: #ff6600; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+            Visit Fastcart
+          </a>
+        </div>
+
+        <p style="margin-top: 30px; font-size: 14px; color: #888;">
+          If you didn’t sign up for Fastcart, please ignore this email or contact our support team.
+        </p>
+
+        <p style="font-size: 14px; color: #888;">
+          — The Fastcart Team
+        </p>
+      </div>
+    </div>
+  `;
+};
 
 const userLogin = (req, res) => {
   const { password } = req.body;
@@ -219,11 +322,53 @@ const orderDetails = async (req, res) => {
 
     await adminOrder.save();
 
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_ADDRESS_TO_SEND_CODE,
+        pass: process.env.PASSWORD_TO_EMAIL_ADDRESS_TO_SEND_CODE,
+      },
+    });
+
+    const htmlContent = generateEmailHTML(user, order)
+
+    const info = await transporter.sendMail({
+      from: "Fastcart Online Store @fastcastonlinestore@store.com",
+      to: user.email,
+      subject: "Your Order Confirmation from Fastcart 🛒",
+      text: `Thank you for your purchase, ${user.firstname}!`,
+      html: htmlContent,
+    });
+
+    console.log("Email sent:", info.messageId);
+
     res.status(200).json({ message: 'Order saved successfully', orderId: adminOrder._id });
   } catch (err) {
     console.error('Error saving order:', err);
     res.status(500).json({ message: 'Failed to save order' });
   }
+};
+
+const generateEmailHTML = (user, order) => {
+  return `
+    <div style="font-family: Arial, sans-serif; padding: 20px; background: #f9f9f9;">
+      <h2 style="color: #2d2d2d;">Thank you for your purchase, ${user.firstname}!</h2>
+      <p>Your order with the transaction id: ${order.flutterwaveResponse?.transaction_id} has been placed successfully. Here are the details:</p>
+      <h3 style="color: #444;">Order Summary</h3>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        ${order.products.map(item => `
+          <div>
+            <img src="${item.image[0]}" alt='product-image'/>
+            <strong>${item.name}</strong> — ${item.quantity || 1} x ₦${item.price.toLocaleString()}
+          </div>`).join('')}
+      </div>
+      <p><strong>Subtotal:</strong> ₦${order.subtotal.toLocaleString()}</p>
+      <p><strong>Transaction ID:</strong> ${order.flutterwaveResponse?.transaction_id || 'N/A'}</p>
+      <hr/>
+      <p>If you have any questions, feel free to reply to this email.</p>
+      <p style="color: #888;">Fastcart Online Store</p>
+    </div>
+  `;
 };
 
 module.exports = {

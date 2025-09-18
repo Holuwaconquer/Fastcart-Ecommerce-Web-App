@@ -6,6 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import { BsFillQuestionOctagonFill } from "react-icons/bs";
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../Authcontext';
+import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 
 const Signin = () => {
   const [inProgress, setInProgress] = useState(false);
@@ -54,6 +55,7 @@ const Signin = () => {
       password: yup.string().required('This field is required').min(6, 'Password must be at least 6 characters long'),
     })
   });
+  const [pwdType, setPwdType] = useState("password")
 
   return (
     <div className='loginPage w-full'>
@@ -82,7 +84,16 @@ const Signin = () => {
                         <span>Password</span>
                         <BsFillQuestionOctagonFill className={formik.touched.password && formik.errors.password ? 'text-[red]' : 'text-zinc-400'} />
                       </small>
-                      <input type="password" name='password' onChange={formik.handleChange} onBlur={formik.handleBlur} placeholder='password' className='w-full border-1 border-[#D1D1D1]' style={{ padding: '10px' }} />
+                      <div className='w-full border-1 border-[#D1D1D1] relative'>
+                        <input type={pwdType} name='password' onChange={formik.handleChange} onBlur={formik.handleBlur} placeholder='password' className='w-full' style={{ padding: '10px' }} />
+                        <div className='absolute top-3 right-2 text-[20px] text-[#191C1F] cursor-pointer'>
+                          {pwdType=='password' ? 
+                            <FaRegEyeSlash onClick={()=>setPwdType('text')}/>
+                            :
+                            <FaRegEye onClick={()=>setPwdType('password')}/>
+                          }
+                        </div>
+                      </div>
                       <p className='text-[red]'>{formik.touched.password && formik.errors.password}</p>
                     </div>
                     <small className='coloredTxt'>Forgot Password</small>

@@ -524,6 +524,41 @@ const getOrdersGroupedByMonth = async (req, res) => {
     res.status(500).json({ status: false, message: "Failed to group orders" });
   }
 };
+
+// Weekly grouping (ISO week)
+const getOrdersGroupedByWeek = async (req, res) => {
+  try {
+    const groupedOrders = await AdminOrder.aggregate([
+      {
+        $group: {
+          _id: {
+            year: { $year: "$createdAt" },
+            week: { $isoWeek: "$createdAt" }
+          },
+          totalOrders: { $sum: 1 },
+          totalRevenue: { $sum: "$subtotal" }
+        }
+      },
+      { $sort: { "_id.year": 1, "_id.week": 1 } }
+    ]);
+
+    // Format week label for response
+    const formatted = groupedOrders.map(g => ({
+      week: `Week ${g._id.week}, ${g._id.year}`,
+      totalOrders: g.totalOrders,
+      totalRevenue: g.totalRevenue
+    }));
+
+    res.status(200).json({
+      status: true,
+      message: "Orders grouped by week",
+      data: formatted
+    });
+  } catch (err) {
+    console.error("Error grouping orders by week:", err);
+    res.status(500).json({ status: false, message: "Failed to group orders" });
+  }
+};
 const getCustomersGroupedByMonth = async (req, res) => {
   try {
     const groupedCustomers = await userModel.aggregate([
@@ -697,6 +732,7 @@ module.exports = {
   updateOrderStatus,
   fetchAllCustomers,
   getOrdersGroupedByMonth,
+  getOrdersGroupedByWeek,
   getCustomersGroupedByMonth,
   getOrdersGroupedByHour,
   getOrdersGroupedByHourForDates

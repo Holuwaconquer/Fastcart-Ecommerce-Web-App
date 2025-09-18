@@ -5,12 +5,17 @@ import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify';
 import { BsFillQuestionOctagonFill } from "react-icons/bs";
 import { useNavigate } from 'react-router-dom';
+import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 
 const Register = () => {
 
   const navigate = useNavigate()
   const [isLogging, setisLogging] = useState(false)
   const API_URL = import.meta.env.VITE_API_URL;
+  const [pwdType, setPwdType] = useState("password")
+  const [pwdType2, setPwdType2] = useState("password")
+
+  
 
   let formik = useFormik({
     initialValues: {
@@ -27,13 +32,17 @@ const Register = () => {
       axios.post(url, values)
       .then((res) =>{
         setisLogging(false)
-        console.log(res.data.message);
+        console.log(res);
         toast.success('User Account has Successfully Registered!');
         setTimeout(() => {
           navigate('/account/login')
         }, 3000);
       }).catch((err) =>{
         setisLogging(false)
+        console.log(err.response.data.valid);
+        if(err.response.data.valid===false){
+          toast.error('The email you provided is not available')
+        }
         const dataErr = err.response.data
         if(dataErr.error === 'Duplicate field: email already exists'){
           console.log('The email is already registered');
@@ -86,14 +95,32 @@ const Register = () => {
                     {/* for password 1 */}
                     <div className='flex flex-col gap-2'>
                       <label htmlFor="password" className='w-full flex items-center justify-between text-[12px] text-[#333333]'><span>Password</span><BsFillQuestionOctagonFill className={formik.touched.password && formik.errors.password ? 'text-[red]' : 'text-zinc-400'} /></label>
-                      <input type="password" name='password' onChange={formik.handleChange} onBlur={formik.handleBlur} placeholder='passord' className='w-full border-1 border-[#D1D1D1]' style={{padding: '10px'}}/>
+                      <div className='w-full border-1 border-[#D1D1D1] relative'>
+                        <input type={pwdType} name='password' onChange={formik.handleChange} onBlur={formik.handleBlur} placeholder='password' className='w-full' style={{padding: '10px'}}/>
+                        <div className='absolute top-3 right-2 text-[20px] text-[#191C1F] cursor-pointer'>
+                          {pwdType=='password' ? 
+                            <FaRegEyeSlash onClick={()=>setPwdType('text')}/>
+                            :
+                            <FaRegEye onClick={()=>setPwdType('password')}/>
+                          }
+                        </div>
+                      </div>
                       <small className='text-[red]'>{formik.touched.password && formik.errors.password}</small>
                     </div>
 
                     {/* for confirm password */}
                     <div className='flex flex-col gap-2'>
                       <label htmlFor="confirmPassword" className='w-full flex items-center justify-between text-[12px] text-[#333333]'><span>Confirm Password</span><BsFillQuestionOctagonFill className={formik.touched.confirmPassword && formik.errors.confirmPassword ? 'text-[red]' : 'text-zinc-400'} /></label>
-                      <input type="password" name='confirmPassword' onChange={formik.handleChange} onBlur={formik.handleBlur} placeholder='passord' className='w-full border-1 border-[#D1D1D1]' style={{padding: '10px'}}/>
+                      <div className='w-full border-1 border-[#D1D1D1] relative'>
+                        <input type={pwdType2} name='confirmPassword' onChange={formik.handleChange} onBlur={formik.handleBlur} placeholder='password' className='w-full' style={{padding: '10px'}}/>
+                        <div className='absolute top-3 right-2 text-[20px] text-[#191C1F] cursor-pointer'>
+                          {pwdType2=='password' ? 
+                            <FaRegEyeSlash onClick={()=>setPwdType2('text')}/>
+                            :
+                            <FaRegEye onClick={()=>setPwdType2('password')}/>
+                          }
+                        </div>
+                      </div>
                       <small className='text-[red]'>{formik.touched.confirmPassword && formik.errors.confirmPassword}</small>
                     </div>
                   </div>
