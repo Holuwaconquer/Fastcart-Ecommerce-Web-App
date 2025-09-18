@@ -7,23 +7,18 @@ import { GoPackage, GoCreditCard } from "react-icons/go";
 import { PiTrophyThin } from "react-icons/pi";
 import { SlEarphonesAlt } from "react-icons/sl";
 import { IoIosArrowRoundForward, IoIosArrowRoundBack } from "react-icons/io";
-import Playstation from "../assets/playstation.png";
-import { MdOutlineRemoveRedEye } from "react-icons/md";
 
-import Drone from "../assets/drone.png";
-import Samsung from "../assets/samsung-phone.png";
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
-import Computer from "../assets/computer.png";
-import Banner from "../assets/Banner.png";
 import { CategoryContext } from "../CategoryContext";
 import BestDeals from "../components/BestDeals";
 import FeaturedProducts from '../components/FeaturedProducts'
 import FewProduct from "../components/FewProduct";
 import { useNavigate } from "react-router-dom";
+import ShowcaseProduct from "../components/ShowcaseProduct";
 
 const Landingpage = () => {
   const prevRef = useRef(null);
@@ -59,6 +54,27 @@ const Landingpage = () => {
   const slideCategory = chunkArray(allCategory, chunkSize);
   const navigate = useNavigate()
 
+  const [promoProduct1, setPromoProduct1] = useState(null)
+  const [promoProduct2, setPromoProduct2] = useState(null)
+  const [promoProduct3, setPromoProduct3] = useState(null)
+  const [promoProduct4, setPromoProduct4] = useState(null)
+  const [promoProduct5, setPromoProduct5] = useState(null)
+  useEffect(() => {
+    if (allProduct && allProduct.length > 0) {
+      const promoProducts = allProduct.filter((prod) => 
+        prod.category?.some((cat) => cat.name === 'Promo')
+      );
+      if (promoProducts.length > 0) {
+        setPromoProduct1(promoProducts[0]);
+        setPromoProduct2(promoProducts[1]);
+        setPromoProduct3(promoProducts[2]);
+        setPromoProduct4(promoProducts[3]);
+        setPromoProduct5(promoProducts[4]);
+      }
+    }
+  }, [allProduct]);
+  console.log(promoProduct1);
+
   return (
     <div
       className="w-full h-auto flex flex-col gap-y-[2em]"
@@ -66,45 +82,7 @@ const Landingpage = () => {
     >
       <div className="w-full grid md:grid-cols-[2fr_1fr] gap-[2em]">
         {/* for the xbox section */}
-        <div
-          className="w-full h-auto bg-[#F2F4F5] rounded-[6px]"
-          style={{ padding: "40px" }}
-        >
-          <div className="w-full flex items-center justify-center gap-[2em]">
-            {/* for the xbox content */}
-            <div className="w-full flex flex-col gap-4">
-              <p className="text-[#2484C2] text-[14px] flex gap-2 items-center font-bold">
-                <span className="w-[24px] bg-[#2484C2] h-[2px]"></span>
-                <span>THE BEST PLACE TO PLAY</span>
-              </p>
-              <h1 className="text-[48px] text-[#191C1F] leading-[1em]">
-                Xbox Consoles
-              </h1>
-              <p className="text-[18px] text-[#475156]">
-                Save up to 50% on select Xbox games. Get 3 months of PC Game
-                Pass for $2 USD.
-              </p>
-              <div>
-                <button
-                  className="flex gap-4 text-white bg-[#FA8232] rounded-[3px]"
-                  style={{ padding: "20px 32px" }}
-                >
-                  <span>SHOP NOW</span> <GoArrowRight size={24} />
-                </button>
-              </div>
-            </div>
-            {/* for the xbox image */}
-            <div className="w-full relative">
-              <div>
-                <img src={Xbox} alt="" />
-              </div>
-              <div className="w-[100px] h-[100px] flex flex-col items-center justify-center font-bold absolute top-0 right-0 rounded-[50%] bg-[#2DA5F3] text-black">
-                <h1 className="text-[22px]">$299</h1>
-              </div>
-            </div>
-            {/* xbox image end */}
-          </div>
-        </div>
+        <ShowcaseProduct promoProduct1={promoProduct1} promoProduct2={promoProduct2} promoProduct3={promoProduct3}/>
         <div className="w-full">
           <div className="w-full flex flex-col gap-[2em]">
             {/* for google pixel phone */}
@@ -112,7 +90,7 @@ const Landingpage = () => {
               className="w-full bg-[#191C1F] rounded-[6px] relative"
               style={{
                 padding: "40px",
-                backgroundImage: `url(${GooglePixel})`,
+                backgroundImage: `url(${promoProduct4?.image[0]})`,
                 backgroundPosition: "200px 100px",
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "contain",
@@ -125,11 +103,12 @@ const Landingpage = () => {
                     <span>Summer Sales</span>
                   </p>
                   <h1 className="text-[24px] text-white leading-[1em]">
-                    New Google Pixel 6 Pro
+                    {promoProduct4?.name.slice(0,15)}...
                   </h1>
                   <div>
                     <button
-                      className="flex gap-4 text-white bg-[#FA8232] rounded-[3px]"
+                      onClick={() => navigate(`/product-page/${promoProduct4._id}`)}
+                      className="flex gap-4 text-white bg-[#FA8232] rounded-[3px] cursor-pointer"
                       style={{ padding: "20px 25px" }}
                     >
                       <span>SHOP NOW</span> <GoArrowRight size={24} />
@@ -140,7 +119,7 @@ const Landingpage = () => {
                   className="rounded-[2px] bg-[#EFD33D] absolute top-[20px] right-[20px] text-[#141414] font-bold"
                   style={{ padding: "10px" }}
                 >
-                  <span className="text-16px">29% OFF</span>
+                  <span className="text-16px">{promoProduct4?.discountPercentage || 0}% OFF</span>
                 </div>
               </div>
             </div>
@@ -150,21 +129,22 @@ const Landingpage = () => {
                 className="w-full bg-[#F2F4F5] rounded-[6px] relative"
                 style={{ padding: "40px" }}
               >
-                <div className="w-full flex items-center justify-center">
+                <div className="w-full flex gap-4 items-center justify-center">
                   <div className="w-full">
-                    <img src={Airpod} alt="" />
+                    <img src={promoProduct5?.image[0]} alt="" />
                   </div>
                   {/* for summer sales content */}
                   <div className="w-full flex flex-col gap-4">
-                    <h1 className="text-[24px] text-white leading-[1em]">
-                      Xiaomi FlipBuds Pro
+                    <h1 className="text-[24px] text-black leading-[1em]">
+                      {promoProduct5?.name.slice(0,15)}... 
                     </h1>
                     <p className="text-[#2DA5F3] text-[18px]">
-                      <span>$299 USD</span>
+                      <span>{promoProduct5?.discountprice.toLocaleString()} NGN</span>
                     </p>
                     <div>
                       <button
-                        className="flex gap-4 text-white bg-[#FA8232] rounded-[3px]"
+                        onClick={() => navigate(`/product-page/${promoProduct5._id}`)}
+                        className="flex gap-4 text-white cursor-pointer bg-[#FA8232] rounded-[3px]"
                         style={{ padding: "10px" }}
                       >
                         <span>SHOP NOW</span> <GoArrowRight size={24} />

@@ -37,6 +37,7 @@ import OrderTrackDetails from './Pages/OrderTrackDetails';
 import Productdetails from './Pages/Productdetails';
 import ScrollToTop from './components/ScrollToTop';
 import Logout from './Pages/user/Logout';
+import ShowcaseProduct from './components/ShowcaseProduct';
 
 
 const App = () => {
@@ -160,7 +161,7 @@ const App = () => {
             </CategoryProvider>
           } />
         </Route>
-        
+        <Route path='/showcase' element={<ShowcaseProduct />}/>
       </Routes>
     </div>
   );
