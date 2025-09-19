@@ -69,8 +69,8 @@ const Navbar = () => {
         <div className='flex items-center gap-2'>
           <RxHamburgerMenu onClick={openMenu} className='md:hidden cursor-pointer' size={24}/>
           <div onClick={goHome} className='flex items-center gap-2 cursor-pointer'>
-            <img src={Fastcart} alt='logo' />
-            <h1 className='logoTxt text-white text-[25px]'>fastcart</h1>
+            <img src={Fastcart} className='max-[400px]:w-[30px]' alt='logo' />
+            <h1 className='logoTxt max-[400px]:text-[20px] text-white text-[25px]'>fastcart</h1>
           </div>
         </div>
         {isOpen && <Menubar closeMenu={closeMenu}/>}

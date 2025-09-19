@@ -71,7 +71,7 @@ const Checkout = () => {
             <div className='flex flex-col gap-4'>
               <div style={{padding: '10px 0'}}>
                 <h1 className='w-full font-bold border-[#E4E7E9] text-[18px] text-[#191C1F]'>SHIPPING ADDRESS</h1>
-                <p className='text-[#EBC80C] flex gap-2 items-center'><span><IoWarningOutline /></span>Your shipping address details is empty, <span className='underline cursor-pointer' onClick={() =>navigate('/dashboard/setting')}>edit your shipping address here</span></p>
+                <p className={`${userData?.shippingfirstname=='' || userData?.shippinglastname=='' || userData?.shippingemail =='' || userData?.shippingaddress =='' || userData?.shippingphonenumber =='' || userData?.shippingcountry =='' || userData?.shippingstate =='' || userData?.shippingcity =='' ? 'block' : 'hidden'} text-[#EBC80C] flex gap-2 items-center`}><span><IoWarningOutline /></span>Your shipping address details is empty or not fully filled, <span className='underline cursor-pointer' onClick={() =>navigate('/dashboard/setting')}>edit your shipping address here</span></p>
               </div>
               {userData ?
                 <div className='w-full flex flex-col gap-5'>
@@ -84,48 +84,48 @@ const Checkout = () => {
                             {/* for first name */}
                             <div className='w-full flex flex-col gap-1'>
                               <small className='text-[14px] text-[#191C1F] font-bold'>Firstname</small>
-                              <input readOnly name='shipping' value={userData?.shipping} type="text" className='border-1 border-[#E4E7E9] text-[#475156] text-[14px] rounded-[2px] focus:outline-0' style={{padding: '8px'}}/>
+                              <input readOnly name='shippingfirstname' value={userData?.shippingfirstname} type="text" className='border-1 border-[#E4E7E9] text-[#475156] text-[14px] rounded-[2px] focus:outline-0' style={{padding: '8px'}}/>
                             </div>
                             {/* for last name */}
                             <div className='w-full flex flex-col gap-1'>
                               <small className='text-[14px] text-[#191C1F] font-bold'>Lastname</small>
-                              <input readOnly name='shipping' value={userData?.shipping} type="text" className='border-1 border-[#E4E7E9] text-[#475156] text-[14px] rounded-[2px] focus:outline-0' style={{padding: '8px'}}/>
+                              <input readOnly name='shippinglastname' value={userData?.shippinglastname} type="text" className='border-1 border-[#E4E7E9] text-[#475156] text-[14px] rounded-[2px] focus:outline-0' style={{padding: '8px'}}/>
                             </div>
                           </div>
                           {/* for shipping */}
                           <div className='w-full flex flex-col gap-1'>
                             <small className='text-[14px] text-[#191C1F] font-bold'>Company Name</small>
-                            <input readOnly name='shipping'  value={userData?.shipping} type="text" className='border-1 border-[#E4E7E9] text-[#475156] text-[14px] rounded-[2px] focus:outline-0' style={{padding: '8px'}}/>
+                            <input readOnly name='shippingcompanyname'  value={userData?.shippingcompanyname} type="text" className='border-1 border-[#E4E7E9] text-[#475156] text-[14px] rounded-[2px] focus:outline-0' style={{padding: '8px'}}/>
                           </div>
                           {/* for shipping */}
                           <div className='w-full flex flex-col gap-1'>
                             <small className='text-[14px] text-[#191C1F] font-bold'>Address</small>
-                            <input readOnly name='shipping' value={userData?.shipping} type="text" className='border-1 border-[#E4E7E9] text-[#475156] text-[14px] rounded-[2px] focus:outline-0' style={{padding: '8px'}}/>
+                            <input readOnly name='shippingaddress' value={userData?.shippingaddress} type="text" className='border-1 border-[#E4E7E9] text-[#475156] text-[14px] rounded-[2px] focus:outline-0' style={{padding: '8px'}}/>
                           </div>
                           {/* for city and zipcode */}
                           <div className='w-full grid md:grid-cols-4 gap-4'>
                           {/* for country */}
                           <div className='w-full flex flex-col gap-1'>
                             <small className='text-[14px] text-[#191C1F] font-bold'>Country</small>
-                            <input readOnly type="text" value={userData?.shipping} className='border-1 border-[#E4E7E9] text-[#475156] text-[14px] rounded-[2px] focus:outline-0' style={{padding: '8px'}}/>
+                            <input readOnly type="text" value={userData?.shippingcountry} className='border-1 border-[#E4E7E9] text-[#475156] text-[14px] rounded-[2px] focus:outline-0' style={{padding: '8px'}}/>
                           </div>
                           {/* for state */}
                           <div className='w-full flex flex-col gap-1'>
                             <small className='text-[14px] text-[#191C1F] font-bold'>State</small>
-                            <input readOnly type="text" value={userData?.shipping} className='border-1 border-[#E4E7E9] text-[#475156] text-[14px] rounded-[2px] focus:outline-0' style={{padding: '8px'}}/>
+                            <input readOnly type="text" value={userData?.shippingstate} className='border-1 border-[#E4E7E9] text-[#475156] text-[14px] rounded-[2px] focus:outline-0' style={{padding: '8px'}}/>
                           </div>
                               {/* for shipping */}
                               <div className='w-full flex flex-col gap-1'>    
                                 <div className='w-full flex flex-col gap-1'>
                                   <small className='text-[14px] text-[#191C1F] font-bold'>City</small>
-                                  <input readOnly name='shipping' value={userData?.shipping} type="text" className='border-1 border-[#E4E7E9] text-[#475156] text-[14px] rounded-[2px] focus:outline-0' style={{padding: '8px'}}/>
+                                  <input readOnly name='shipping' value={userData?.shippingcity} type="text" className='border-1 border-[#E4E7E9] text-[#475156] text-[14px] rounded-[2px] focus:outline-0' style={{padding: '8px'}}/>
                                 </div>
                               </div>
                               {/* for shipping */}
                               <div className='w-full flex flex-col gap-1'>    
                                 <div className='w-full flex flex-col gap-1'>
                                   <small className='text-[14px] text-[#191C1F] font-bold'>Zip Code</small>
-                                  <input readOnly name='shipping' value={userData?.shipping} type="text" className='border-1 border-[#E4E7E9] text-[#475156] text-[14px] rounded-[2px] focus:outline-0' style={{padding: '8px'}}/>
+                                  <input readOnly name='shipping' value={userData?.shippingzipcode} type="text" className='border-1 border-[#E4E7E9] text-[#475156] text-[14px] rounded-[2px] focus:outline-0' style={{padding: '8px'}}/>
                                 </div>
                               </div>
                           </div>
@@ -133,12 +133,12 @@ const Checkout = () => {
                             {/* for email */}
                             <div className='w-full flex flex-col gap-1'>
                               <small className='text-[14px] text-[#191C1F] font-bold'>Email</small>
-                              <input readOnly name='shipping' value={userData?.shipping} type="email" className='border-1 border-[#E4E7E9] text-[#475156] text-[14px] rounded-[2px] focus:outline-0' style={{padding: '8px'}}/>
+                              <input readOnly name='shipping' value={userData?.shippingemail} type="email" className='border-1 border-[#E4E7E9] text-[#475156] text-[14px] rounded-[2px] focus:outline-0' style={{padding: '8px'}}/>
                             </div>
                             {/* for phone number */}
                             <div className='w-full flex flex-col gap-1'>
                               <small className='text-[14px] text-[#191C1F] font-bold'>Phone number</small>
-                              <input readOnly name='shipping' value={userData?.shipping} type="text" className='border-1 border-[#E4E7E9] text-[#475156] text-[14px] rounded-[2px] focus:outline-0' style={{padding: '8px'}}/>
+                              <input readOnly name='shipping' value={userData?.shippingphonenumber} type="text" className='border-1 border-[#E4E7E9] text-[#475156] text-[14px] rounded-[2px] focus:outline-0' style={{padding: '8px'}}/>
                             </div>
                           </div>
                         </div>
@@ -168,10 +168,10 @@ const Checkout = () => {
                 {/* for pay on delivery */}
                 <div className='w-full flex flex-col gap-2 items-center border-r border-[#E4E7E9]'>
                   <label className='flex cursor-pointer flex-col items-center justify-center' htmlFor='cash on delivery'>
-                    <TbCurrencyNaira size={52} className='text-[#FA8232]'/>
-                    <span className='text-[14px] text-[#191C1F] font-semibold'>Cash on Delivery</span>
+                    <TbCurrencyNaira size={52} className='text-[#fa82326f]'/>
+                    <span className='text-[14px] text-[#191c1f7b] font-semibold'>Pay on Delivery</span>
                   </label>
-                  <input type="radio" className='cursor-pointer' id='cash on delivery' name='paymentmethod'/>
+                  <input type="radio" className='cursor-pointer' id='cash on delivery' onChange={() => alert('pay on delivery is not available yet')} disabled name='paymentmethod'/>
                 </div>
                 {/* for Bank transfer */}
                 <div className='w-full flex flex-col gap-2 items-center border-r border-[#E4E7E9]'>
@@ -242,15 +242,15 @@ const Checkout = () => {
                           flutterwaveResponse: response,
                           cartItems: cartItem,
                           shipping: {
-                            firstname: userData?.shipping,
-                            lastname: userData?.shipping,
-                            address: userData?.shipping,
-                            country: userData?.shipping,
-                            state: userData?.shipping,
-                            city: userData?.shipping,
-                            zipcode: userData?.shipping,
-                            email: userData?.shipping,
-                            phone: userData?.shipping,
+                            firstname: userData?.shippingfirstname,
+                            lastname: userData?.shippinglastname,
+                            address: userData?.shippingaddress,
+                            country: userData?.shippingcountry,
+                            state: userData?.shippingstate,
+                            city: userData?.shippingcity,
+                            zipcode: userData?.shippingzipcode,
+                            email: userData?.shippingemail,
+                            phone: userData?.shippingphonenumber,
                           },
                           subtotal
                         })

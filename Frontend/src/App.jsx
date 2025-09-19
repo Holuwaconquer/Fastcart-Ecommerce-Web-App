@@ -38,9 +38,18 @@ import Productdetails from './Pages/Productdetails';
 import ScrollToTop from './components/ScrollToTop';
 import Logout from './Pages/user/Logout';
 import ShowcaseProduct from './components/ShowcaseProduct';
+import Gallery from './components/Gallery';
 
 
 const App = () => {
+  // const images = [
+  //   "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0",
+  //   "https://images.unsplash.com/photo-1491553895911-0055eca6402d",
+  //   "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
+  //   "https://images.unsplash.com/photo-1501785888041-af3ef285b470",
+  //   "https://images.unsplash.com/photo-1470770841072-f978cf4d019e",
+  //   "https://images.unsplash.com/photo-1470770841072-f978cf4d019e",
+  // ];
   return (
     <div>
       <ScrollToTop />
@@ -161,7 +170,6 @@ const App = () => {
             </CategoryProvider>
           } />
         </Route>
-        <Route path='/showcase' element={<ShowcaseProduct />}/>
       </Routes>
     </div>
   );

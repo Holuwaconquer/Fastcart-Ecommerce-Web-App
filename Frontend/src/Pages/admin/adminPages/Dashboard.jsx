@@ -185,7 +185,10 @@ const Dashboard = () => {
                 })}
               </div>
             </div>
+            <div className='w-full'>
             <DashboardChart />
+
+            </div>
           </div>
         </div>
       </div>

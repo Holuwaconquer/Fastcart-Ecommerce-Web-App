@@ -59,7 +59,7 @@ const DashboardChart = () => {
             nextYear += 1;
           }
           // Fill 8 weeks ending with next coming week
-          for (let i = 7; i >= 0; i--) {
+          for (let i = 8; i >= 0; i--) {
             let week = nextWeek - i;
             let year = nextYear;
             if (week <= 0) {
@@ -87,21 +87,21 @@ const DashboardChart = () => {
   }
 
   return (
-    <div>
+    <div className="w-full">
       <ResponsiveContainer width="100%" height={400}>
-        <LineChart data={ordersWeekly}>
-          <CartesianGrid strokeDasharray="2 2" vertical={false} />
+        <LineChart data={ordersWeekly} margin={{ top: 0, right: 30, left: -40, bottom: 0 }}>
+          <CartesianGrid strokeDasharray="5 5" vertical={true} />
           <XAxis
             dataKey="week"
-            axisLine={false}
-            tickLine={false}
-            tickFormatter={(week) => week}
+            axisLine={true}
+            tickLine={true}
+            tickFormatter={(week) => week.replace(/, \d{4}$/, "")}
             interval={0}
             tick={{ fontSize: 12, fill: "#5A607F" }}
           />
-          <YAxis axisLine={false} tickLine={false} />
+          <YAxis axisLine={true} tickLine={true} />
           <Tooltip />
-          <Legend />
+          {/* <Legend /> */}
           <Line
             key="totalOrders"
             type="monotone"

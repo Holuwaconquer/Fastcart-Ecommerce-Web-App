@@ -15,7 +15,10 @@ const Bottomnav = () => {
   const [isClicked, setIsClicked] = useState(false);
 
   const handleClick = () => {
-    setIsClicked(!isClicked); 
+    setIsClicked(true); 
+  }
+  const handleClick2 = () => {
+    setIsClicked(false); 
   }
   const { allCategory } = useContext(CategoryContext);
 
@@ -24,10 +27,11 @@ const Bottomnav = () => {
       <div className='w-full flex items-center justify-between'>
         {/* for All category */}
         <div className='w-auto flex relative items-center text-[#191C1F]'>
-          <div className='relative'>
-            <button onMouseEnter={handleClick} className={`bg-[#F2F4F5] active:bg-[#FA8232] cursor-pointer text-[#191C1F] flex gap-[8px] rounded-[2px] items-center ${isClicked ? 'bg-[#FA8232] text-white' : ''}`} style={{padding: '14px 24px'}}><span>All Category</span><span><RxCaretDown className={isClicked ? 'rotateCaret' : ''} size={18}/></span></button>
-          </div>
-            <div style={{padding: '10px 0'}} className='absolute top-[130%] left-0 bg-white shadow-sm rounded-[3px]'>
+          <div onMouseEnter={handleClick} onMouseLeave={handleClick2}>
+            <div className='relative'>
+              <button  className={`bg-[#F2F4F5] active:bg-[#FA8232] cursor-pointer text-[#191C1F] flex gap-[8px] rounded-[2px] items-center ${isClicked ? 'bg-[#FA8232] text-white' : ''}`} style={{padding: '14px 24px'}}><span>All Category</span><span><RxCaretDown className={isClicked ? 'rotateCaret' : ''} size={18}/></span></button>
+            </div>
+            <div style={{padding: '10px 0'}} className='absolute top-[130%] left-0 z-50 bg-white shadow-sm rounded-[3px]'>
               {
                 allCategory && (
                   allCategory.map((category, index) => (
@@ -38,6 +42,7 @@ const Bottomnav = () => {
                 )
               }
             </div>
+          </div>
           <div>
             <NavLink
               to="/order-tracking"
