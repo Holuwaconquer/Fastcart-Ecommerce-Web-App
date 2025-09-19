@@ -41,7 +41,7 @@ const ShoppingCart = () => {
                       <div key={cartProduct._id} className='w-full grid grid-cols-1 sm:grid-cols-[3fr_1fr_2fr_1fr] gap-4 items-center'>
                         {/* Product Details */}
                         <div className='w-full flex items-center gap-4'>
-                          <RxCrossCircled onClick={() => dispatch(removeFromCart(cartProduct))} size={24} className='text-[#929FA5] cursor-pointer'/>
+                          <RxCrossCircled onClick={() => dispatch(removeFromCart(cartProduct))} size={44} className='text-[#929FA5] cursor-pointer'/>
                           <div className='w-[72px] h-[72px]'>
                             <img className='w-full h-full object-contain' src={cartProduct?.image[0]} alt="" />
                           </div>
@@ -91,10 +91,9 @@ const ShoppingCart = () => {
                   </div>
                   {/* Buttons */}
                   <div className='w-full flex items-center justify-between gap-4 flex-wrap' style={{ padding: '20px' }}>
-                    <button style={{ padding: '15px 0' }} className='rounded-[2px] border-2 border-[#2DA5F3] transition-all cursor-pointer font-bold hover:bg-[#2DA5F3] hover:text-white active:text-white active:bg-[#2DA5F3] text-[#2DA5F3] w-full sm:w-auto flex items-center justify-center gap-4'>
+                    <button onClick={() => navigate('/shop')} style={{ padding: '15px 10px' }} className='rounded-[2px] border-2 border-[#2DA5F3] transition-all cursor-pointer font-bold hover:bg-[#2DA5F3] hover:text-white active:text-white active:bg-[#2DA5F3] text-[#2DA5F3] w-full sm:w-auto flex items-center justify-center gap-4'>
                       <IoIosArrowRoundBack size={24} /><span>RETURN TO SHOP</span>
                     </button>
-                    <button style={{ padding: '15px 0' }} className='rounded-[2px] border-2 border-[#2DA5F3] transition-all cursor-pointer font-bold hover:bg-[#2DA5F3] hover:text-white active:text-white active:bg-[#2DA5F3] text-[#2DA5F3] w-full sm:w-auto'>UPDATE CART</button>
                   </div>
                 </div>
               </div>

@@ -21,6 +21,7 @@ const Productdetails = () => {
   const dispatch = useDispatch()
   const cartItem = useSelector(state => state.cart.cartItem)
   const cartProduct = cartItem.find(item => item._id === product?._id);
+  const [localQuantity, setLocalQuantity] = useState(cartProduct ? cartProduct.quantity : 1);
   const quantity = cartProduct ? cartProduct.quantity : 1;
   const [isReading, setIsReading] = useState('description')
   useEffect(() => {
@@ -40,6 +41,34 @@ const Productdetails = () => {
       dispatch(addToCart(product))
     }
   }
+  useEffect(() => {
+    if (cartProduct) {
+      setLocalQuantity(cartProduct.quantity);
+    } else {
+      setLocalQuantity(1);
+    }
+  }, [cartProduct]);
+  const handleQuantityChange = (e) => {
+    const value = e.target.value;
+    if (value === "") {
+      setLocalQuantity("");
+      return;
+    }
+
+    const parsed = parseInt(value, 10);
+    if (!isNaN(parsed) && parsed > 0) {
+      setLocalQuantity(parsed);
+    }
+  };
+  const commitQuantity = () => {
+    const finalQuantity = localQuantity === "" ? 1 : Math.max(1, parseInt(localQuantity, 10));
+    setLocalQuantity(finalQuantity);
+
+    dispatch(updateQuantity({
+      productId: product._id,
+      quantity: finalQuantity
+    }));
+  };
   const today = new Date();
   today.setDate(today.getDate() + 5);
   const deliveryDate = today.toLocaleDateString('en-GB', {
@@ -109,40 +138,40 @@ const Productdetails = () => {
                 </button> */}
                 <div className='w-full h-full'>
                   <div className='w-full h-full'>
-                    <div className='w-25 h-full text-[#191C1F] flex items-center gap-4 justify-center border border-[#E4E7E9] rounded-[3px]' style={{padding: '5px 10px'}}>
+                    <div className="w-25 h-full text-[#191C1F] flex items-center gap-4 justify-center border border-[#E4E7E9] rounded-[3px]" style={{padding: '5px 10px'}}>
                       <FaMinus
-                        className='cursor-pointer'
+                        className="cursor-pointer"
                         onClick={() => {
-                          dispatch(updateQuantity({
-                            productId: product._id,
-                            quantity: Math.max(1, quantity - 1)
-                          }));
+                          const newQty = Math.max(1, (parseInt(localQuantity) || 1) - 1);
+                          setLocalQuantity(newQty);
+                          dispatch(updateQuantity({ productId: product._id, quantity: newQty }));
                         }}
                         size={16}
                       />
                       <input
-                        type="text"
-                        onChange={(e) => {
-                          const value = parseInt(e.target.value);
-                          dispatch(updateQuantity({
-                            productId: product._id,
-                            quantity: isNaN(value) || value < 1 ? 1 : value
-                          }));
+                        type="number"
+                        min="1"
+                        onChange={handleQuantityChange}
+                        onBlur={commitQuantity}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            commitQuantity();
+                          }
                         }}
-                        className='border-0 focus:outline-0 w-8 text-center'
-                        value={quantity}
+                        className="border-0 focus:outline-0 w-8 text-center"
+                        value={localQuantity}
                       />
                       <FaPlus
-                        className='cursor-pointer'
+                        className="cursor-pointer"
                         onClick={() => {
-                          dispatch(updateQuantity({
-                            productId: product._id,
-                            quantity: quantity + 1
-                          }));
+                          const newQty = (parseInt(localQuantity) || 1) + 1;
+                          setLocalQuantity(newQty);
+                          dispatch(updateQuantity({ productId: product._id, quantity: newQty }));
                         }}
                         size={16}
                       />
                     </div>
+
                   </div>
                 </div>
                 <button onClick={handleCartToggle} className="rounded-[3px] bg-[#FA8232] text-white flex items-center justify-center gap-[8px] cursor-pointer transition-all hover:bg-[#f7751f] active:bg-[#f89e62]" style={{ padding: "15px" }}>
