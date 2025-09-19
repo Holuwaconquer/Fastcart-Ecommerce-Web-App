@@ -11,6 +11,7 @@ import { MdOutlineRemoveRedEye } from "react-icons/md";
 import Loader from '../components/Loader';
 import Gallery from '../components/Gallery';
 import FlutterwaveLogo from '../assets/Flutterwave_Logo.png'
+import FewProduct from '../components/FewProduct';
 
 const Productdetails = () => {
   const id = useParams();
@@ -209,6 +210,7 @@ const Productdetails = () => {
           </div>
         </div>
       </div>
+      <FewProduct />
     </div>
   )
 }

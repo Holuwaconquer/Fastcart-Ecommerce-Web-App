@@ -28,8 +28,10 @@ const BestDeals = () => {
       setProductWithHighestDiscount(higherDiscount) 
       
       const topEightDiscounted = allProduct
-      .filter(product => typeof product.discountPercentage === "number" &&
-      product._id !== higherDiscount._id)
+      .filter(product => 
+        typeof product.discountPercentage === "number" &&
+        (!higherDiscount || product._id !== higherDiscount._id)
+      )
       .sort((a, b) => b.discountPercentage - a.discountPercentage)
       .slice(0, 8);
       setbestDealsProduct(topEightDiscounted)
@@ -53,11 +55,11 @@ const BestDeals = () => {
     navigate(`/product-page/${productWithHighestDiscount._id}`)
   }
   return (
-    <div onClick={() => productDetails(productWithHighestDiscount)} className="w-full gap-4 md:gap-0 grid items-start lg:grid-cols-[24%_76%] lg:border-1 lg:border-[#E4E7E9]">
+    <div className="w-full gap-4 md:gap-0 grid items-start lg:grid-cols-[24%_76%] lg:border-1 lg:border-[#E4E7E9]">
       <div className="border border-[#E4E7E9] md:border-0 md:border-r-1 md:border-[#E4E7E9]" style={{ padding: "10px" }}>
         {/* for higher product */}
         {productWithHighestDiscount && (
-          <div className="w-full flex flex-col">
+          <div onClick={() => productDetails(productWithHighestDiscount)} className="w-full flex flex-col cursor-pointer">
             {/* for highest discount product */}
             <div className="relative">
               <img src={productWithHighestDiscount?.image[0]} alt="product-image" />
@@ -84,9 +86,9 @@ const BestDeals = () => {
                 {productWithHighestDiscount?.name}
               </p>
               <p className="flex gap-2 items-center">
-                <span className="text-[18px] text-[#ADB7BC] line-through">₦{productWithHighestDiscount?.price.toLocaleString()}</span>
+                <span className="text-[18px] text-[#ADB7BC] line-through">₦{productWithHighestDiscount?.price ? productWithHighestDiscount.price.toLocaleString() : "0"}</span>
                 <span className="text-[#2DA5F3] text-[18px] font-bold">
-                  ₦{productWithHighestDiscount?.discountprice.toLocaleString()}
+                  ₦{productWithHighestDiscount?.discountprice ? productWithHighestDiscount.discountprice.toLocaleString() : "0"}
                 </span>
               </p>
               <p className="text-[14px] text-[#5F6C72]">
