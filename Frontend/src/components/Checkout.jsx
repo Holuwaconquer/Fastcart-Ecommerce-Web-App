@@ -71,7 +71,20 @@ const Checkout = () => {
             <div className='flex flex-col gap-4'>
               <div style={{padding: '10px 0'}}>
                 <h1 className='w-full font-bold border-[#E4E7E9] text-[18px] text-[#191C1F]'>SHIPPING ADDRESS</h1>
-                <p className={`${userData?.shippingfirstname=='' || userData?.shippinglastname=='' || userData?.shippingemail =='' || userData?.shippingaddress =='' || userData?.shippingphonenumber =='' || userData?.shippingcountry =='' || userData?.shippingstate =='' || userData?.shippingcity =='' ? 'block' : 'hidden'} text-[#EBC80C] flex gap-2 items-center`}><span><IoWarningOutline /></span>Your shipping address details is empty or not fully filled, <span className='underline cursor-pointer' onClick={() =>navigate('/dashboard/setting')}>edit your shipping address here</span></p>
+                <p className={`${
+                  [
+                    userData?.shippingfirstname,
+                    userData?.shippinglastname,
+                    userData?.shippingemail,
+                    userData?.shippingaddress,
+                    userData?.shippingphonenumber,
+                    userData?.shippingcountry,
+                    userData?.shippingstate,
+                    userData?.shippingcity
+                  ].some(field => !field || field.trim() === '') 
+                    ? 'block' 
+                    : 'hidden'
+                } text-[#EBC80C] flex gap-2 items-center`}><span><IoWarningOutline /></span>Your shipping address details is empty or not fully filled, <span className='underline cursor-pointer' onClick={() =>navigate('/dashboard/setting')}>edit your shipping address here</span></p>
               </div>
               {userData ?
                 <div className='w-full flex flex-col gap-5'>
