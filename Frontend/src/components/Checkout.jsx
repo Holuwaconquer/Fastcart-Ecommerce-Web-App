@@ -84,7 +84,7 @@ const Checkout = () => {
                   ].some(field => !field || field.trim() === '') 
                     ? 'block' 
                     : 'hidden'
-                } text-[#EBC80C] flex gap-2 items-center`}><span><IoWarningOutline /></span>Your shipping address details is empty or not fully filled, <span className='underline cursor-pointer' onClick={() =>navigate('/dashboard/setting')}>edit your shipping address here</span></p>
+                } text-[#EBC80C] flex flex-col md:flex-row md:items-center`}><span><IoWarningOutline /></span>Your shipping address details is empty or not fully filled,<span className='underline cursor-pointer hover:no-underline transition-all' onClick={() =>navigate('/dashboard/setting')}>edit your shipping address here</span> </p>
               </div>
               {userData ?
                 <div className='w-full flex flex-col gap-5'>
