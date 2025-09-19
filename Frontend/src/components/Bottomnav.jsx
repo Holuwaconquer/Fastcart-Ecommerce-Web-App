@@ -43,6 +43,7 @@ const Bottomnav = () => {
               }
             </div>
           </div>
+          {/* link for order tracking */}
           <div>
             <NavLink
               to="/order-tracking"
@@ -67,8 +68,30 @@ const Bottomnav = () => {
               )}
             </NavLink>
           </div>
+          {/* link for customer support */}
           <div>
-            <button className='text-[#191C1F] flex gap-[8px] rounded-[2px] items-center' style={{padding: '14px 24px'}}><span><SlEarphonesAlt size={18}/></span><span>Customer Support</span></button>
+            <NavLink
+              to="/customer-support"
+              className={({ isActive }) =>
+                `cursor-pointer flex gap-[8px] items-center ${
+                  isActive ? "text-[#FA8232] font-semibold" : "text-[#191C1F]"
+                }`
+              }
+            >
+              {({ isActive }) => (
+                <button
+                  className={`flex gap-[8px] items-center cursor-pointer ${
+                    isActive ? "text-[#FA8232] font-semibold" : "text-[#191C1F]"
+                  }`}
+                  style={{ padding: "14px 24px" }}
+                >
+                  <span>
+                    <SlEarphonesAlt size={18} />
+                  </span>
+                  <span>Customer Support</span>
+                </button>
+              )}
+            </NavLink>
           </div>
           <div>
             <button className='text-[#191C1F] flex gap-[8px] rounded-[2px] items-center' style={{padding: '14px 24px'}}><span><CiCircleInfo  size={18}/></span><span>Need Help</span></button>

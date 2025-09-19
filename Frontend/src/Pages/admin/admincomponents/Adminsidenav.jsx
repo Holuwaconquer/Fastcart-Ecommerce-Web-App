@@ -12,7 +12,7 @@ import { IoSettingsOutline } from "react-icons/io5";
 
 const Adminsidenav = () => {
   return (
-    <div style={{padding: '20px 0px 20px 40px'}} className='w-[250px] h-[100vh] sticky top-0 bg-[#1E2753] flex flex-col justify-start items-center overflow-y-auto'>
+    <div style={{padding: '40px 0px 100px 40px'}} className='w-[250px] h-full sticky top-0 bg-[#1E2753] flex flex-col justify-start items-center overflow-x-hidden overflow-y-auto'>
       <div className='w-full text-white flex flex-col gap-[1.3em] h-full'>
         <div className='w-full flex flex-col'>
           {/* for dashboard */}

@@ -39,6 +39,8 @@ import ScrollToTop from './components/ScrollToTop';
 import Logout from './Pages/user/Logout';
 import ShowcaseProduct from './components/ShowcaseProduct';
 import Gallery from './components/Gallery';
+import CustomerSupport from './Pages/CustomerSupport';
+import AboutUs from './Pages/AboutUs';
 
 
 const App = () => {
@@ -61,6 +63,7 @@ const App = () => {
             </CategoryProvider>
           }>
             <Route index element={<Landingpage />} />
+            <Route path='/who-we-are' element={<AboutUs />} />
             <Route path='/shop' element={<ShopPage />} />
             <Route path='/shop/:categoryName' element={<ShopPage />} />
             <Route path='/product-page/:id' element={
@@ -71,6 +74,7 @@ const App = () => {
             <Route path='/order-tracking' element={<OrderTrack />} />
             <Route path='/order-tracking/:id' element={<OrderTrackDetails />} />
             <Route path='/shopping-cart' element={<ShoppingCart />} />
+            <Route path='/customer-support' element={<CustomerSupport />} />
             <Route path='/shopping-cart/checkout' element={
               <UserProvider>
                 <ProtectedRoute role="user">

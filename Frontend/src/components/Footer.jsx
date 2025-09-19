@@ -47,8 +47,8 @@ const Footer = () => {
             <li className='cursor-pointer' onClick={() => navigate('/')}>Wishlist</li>
             <li className='cursor-pointer' onClick={() => navigate('/')}>Compare</li>
             <li className='cursor-pointer' onClick={() => navigate('/order-tracking')}>Track Order</li>
-            <li className='cursor-pointer' onClick={() => navigate('/')}>Customer Help</li>
-            <li className='cursor-pointer' onClick={() => navigate('/')}>About Us</li>
+            <li className='cursor-pointer' onClick={() => navigate('/customer-support')}>Customer Help</li>
+            <li className='cursor-pointer' onClick={() => navigate('/who-we-are')}>About Us</li>
           </ul>
         </div>
         {/* end of top category */}

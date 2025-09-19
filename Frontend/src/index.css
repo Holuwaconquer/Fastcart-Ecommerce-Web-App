@@ -6,7 +6,13 @@
   box-sizing: border-box;
   font-family: "Montserrat", sans-serif;
 }
-
+::-webkit-scrollbar{
+  width: 10px;
+  background-color: #1E2753;
+}
+::-webkit-scrollbar-thumb{
+  background-color: #F5F6FA;
+}
 body{
   font-family: "Montserrat", sans-serif;
 }
