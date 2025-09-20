@@ -3,10 +3,9 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useLocation, useParams } from 'react-router-dom';
 import { CategoryContext } from '../CategoryContext';
 import { FiShoppingCart } from "react-icons/fi";
-import { FaStar, FaMinus, FaPlus} from "react-icons/fa6";
+import { FaStar, FaMinus, FaPlus, FaRegStar} from "react-icons/fa6";
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart, removeFromCart, updateQuantity } from '../redux/Cart';
-import { FaRegHeart } from "react-icons/fa";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import Loader from '../components/Loader';
 import Gallery from '../components/Gallery';
@@ -16,6 +15,7 @@ import FewProduct from '../components/FewProduct';
 const Productdetails = () => {
   const id = useParams();
   const API_URL = import.meta.env.VITE_API_URL;
+  const ADMIN_URL = import.meta.env.VITE_ADMIN_ROUTE_NAME
   const { allProduct } = useContext(CategoryContext)
   const [product, setProduct] = useState({})
   const dispatch = useDispatch()
@@ -24,14 +24,30 @@ const Productdetails = () => {
   const [localQuantity, setLocalQuantity] = useState(cartProduct ? cartProduct.quantity : 1);
   const quantity = cartProduct ? cartProduct.quantity : 1;
   const [isReading, setIsReading] = useState('description')
+  const [averageRating, setAverageRating] = useState('')
+  const [totalRating, setTotalRating] = useState('')
   useEffect(() => {
     const foundProduct = allProduct.find((product) => product._id === id.id)
     setProduct(foundProduct)
     console.log(product);
-
     document.title = `${foundProduct?.name || 'Loading...'} | Fastcart Online Store`
     
   }, [id, allProduct])
+
+  useEffect(() => {
+    if (product?._id) {
+      console.log(product._id);
+      
+      axios.get(`${API_URL}/${ADMIN_URL}/${product._id}/average-rating`)
+        .then(res => {
+          console.log("Average Rating:", res.data);
+          setAverageRating(res.data.averageRating);
+          setTotalRating(res.data.totalrating);
+        })
+        .catch(err => console.error(err));
+    }
+  }, [product]);
+
   const isAddedToCart = product && cartItem.some(item => item._id === product._id);
 
   const handleCartToggle = () =>{
@@ -232,7 +248,50 @@ const Productdetails = () => {
                 <div><p>N/A</p></div>
               )
               : isReading =='review' ? (
-                <div></div>
+                <div className='w-full flex flex-col gap-4'>
+                  {product?.rating && product.rating.length > 0 ? (
+                    <div className='w-full items-start flex flex-col gap-4'>
+                      <div className='bg-[#FBF4CE] rounded-[4px] items-center justify-center flex flex-col gap-4' style={{padding:'32px'}}>
+                        <h1 className='text-[#191C1F] text-[56px] font-semibold'>{averageRating}</h1>
+                        <div className="flex">
+                          {[...Array(5)].map((_, i) =>
+                            i < averageRating ? (
+                              <FaStar key={i} size={18} className="text-[#FA8232]" />
+                            ) : (
+                              <FaRegStar key={i} size={18} className="text-[#ADB7BC]" />
+                            )
+                          )}
+                        </div>
+                        <p><span className='text-[#191C1F] text-[16px] font-medium'>Customer Rating</span><span className='text-[#475156] text-[16px]'> ({totalRating})</span></p>
+                      </div>
+                      <h1 className='text-[#191C1F] text-[16px] font-semibold'>Customer Feedback</h1>
+                      {product?.rating.map((rates, index) => (
+                        <div key={index} className='flex flex-col gap-4 border-b border-[#E4E7E9]' style={{paddingBottom: '10px'}}>
+                          <div className='flex gap-4 items-center'>
+                            <div className='w-[48px] h-[48px] rounded-[50%] border border-[#191C1F]'></div>
+                            <div className='flex flex-col gap-2'>
+                              <p><span className='text-[#191C1F] text-[14px] font-medium'>Dianne Russell</span> • <span className='text-[#5F6C72] text-[12px]'>{rates.createdAt}</span> </p>
+                              <div className="flex">
+                                {[...Array(5)].map((_, i) =>
+                                  i < rates.ratingGrade ? (
+                                    <FaStar key={i} size={18} className="text-[#FA8232]" />
+                                  ) : (
+                                    <FaRegStar key={i} size={18} className="text-[#ADB7BC]" />
+                                  )
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                          <p className='text-[14px] text-[#475156]'>{rates.feedback}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )
+                  : (
+                      <div>no rating</div>
+                    )
+                  }
+                </div>
               )
               : 'nothing here'
             }

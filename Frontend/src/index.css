@@ -165,3 +165,23 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+
+option {
+  color: #ccc;
+}
+
+option[value="1"] {
+  color: #f90;
+}
+option[value="2"] {
+  color: #f90;
+}
+option[value="3"] {
+  color: #f90;
+}
+option[value="4"] {
+  color: #f90;
+}
+option[value="5"] {
+  color: #f90;
+}

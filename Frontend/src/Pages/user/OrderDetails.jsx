@@ -6,12 +6,19 @@ import { LuPlus } from "react-icons/lu";
 import { CategoryContext } from '../../CategoryContext';
 import { PiNotebookDuotone, PiPackage, PiTruckLight, PiHandshakeLight } from "react-icons/pi";
 import { RxCheck } from "react-icons/rx";
+import { Dialog, DialogPanel, DialogTitle, DialogBackdrop } from '@headlessui/react'
+import { useFormik } from 'formik';
+import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
 
 const OrderDetails = () => {
+  let [isOpen, setIsOpen] = useState(false)
   const { id } = useParams()
   const {userData } = useContext(UserAccountContext)
   const [order, setOrder] = useState(null)
   const { allProduct } = useContext(CategoryContext)
+  const API_URL = import.meta.env.VITE_API_URL
+  const ADMIN_ROUTE = import.meta.env.VITE_ADMIN_ROUTE_NAME;
 
   useEffect(() => {
     if(userData && userData.productOrder) {
@@ -27,11 +34,30 @@ const OrderDetails = () => {
   : null;
   if (expectedDate) expectedDate.setDate(expectedDate.getDate() + 5);
   
+  const formik = useFormik({
+    initialValues: {
+      productId: '',
+      ratingGrade: 5,
+      feedback: '',
+    },
+    onSubmit: (values) =>{
+      console.log(values);
+      axios.put(`${API_URL}/${ADMIN_ROUTE}/product/${values.productId}`, {
+        ratingGrade: values.ratingGrade,
+        feedback: values.feedback
+      },{
+        headers: { Authorization: `Bearer ${localStorage.getItem("userToken")}` }
+      }).then(res => {
+        toast.success('Your feedback has been received!')
+        setIsOpen(false);
+      })
+      .catch(err => console.error("Error rating product:", err));
+    }
+  })
   return (
     <div className='w-full flex flex-col border border-[#E4E7E9] rounded-[4px]'>
       <div style={{padding:"15px 20px"}} className='w-full flex justify-between items-center border-b border-[#E4E7E9]'>
         <p onClick={() => window.history.back()} className='flex cursor-pointer gap-1 items-center text-[14px] text-[#191C1F]'><IoIosArrowRoundBack size={24}/><span>ORDER DETAILS</span></p>
-        <p className='flex gap-1 items-center text-[14px] text-[#FA8232]'><span>Leave a Rating</span><LuPlus size={24}/></p>
       </div>
       {order ? (
         <div className='w-full flex flex-col gap-4'>
@@ -123,15 +149,25 @@ const OrderDetails = () => {
             </div>
             {order?.products?.map((product, index) => (
             <div key={index} style={{padding:"20px"}} className='w-full border-b border-[#E4E7E9] grid grid-cols-[3fr_1fr_1fr_1fr] text-[12px] text-[#475156]'>
-                <div className='w-full flex items-center gap-2'>
-                  <div className='w-[80px] h-[80px]'>
-                    <img src={product.image} alt="" />
+                <div>
+                  <div className='w-full flex items-center gap-2'>
+                    <div className='w-[80px] h-[80px]'>
+                      <img src={product.image} alt="" />
+                    </div>
+                    <div>
+                      <p className='font-semibold text-[12px] text-[#2DA5F3]'>{allProduct.find(item => item._id === product.id)?.category?.map(cat => cat.name).join(', ').toUpperCase()}</p>
+                      <p className='text-[14px] text-[#191C1F]'>{product.name}</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className='font-semibold text-[12px] text-[#2DA5F3]'>{allProduct.find(item => item._id === product.id)?.category?.map(cat => cat.name).join(', ').toUpperCase()}</p>
-                    <p className='text-[14px] text-[#191C1F]'>{product.name}</p>
-
-                  </div>
+                  <button 
+                    className="ml-4 cursor-pointer text-sm text-[#FA8232]" 
+                    onClick={() => {
+                      setIsOpen(true);
+                      formik.setFieldValue("productId", product.productId);
+                    }}
+                  >
+                    Rate Product
+                  </button>
                 </div>
                 <p className='text-[#475156] text-[14px]'>{product.price.toLocaleString()}</p>
                 <p className='text-[#475156] text-[14px]'>{product.quantity || 1}</p>
@@ -153,6 +189,36 @@ const OrderDetails = () => {
       ) : (
         <div style={{padding: '20px'}}>Loading Order details...</div>
       )}
+
+      <Dialog open={isOpen} onClose={() => setIsOpen(false)} className="relative z-50">
+          <DialogBackdrop transition className="fixed inset-0 bg-black/30 duration-300 ease-out data-closed:opacity-0" />
+            <div className="fixed inset-0 flex w-screen items-center justify-center">
+              <DialogPanel transition className="w-[90%] md:w-2/4 lg:w-[40%] space-y-4 bg-white shadow-lg flex flex-col gap-[1em]" style={{padding: '20px', borderRadius: '4px'}}>
+                <DialogTitle className="font-bold text-[#131523] text-[16px">Ratings</DialogTitle>
+                <form onSubmit={formik.handleSubmit} className='w-full flex flex-col gap-3'>
+                  <div className='w-full flex flex-col gap-2'>
+                    <label htmlFor="name">Rating</label>
+                    <select name="ratingGrade" defaultValue={5} value={formik.values.ratingGrade} onChange={formik.handleChange} className='border border-[#E4E7E9] rounded-[2px]' style={{padding: '5px'}} id="">
+                      {[5, 4, 3, 2, 1].map((rating) => (
+                        <option key={rating} value={rating}>
+                          {'★'.repeat(rating)}{'☆'.repeat(5 - rating)} {rating} Star Rating
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className='w-full flex flex-col gap-1'>
+                    <label htmlFor="description">Feedback</label>
+                    <textarea name="feedback" value={formik.values.feedback} onChange={formik.handleChange} rows={4} className='resize-none border border-[#E4E7E9] rounded-[2px] outline-0' placeholder='Write down your feedback about our product & services' style={{padding: '5px'}} id=""></textarea>
+                  </div>
+                  <div className="flex gap-4">
+                    <button style={{ padding: '10px 20px' }} type='submit' className='cursor-pointer flex items-center rounded-[4px] text-white gap-2 active:bg-[#f98f48] bg-[#FA8232]'>PUBLISH REVIEW</button>
+                  </div>
+                </form>
+              </DialogPanel>
+            </div>
+      </Dialog>
+
+        <ToastContainer />
     </div>
   )
 }

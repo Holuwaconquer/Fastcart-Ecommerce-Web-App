@@ -2,10 +2,10 @@ import React from 'react'
 
 const Logout = () => {
     const logOut = () =>{
-        if(window.confirm("are you sure you want to log out")){
-        localStorage.removeItem("userToken")
-        window.location.href = '/dashboard/account'
-        }
+      if(window.confirm("are you sure you want to log out")){
+      localStorage.removeItem("userToken")
+      window.location.href = '/dashboard/account'
+      }
     }
   return (
     <div>

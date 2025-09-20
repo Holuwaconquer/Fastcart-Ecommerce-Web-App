@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcryptjs');
+const userModel = require('./user.model');
 require('dotenv').config()
 
 const admin_username = process.env.admin_username;
@@ -21,6 +22,12 @@ const categorySchema = mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
   subcategories: [subCategorySchema]
 })
+const ratingSchema = new mongoose.Schema({
+  user: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
+  ratingGrade: { type: Number, min: 1, max: 5, required: true },
+  feedback: { type: String },
+  createdAt: { type: Date, default: Date.now }
+});
 
 const productSchema = mongoose.Schema({
   name: {type:String, required: true, trim: true},
@@ -43,6 +50,7 @@ const productSchema = mongoose.Schema({
   productBox: {type: String},
   keyFeatures: {type: String},
   discountPercentage: {type:Number},
+  rating: [ratingSchema],
   createdAt: {type:Date, default: Date.now}
 })
 

@@ -1,12 +1,19 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { PiStorefrontLight, PiMapPinLineLight, PiShoppingCartSimple, PiArrowsCounterClockwise, PiNotebookLight, PiClockClockwise, PiSignOutLight } from "react-icons/pi";
 import { CiHeart } from "react-icons/ci";
 import { RiStackLine } from "react-icons/ri";
 import { GoGear } from "react-icons/go";
+import { Dialog, DialogPanel, DialogTitle, DialogBackdrop } from '@headlessui/react'
 
 
 const DashboardSidenav = () => {
+
+  let [isOpen, setIsOpen] = useState(false)
+  const logOut = () =>{
+    localStorage.removeItem("userToken")
+    window.location.href = '/dashboard/account'
+  }
 
   return (
     <div style={{padding: '16px 0px'}} className='md:w-[264px] bg-white flex flex-col
@@ -77,13 +84,30 @@ const DashboardSidenav = () => {
           </div>
         {/* for knowledge base */}
           <div className='w-full'>
-           <NavLink style={{padding: '10px'}} to='/dashboard/logout' className={({ isActive }) => `w-full flex items-center gap-2 transition-all duration-300 ${ isActive ? 'bg-[#FA8232] text-[#white] shadow-md scale-[1.03]' : 'text-[#5F6C72] hover:bg-[#FFF3EB]' }`}>
+           <button style={{padding: '10px'}} onClick={() => setIsOpen(true)} className={ `w-full flex items-center gap-2 transition-all duration-300 text-[#5F6C72] cursor-pointer scale-[1.03] hover:bg-[#FFF3EB]`}>
            <PiSignOutLight  size={24} />
            <span className='text-[14px]'>Log Out</span>
-            </NavLink>
+          </button>
           </div>
         </div>
       </div>
+
+      <Dialog open={isOpen} onClose={() => setIsOpen(false)} className="relative z-50">
+        <DialogBackdrop transition className="fixed inset-0 bg-black/30 duration-300 ease-out data-closed:opacity-0" />
+          <div className="fixed inset-0 flex w-screen items-center justify-center">
+            <DialogPanel transition className="w-[90%] md:w-2/4 lg:w-[40%] space-y-4 bg-white shadow-lg flex flex-col gap-[1em]" style={{padding: '20px', borderRadius: '4px'}}>
+              <DialogTitle className="font-bold text-[#131523] text-[16px">Log Out</DialogTitle>
+              <div className='w-full flex flex-col gap-4 items-center justify-center'>
+                <h1 className='text-[#191C1F] text-[25px]'>Are you logging out?</h1>
+                <p>You can always log in at anytime, click the log out button to confirm or cancel if you're not sure.</p>
+                <div className='flex gap-4 items-center'>
+                  <button style={{padding: '10px 30px'}} className='cursor-pointer rounded-[30px] text-[#191C1F] border border-[#191C1F] active:bg-[#45494d]' onClick={() => setIsOpen(false)}>Cancel</button>
+                  <button style={{padding: '10px 30px'}} className='cursor-pointer rounded-[30px] text-white bg-[#191C1F] active:bg-[#45494d]' onClick={logOut}>Log out</button>
+                </div>
+              </div>
+            </DialogPanel>
+          </div>
+    </Dialog>
     </div>
   )
 }
