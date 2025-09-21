@@ -1,8 +1,8 @@
 import React from 'react'
 
-const Loader = () => {
+const SkelentonLoader = () => {
   return (
-    <div className='w-full h-full bg-[#ffd8bddd] backdrop-blur-lg fixed top-0 left-0 z-50'>
+    <div className='w-full h-full bg-[#ffd8bddd] backdrop-blur-lg'>
         <div className='w-full h-full flex flex-col items-center justify-center'>
             <div class="w-32 h-32 relative flex items-center justify-center">
             <div
@@ -56,4 +56,4 @@ const Loader = () => {
   )
 }
 
-export default Loader
+export default SkelentonLoader

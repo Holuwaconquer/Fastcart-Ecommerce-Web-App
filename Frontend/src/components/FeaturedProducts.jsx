@@ -7,6 +7,7 @@ import { CategoryContext } from '../CategoryContext';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart, removeFromCart } from '../redux/Cart';
 import ProductCard from './ProductCard';
+import SkelentonLoader from './SkelentonLoader';
 
 const FeaturedProducts = () => {
   const [productWithHighestDiscount, setProductWithHighestDiscount] = useState(null)
@@ -74,9 +75,16 @@ const FeaturedProducts = () => {
         <h2 className="text-xl font-bold mb-4">Featured Products</h2>
       <div>
         <div className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {featuredProducts.map(fp => (
+          {featuredProducts && featuredProducts.length > 0 ? featuredProducts.map(fp => (
             <ProductCard key={fp._id} product={fp} />
-          ))}
+          ))
+          :
+          Array.from({ length: 10}).map((_, index) => (
+            <div className="w-full h-[250px] cursor-pointer flex flex-col gap-2 border-1 border-[#E4E7E9]" style={{ padding: "10px" }}>
+              <SkelentonLoader />
+            </div>
+          ))
+          }
         </div>
       </div>
     </div>

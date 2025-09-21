@@ -11,6 +11,8 @@ import Loader from '../components/Loader';
 import Gallery from '../components/Gallery';
 import FlutterwaveLogo from '../assets/Flutterwave_Logo.png'
 import FewProduct from '../components/FewProduct';
+import { addToRecentlyViewed } from '../components/Recentlyview';
+import BrowsingHistory from '../components/BrowsingHistory';
 
 const Productdetails = () => {
   const id = useParams();
@@ -37,6 +39,7 @@ const Productdetails = () => {
   useEffect(() => {
     if (product?._id) {
       console.log(product._id);
+      addToRecentlyViewed(product._id)
       
       axios.get(`${API_URL}/${ADMIN_URL}/${product._id}/average-rating`)
         .then(res => {
@@ -270,7 +273,12 @@ const Productdetails = () => {
                           <div className='flex gap-4 items-center'>
                             <div className='w-[48px] h-[48px] rounded-[50%] border border-[#191C1F]'></div>
                             <div className='flex flex-col gap-2'>
-                              <p><span className='text-[#191C1F] text-[14px] font-medium'>Dianne Russell</span> • <span className='text-[#5F6C72] text-[12px]'>{rates.createdAt}</span> </p>
+                              <p><span className='text-[#191C1F] text-[14px] font-medium'>Dianne Russell</span> • <br className='md:hidden'/>
+                                <span className='text-[#5F6C72] text-[12px]'>
+                                  {rates.createdAt.split('T')[0]
+                                  }
+                                </span> 
+                              </p>
                               <div className="flex">
                                 {[...Array(5)].map((_, i) =>
                                   i < rates.ratingGrade ? (
@@ -298,6 +306,7 @@ const Productdetails = () => {
           </div>
         </div>
       </div>
+      <BrowsingHistory />
       <FewProduct />
     </div>
   )

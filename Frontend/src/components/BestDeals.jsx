@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addToCart, removeFromCart } from '../redux/Cart';
 import ProductCard from './ProductCard';
 import { useNavigate } from 'react-router-dom';
+import SkelentonLoader from './SkelentonLoader';
 const BestDeals = () => {
   
   const [productWithHighestDiscount, setProductWithHighestDiscount] = useState(null)
@@ -125,9 +126,16 @@ const BestDeals = () => {
 
       {/* for other best deal product */}
       <div className='w-full items-start md:items-stretch grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 grid-rows-auto gap-2 lg:gap-0'>
-      {bestDealsProduct.map((bestProducts, index) => (
+      {bestDealsProduct && bestDealsProduct.length > 0 ? bestDealsProduct.map((bestProducts, index) => (
         <ProductCard key={bestProducts._id} product={bestProducts}/>
-      ))}
+      ))
+      : 
+      Array.from({ length: 8}).map((_, index) => (
+        <div className="w-full h-[250px] cursor-pointer flex flex-col gap-2 border-1 border-[#E4E7E9]" style={{ padding: "10px" }}>
+          <SkelentonLoader />
+        </div>
+      ))
+      }
       </div>
     </div>
   )

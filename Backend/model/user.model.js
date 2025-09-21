@@ -83,10 +83,8 @@ userSchema.pre('save', function(next){
   if (!this.isModified('password')) return next()
   bcrypt.hash(this.password, saltRounds, (err, hashedPassword)=>{
     if(err){
-      console.log("password could not be hashed");
       return next(err)
     }else{
-      console.log(hashedPassword);
       this.password = hashedPassword
       next();
     }
@@ -94,17 +92,13 @@ userSchema.pre('save', function(next){
 })
 
 userSchema.methods.validatePassword = function(password, callback) {
-  console.log(password);
   bcrypt.compare(password, this.password, (err, isMatch) => {
     if (err) {
-      console.log("There is an error while validating the password", err);
       return callback(err);
     }
     if (isMatch) {
-      console.log("Password matches");
       return callback(null, true);
     } else {
-      console.log("Password does not match");
       return callback(null, false);
     }
   });

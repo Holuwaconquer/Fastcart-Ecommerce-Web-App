@@ -11,10 +11,16 @@ const { adminRegister, fetchPaginatedCustomers } = require('./controller/admin.c
 const PORT = process.env.PORT
 const helmet = require('helmet')
 const rateLimit = require('express-rate-limit')
+const { ipKeyGenerator } = require("express-rate-limit");
 
 // Middleware
 app.use(helmet())
-app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100}))
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  keyGenerator: ipKeyGenerator
+});
+app.use(limiter);
 app.use(cors({
   origin: ['http://localhost:5173', 'https://fastcartonlinestore.vercel.app'],
   credentials: true
@@ -34,6 +40,9 @@ mongoose.connect(process.env.URI, {
 })
   .then(async () => {
     console.log("Database Connected");
+    // app.listen(PORT, ()=>{
+    //   console.log('app running on Port', PORT);
+    // })
     const { adminModel } = require('./model/admin.model');
     const existingAdmin = await adminModel.findOne({ username: process.env.admin_username });
     if (!existingAdmin) {
@@ -45,9 +54,6 @@ mongoose.connect(process.env.URI, {
     console.log("DB connection error", err);
   });
 
-// app.listen(PORT, ()=>{
-//   console.log('app running on Port', PORT);
-// })
 // 👉 Export handler for Vercel
 module.exports = app;
 module.exports.handler = serverless(app);

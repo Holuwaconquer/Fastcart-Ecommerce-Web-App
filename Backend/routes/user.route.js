@@ -1,5 +1,5 @@
 const express = require('express')
-const { greetingUser, userLogin, userDashboard, editUser, billingDetails, shippingDetails, changePassword, orderDetails } = require('../controller/user.controller')
+const { greetingUser, userLogin, userDashboard, editUser, billingDetails, shippingDetails, changePassword, orderDetails, forgotPassword, resetPassword } = require('../controller/user.controller')
 const { authenticate } = require('../auth')
 const router = express.Router()
 
@@ -11,5 +11,7 @@ router.put('/updateBilling/:id', billingDetails)
 router.put('/updateShipping/:id', shippingDetails)
 router.put('/changepassword/:id', changePassword)
 router.post('/orderDetails/:id', orderDetails)
+router.post('/account/forgot-password', forgotPassword)
+router.post('/account/reset-password/:token', resetPassword)
 
 module.exports = router

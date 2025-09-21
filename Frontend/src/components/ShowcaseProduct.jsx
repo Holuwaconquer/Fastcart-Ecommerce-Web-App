@@ -78,14 +78,14 @@ const ShowcaseProduct = ({ promoProduct1, promoProduct2, promoProduct3 }) => {
               {/* xbox image end */}
             </div>
           :
-            <div className="w-full flex items-center justify-center gap-[2em]">
+            <div className="w-full flex flex-col-reverse md:flex-row md:items-center justify-center gap-[2em]">
                 {/* for the xbox content */}
                 <div className="w-full flex flex-col gap-4">
                   <p className="text-[#2484C2] text-[14px] flex gap-2 items-center font-bold">
                     <span className="w-[24px] bg-[#2484C2] h-[2px]"></span>
                     <span>PROMO PRODUCT</span>
                   </p>
-                  <h1 className="text-[48px] text-[#191C1F] leading-[1em]">
+                  <h1 className="text-[28px] md:text-[48px] text-[#191C1F] leading-[1em]">
                     {promoProduct1?.name.slice(0,20)}
                   </h1>
                   <p className="text-[18px] text-[#475156]">
@@ -106,8 +106,8 @@ const ShowcaseProduct = ({ promoProduct1, promoProduct2, promoProduct3 }) => {
                   <div>
                     <img src={promoProduct1?.image[0]} alt="" />
                   </div>
-                  <div className="w-[100px] h-[100px] flex flex-col items-center justify-center font-bold absolute top-0 right-0 rounded-[50%] bg-[#2DA5F3] text-black">
-                    <h1 className="text-[22px]">{promoProduct1.discountprice.toLocaleString()}</h1>
+                  <div className="w-[80px] h-[80px] md:w-[100px] md:h-[100px] flex flex-col items-center justify-center font-bold absolute top-[0px] md:top-0 right-0 rounded-[50%] bg-[#2DA5F3] text-black">
+                    <h1 className="md:text-[22px]">₦{promoProduct1.discountprice.toLocaleString()}</h1>
                   </div>
                 </div>
                 {/* xbox image end */}
@@ -152,14 +152,14 @@ const ShowcaseProduct = ({ promoProduct1, promoProduct2, promoProduct3 }) => {
               {/* xbox image end */}
             </div>
           :
-            <div className="w-full flex items-center justify-center gap-[2em]">
+            <div className="w-full flex flex-col-reverse md:flex-row md:items-center justify-center gap-[2em]">
                 {/* for the xbox content */}
                 <div className="w-full flex flex-col gap-4">
                   <p className="text-[#2484C2] text-[14px] flex gap-2 items-center font-bold">
                     <span className="w-[24px] bg-[#2484C2] h-[2px]"></span>
                     <span>PROMO PRODUCT</span>
                   </p>
-                  <h1 className="text-[48px] text-[#191C1F] leading-[1em]">
+                  <h1 className="text-[28px] md:text-[48px] text-[#191C1F] leading-[1em]">
                     {promoProduct2?.name.slice(0,20)}
                   </h1>
                   <p className="text-[18px] text-[#475156]">
@@ -181,7 +181,7 @@ const ShowcaseProduct = ({ promoProduct1, promoProduct2, promoProduct3 }) => {
                     <img src={promoProduct2?.image[0]} alt="" />
                   </div>
                   <div className="w-[100px] h-[100px] flex flex-col items-center justify-center font-bold absolute top-0 right-0 rounded-[50%] bg-[#2DA5F3] text-black">
-                    <h1 className="text-[22px]">{promoProduct2.discountprice.toLocaleString()}</h1>
+                    <h1 className="md:text-[22px]">₦{promoProduct2.discountprice.toLocaleString()}</h1>
                   </div>
                 </div>
                 {/* xbox image end */}
@@ -226,14 +226,14 @@ const ShowcaseProduct = ({ promoProduct1, promoProduct2, promoProduct3 }) => {
               {/* xbox image end */}
             </div>
           :
-            <div className="w-full flex items-center justify-center gap-[2em]">
+            <div className="w-full flex flex-col-reverse md:flex-row md:items-center justify-center gap-[2em]">
                 {/* for the xbox content */}
                 <div className="w-full flex flex-col gap-4">
                   <p className="text-[#2484C2] text-[14px] flex gap-2 items-center font-bold">
                     <span className="w-[24px] bg-[#2484C2] h-[2px]"></span>
                     <span>PROMO PRODUCT</span>
                   </p>
-                  <h1 className="text-[48px] text-[#191C1F] leading-[1em]">
+                  <h1 className="text-[28px] md:text-[48px] text-[#191C1F] leading-[1em]">
                     {promoProduct3?.name.slice(0,20)}
                   </h1>
                   <p className="text-[18px] text-[#475156]">
@@ -255,7 +255,7 @@ const ShowcaseProduct = ({ promoProduct1, promoProduct2, promoProduct3 }) => {
                     <img src={promoProduct3?.image[0]} alt="" />
                   </div>
                   <div className="w-[100px] h-[100px] flex flex-col items-center justify-center font-bold absolute top-0 right-0 rounded-[50%] bg-[#2DA5F3] text-black">
-                    <h1 className="text-[22px]">{promoProduct3.discountprice.toLocaleString()}</h1>
+                    <h1 className="md:text-[22px]">₦{promoProduct3.discountprice.toLocaleString()}</h1>
                   </div>
                 </div>
                 {/* xbox image end */}

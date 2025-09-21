@@ -71,7 +71,7 @@ const DashboardSidenav = () => {
           </div>
           {/* for inbox */}
           <div className='w-full '>
-            <NavLink style={{padding: '10px'}} to='/dashboard/browising-history' className={({ isActive }) => `w-full flex items-center gap-2 transition-all duration-300 ${ isActive ? 'bg-[#FA8232] text-[#white] shadow-md scale-[1.03]' : 'text-[#5F6C72] hover:bg-[#FFF3EB]' }`}>
+            <NavLink style={{padding: '10px'}} to='/dashboard/browsing-history' className={({ isActive }) => `w-full flex items-center gap-2 transition-all duration-300 ${ isActive ? 'bg-[#FA8232] text-[#white] shadow-md scale-[1.03]' : 'text-[#5F6C72] hover:bg-[#FFF3EB]' }`}>
              <PiClockClockwise  size={24} />
              <span className='text-[14px]'>Browsing History</span>
             </NavLink>

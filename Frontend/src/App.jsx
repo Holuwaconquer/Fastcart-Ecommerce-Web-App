@@ -37,21 +37,14 @@ import OrderTrackDetails from './Pages/OrderTrackDetails';
 import Productdetails from './Pages/Productdetails';
 import ScrollToTop from './components/ScrollToTop';
 import Logout from './Pages/user/Logout';
-import ShowcaseProduct from './components/ShowcaseProduct';
-import Gallery from './components/Gallery';
 import CustomerSupport from './Pages/CustomerSupport';
 import AboutUs from './Pages/AboutUs';
+import ForgotPassword from './Pages/user/ForgotPassword';
+import ResetPassword from './Pages/user/ResetPassword';
+import BrowsingHistory from './components/BrowsingHistory';
 
 
 const App = () => {
-  // const images = [
-  //   "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0",
-  //   "https://images.unsplash.com/photo-1491553895911-0055eca6402d",
-  //   "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
-  //   "https://images.unsplash.com/photo-1501785888041-af3ef285b470",
-  //   "https://images.unsplash.com/photo-1470770841072-f978cf4d019e",
-  //   "https://images.unsplash.com/photo-1470770841072-f978cf4d019e",
-  // ];
   return (
     <div>
       <ScrollToTop />
@@ -65,6 +58,9 @@ const App = () => {
             <Route index element={<Landingpage />} />
             <Route path='/who-we-are' element={<AboutUs />} />
             <Route path='/shop' element={<ShopPage />} />
+            <Route path='/account/forgot-password' element={<ForgotPassword />} />
+            <Route path='/reset-password/:token' element={<ResetPassword />} />
+
             <Route path='/shop/:categoryName' element={<ShopPage />} />
             <Route path='/product-page/:id' element={
               <CategoryProvider>
@@ -93,6 +89,11 @@ const App = () => {
               <Route path='account' element={
                 <UserProvider>
                   <HomeDashboard />
+                </UserProvider>
+              }/>
+              <Route path='browsing-history' element={
+                <UserProvider>
+                  <BrowsingHistory />
                 </UserProvider>
               }/>
               <Route path='order-history' element={

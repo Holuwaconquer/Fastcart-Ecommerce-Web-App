@@ -61,8 +61,6 @@ const greetingUser = async (req, res) => {
         html: htmlContent,
       });
 
-      console.log("Email sent:", info);
-
       return res.status(201).json({
         status: true,
         message: 'User registered successfully.',
@@ -190,6 +188,107 @@ const changePassword = async (req, res) =>{
   catch (err) {
     console.error("Error during password change:", err);
     res.status(500).json({ error: "Internal server error" });
+  }
+}
+
+const forgotPassword = async (req, res) => {
+  const { email } = req.body
+  try{
+    const user = await userModel.findOne({email})
+    if(!user){
+      return res.status(404).json({
+        message: 'The email as not been registered'
+      })
+    }
+    const resetToken = jwt.sign(
+      {id: user._id},
+      process.env.JWT_SECRET,
+      { expiresIn: '15m' }
+    )
+
+    const resetUrl = `https://fastcartonlinestore.vercel.app/reset-password/${resetToken}`
+
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_ADDRESS_TO_SEND_CODE,
+        pass: process.env.PASSWORD_TO_EMAIL_ADDRESS_TO_SEND_CODE
+      }
+    })
+
+    const emailContent = ResetPasswordEmail(user, resetUrl)
+
+    const passwordReset = await transporter.sendMail({
+      from: 'Fastcart Online Store',
+      to: email,
+      subject: 'Password Reset Link',
+      html: emailContent
+    })
+    
+    res.status(200).json({
+      status: true,
+      message: 'Password reset link sent', 
+      resetUrl
+    })
+    
+  }
+  catch(err){
+    console.error("Forgot password error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
+const ResetPasswordEmail = (user, resetUrl) => {
+  return `
+    <div style="font-family: Arial, sans-serif; padding: 10px; background-color: #f9f9f9;">
+      <div style="max-width: 600px; margin: auto; background-color: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+        <h1 style="color: black;">Reset Password</h1>
+        <h2 style="color: #2d2d2d;">Hi ${user.firstname},</h2>
+        <p style="font-size: 16px; color: #333;">
+          Tap the button below to reset your fastcart account password.
+          <br />
+          if you didn't request a new password, you can safely delete this email.
+          your password will expire within 15 minutes
+        </p>
+        <a style="font-size: 16px; color: white; padding: 10px 30px; border-radius: 4px; background-color: #FA8232;" href="${resetUrl}">Reset Password</a>
+        <p style="font-size: 16px; color: #333;">
+          If that doesn't work, copy and paste the following following link into your browser
+          <br />
+          ${resetUrl}
+        </p>
+
+        <p style="font-size: 14px; color: #888;">
+          — The Fastcart Team
+        </p>
+      </div>
+    </div>
+  `;
+};
+
+const resetPassword = async (req, res) => {
+  const { token } = req.params;
+  const {confirmPassword, password } = req.body;
+
+  try{
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const user = await userModel.findById(decoded.id);
+    if(!user){
+      return res.status(404).json({ message: 'User no found' })
+    }
+
+    user.password = password;
+    
+    await user.save()
+
+    res.status(200).json({ status: true, message: "Password reset successful" });
+  }
+  catch (err) {
+    console.error("Reset password error:", err);
+    if (err.name === "TokenExpiredError") {
+      return res.status(400).json({ message: "Reset link has expired" });
+    }
+    res.status(400).json({ message: "Invalid reset link" });
   }
 }
   
@@ -340,8 +439,6 @@ const orderDetails = async (req, res) => {
       html: htmlContent,
     });
 
-    console.log("Email sent:", info.messageId);
-
     res.status(200).json({ message: 'Order saved successfully', orderId: adminOrder._id });
   } catch (err) {
     console.error('Error saving order:', err);
@@ -358,7 +455,7 @@ const generateEmailHTML = (user, order) => {
       <div style="display: flex; flex-direction: column; gap: 10px;">
         ${order.products.map(item => `
           <div>
-            <img src="${item.image[0]}" alt='product-image'/>
+            <img src="${item.image}" alt='product-image'/>
             <strong>${item.name}</strong> — ${item.quantity || 1} x ₦${item.price.toLocaleString()}
           </div>`).join('')}
       </div>
@@ -379,5 +476,7 @@ module.exports = {
   billingDetails,
   shippingDetails,
   changePassword,
-  orderDetails
+  orderDetails,
+  forgotPassword,
+  resetPassword
 }

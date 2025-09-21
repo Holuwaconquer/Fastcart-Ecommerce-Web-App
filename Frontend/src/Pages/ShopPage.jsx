@@ -97,11 +97,12 @@ const ShopPage = () => {
     setSearchQuery(e.target.value) 
   }
 
-  const [showFilter, setShowFilter] = useState(true)
+  // Filter panel state
+  const [showFilterMobile, setShowFilterMobile] = useState(false);
 
-  const filterPanel = () => {
-    setShowFilter(prev => !prev)
-  }
+  const openFilterPanel = () => setShowFilterMobile(true);
+  const closeFilterPanel = () => setShowFilterMobile(false);
+
   useEffect(() => {
     setCurrentPage(1);
   }, [productShowName, productPrice, debouncedQuery]);
@@ -116,72 +117,159 @@ const ShopPage = () => {
 
   return (
     <div className='w-full' style={{padding: '2% 6%'}}>
-      {allProduct.length !== 0 ?(
-        <div className='w-full grid md:grid-cols-[20%_80%] grid-rows-auto'>
-          {/* for filter section */}
-          <div className={`${showFilter ? 'hidden' : 'block'} md:block`}>
-            {/* for category filter */}
-            <div className='w-full flex flex-col gap-2 border-b border-[#E4E7E9]' style={{paddingBottom: '20px'}}>
-              <h1>CATEGORY</h1>
-              <div className='w-full flex gap-4 items-center'>
-                <input type="radio" id={`category-all`} onChange={() => setProductShowName('All Product')} checked={productShowName === 'All Product'} name='category'/>
-                <label htmlFor={`category-all`}>All Product</label>
+      {Array.isArray(allProduct) && allProduct.length !== 0 ? (
+        <div className={`w-full grid ${showFilterMobile ? 'md:grid-cols-[20%_80%]' : 'md:grid-cols-[20%_80%]'} grid-rows-auto`}>
+          {/* Filter Section Desktop */}
+          <div className="hidden md:block bg-white p-5 h-full">
+            {/* Category filter */}
+            <div className="w-full flex flex-col gap-2 border-b border-[#E4E7E9] pb-5">
+              <h1 className="font-semibold">CATEGORY</h1>
+              <div className="flex gap-2 items-center">
+                <input
+                  type="radio"
+                  id="category-all"
+                  onChange={() => setProductShowName("All Product")}
+                  checked={productShowName === "All Product"}
+                  name="category"
+                />
+                <label htmlFor="category-all">All Product</label>
               </div>
-              {allCategory && (
-                allCategory.map((cat) =>(
-                  <div className='w-full flex gap-2 items-center' key={cat.name}>
-                    <input type="radio" id={`category-${cat.name}`} onChange={() => setProductShowName(cat.name)} checked={productShowName === cat.name} name='category'/>
-                    <label htmlFor={`category-${cat.name}`}>{cat.name}</label>
-                  </div>
-                ))
-              )}
+              {allCategory?.map((cat) => (
+                <div className="flex gap-2 items-center" key={cat.name}>
+                  <input
+                    type="radio"
+                    id={`category-${cat.name}`}
+                    onChange={() => setProductShowName(cat.name)}
+                    checked={productShowName === cat.name}
+                    name="category"
+                  />
+                  <label htmlFor={`category-${cat.name}`}>{cat.name}</label>
+                </div>
+              ))}
             </div>
-            {/* for price range filtering */}
-            <div className='w-full flex flex-col gap-2 border-b border-[#E4E7E9]' style={{paddingTop: '20px'}}>
-              <h1>PRICE RANGE</h1>
-              <div className='w-full flex gap-2 items-center'>
-                <input type="radio" id="price-all" onChange={() => setProductPrice('all')} checked={productPrice === 'all'} name='pricerange'/>
+            {/* Price filter */}
+            <div className="w-full flex flex-col gap-2 border-b border-[#E4E7E9] pt-5">
+              <h1 className="font-semibold">PRICE RANGE</h1>
+              <div className="flex gap-2 items-center">
+                <input
+                  type="radio"
+                  id="price-all"
+                  onChange={() => setProductPrice("all")}
+                  checked={productPrice === "all"}
+                  name="pricerange"
+                />
                 <label htmlFor="price-all">All Price</label>
               </div>
-              {/* for price under 10,000 naira */}
               <div className='w-full flex gap-2 items-center'>
                 <input type="radio" id='10000 naira' onChange={() => setProductPrice('under10k')} checked={productPrice === 'under10k'} name='pricerange'/>
                 <label htmlFor='10000 naira'>Under ₦10,000</label>
               </div>
-              {/* for price between 11,000 and 49,000 naira */}
               <div className='w-full flex gap-2 items-center'>
                 <input type="radio" id='11000 to 49,000 naira' onChange={() => setProductPrice('11k-49k')} checked={productPrice === '11k-49k'} name='pricerange'/>
                 <label htmlFor='11000 to 49,000 naira'>₦11,000 - ₦49,000</label>
               </div>
-              {/* for price between 50,000 and 100,000 naira */}
               <div className='w-full flex gap-2 items-center'>
                 <input type="radio" id='50000 to 100,000 naira' onChange={() => setProductPrice('50k-100k')} checked={productPrice === '50k-100k'} name='pricerange'/>
                 <label htmlFor='50000 to 100,000 naira'>₦50,000 - ₦100,000</label>
               </div>
-              {/* for price between 101,000 and 500,000 naira */}
               <div className='w-full flex gap-2 items-center'>
                 <input type="radio" id='101,000 to 500,000 naira' onChange={() => setProductPrice('101k-500k')} checked={productPrice === '101k-500k'}  name='pricerange'/>
                 <label htmlFor='101,000 to 500,000 naira'>₦101,000 - ₦500,000</label>
               </div>
-              {/* for price between ₦501,000 - ₦1,000,000 naira */}
               <div className='w-full flex gap-2 items-center'>
                 <input type="radio" id='500,000 to 1,000,000 naira' onChange={() => setProductPrice('501k-1m')} checked={productPrice === '501k-1m'} name='pricerange'/>
                 <label htmlFor='500,000 to 1,000,000 naira'>₦501,000 - ₦1,000,000</label>
               </div>
-              {/* for price between ₦1,000,000 - ₦10,000,000 naira */}
               <div className='w-full flex gap-2 items-center'>
                 <input type="radio" id='1,000,000 to 10,000,000 naira' onChange={() => setProductPrice('1m-10m')} checked={productPrice === '1m-10m'} name='pricerange'/>
                 <label htmlFor='1,000,000 to 10,000,000 naira'>₦1,000,000 - ₦10,000,000</label>
               </div>
-              {/* for price over ₦10,000,000 naira */}
               <div className='w-full flex gap-2 items-center'>
                 <input type="radio" id='10,000,000 naira' onChange={() => setProductPrice('over10m')} checked={productPrice === 'over10m'} name='pricerange'/>
                 <label htmlFor='10,000,000 naira'>Over ₦10,000,000</label>
               </div>
             </div>
           </div>
-
-          {/* for product section */}
+          {/* Filter Section Mobile */}
+          {showFilterMobile && (
+            <div className="fixed inset-0 bg-[#0000003f] bg-opacity-40 z-40 md:hidden" onClick={closeFilterPanel}>
+              <div 
+                style={{padding: '20px'}}
+                className="absolute top-0 left-0 w-3/4 sm:w-1/2 h-screen bg-white p-5 overflow-y-auto"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {/* Category filter */}
+                <div className="w-full flex flex-col gap-2 border-b border-[#E4E7E9] pb-5">
+                  <h1 className="font-semibold">CATEGORY</h1>
+                  <div className="flex gap-2 items-center">
+                    <input
+                      type="radio"
+                      id="category-all-mobile"
+                      onChange={() => setProductShowName("All Product")}
+                      checked={productShowName === "All Product"}
+                      name="category"
+                    />
+                    <label htmlFor="category-all-mobile">All Product</label>
+                  </div>
+                  {allCategory?.map((cat) => (
+                    <div className="flex gap-2 items-center" key={cat.name}>
+                      <input
+                        type="radio"
+                        id={`category-mobile-${cat.name}`}
+                        onChange={() => setProductShowName(cat.name)}
+                        checked={productShowName === cat.name}
+                        name="category"
+                      />
+                      <label htmlFor={`category-mobile-${cat.name}`}>{cat.name}</label>
+                    </div>
+                  ))}
+                </div>
+                {/* Price filter */}
+                <div className="w-full flex flex-col gap-2 border-b border-[#E4E7E9] pt-5">
+                  <h1 className="font-semibold">PRICE RANGE</h1>
+                  <div className="flex gap-2 items-center">
+                    <input
+                      type="radio"
+                      id="price-all-mobile"
+                      onChange={() => setProductPrice("all")}
+                      checked={productPrice === "all"}
+                      name="pricerange"
+                    />
+                    <label htmlFor="price-all-mobile">All Price</label>
+                  </div>
+                  <div className='w-full flex gap-2 items-center'>
+                    <input type="radio" id='10000 naira-mobile' onChange={() => setProductPrice('under10k')} checked={productPrice === 'under10k'} name='pricerange'/>
+                    <label htmlFor='10000 naira-mobile'>Under ₦10,000</label>
+                  </div>
+                  <div className='w-full flex gap-2 items-center'>
+                    <input type="radio" id='11000 to 49,000 naira-mobile' onChange={() => setProductPrice('11k-49k')} checked={productPrice === '11k-49k'} name='pricerange'/>
+                    <label htmlFor='11000 to 49,000 naira-mobile'>₦11,000 - ₦49,000</label>
+                  </div>
+                  <div className='w-full flex gap-2 items-center'>
+                    <input type="radio" id='50000 to 100,000 naira-mobile' onChange={() => setProductPrice('50k-100k')} checked={productPrice === '50k-100k'} name='pricerange'/>
+                    <label htmlFor='50000 to 100,000 naira-mobile'>₦50,000 - ₦100,000</label>
+                  </div>
+                  <div className='w-full flex gap-2 items-center'>
+                    <input type="radio" id='101,000 to 500,000 naira-mobile' onChange={() => setProductPrice('101k-500k')} checked={productPrice === '101k-500k'}  name='pricerange'/>
+                    <label htmlFor='101,000 to 500,000 naira-mobile'>₦101,000 - ₦500,000</label>
+                  </div>
+                  <div className='w-full flex gap-2 items-center'>
+                    <input type="radio" id='500,000 to 1,000,000 naira-mobile' onChange={() => setProductPrice('501k-1m')} checked={productPrice === '501k-1m'} name='pricerange'/>
+                    <label htmlFor='500,000 to 1,000,000 naira-mobile'>₦501,000 - ₦1,000,000</label>
+                  </div>
+                  <div className='w-full flex gap-2 items-center'>
+                    <input type="radio" id='1,000,000 to 10,000,000 naira-mobile' onChange={() => setProductPrice('1m-10m')} checked={productPrice === '1m-10m'} name='pricerange'/>
+                    <label htmlFor='1,000,000 to 10,000,000 naira-mobile'>₦1,000,000 - ₦10,000,000</label>
+                  </div>
+                  <div className='w-full flex gap-2 items-center'>
+                    <input type="radio" id='10,000,000 naira-mobile' onChange={() => setProductPrice('over10m')} checked={productPrice === 'over10m'} name='pricerange'/>
+                    <label htmlFor='10,000,000 naira-mobile'>Over ₦10,000,000</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          {/* Product Section */}
           <div className='w-full flex flex-col gap-4'>
             {/* for search bar */}
             <div className='md:w-2/4 border border-[#E4E7E9] rounded-[2px] flex items-center justify-between' style={{padding: '10px'}}>
@@ -294,13 +382,13 @@ const ShopPage = () => {
           )}
           </div>
 
-          <div onClick={filterPanel} className='fixed bottom-[10px] left-1/2 -translate-x-1/2 md:hidden bg-[#1d1d1d] rounded-[30px] text-white border border-[#E4E7E9]' style={{padding: '10px 20px'}}>
+          {/* Filter button for mobile */}
+          <div onClick={openFilterPanel} className='fixed cursor-pointer bottom-[10px] left-1/2 -translate-x-1/2 md:hidden bg-[#1d1d1d] rounded-[30px] text-white border border-[#E4E7E9]' style={{padding: '10px 20px'}}>
             <p className='flex items-center justify-center gap-4'><span>Filter</span><IoFilter size={18}/></p>
           </div>
         </div>
       )
-      :(
-
+      : (
         <Loader />
       )
       }

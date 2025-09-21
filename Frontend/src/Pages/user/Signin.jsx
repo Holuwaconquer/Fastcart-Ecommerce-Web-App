@@ -96,7 +96,7 @@ const Signin = () => {
                       </div>
                       <p className='text-[red]'>{formik.touched.password && formik.errors.password}</p>
                     </div>
-                    <small className='coloredTxt'>Forgot Password</small>
+                    <small onClick={() => navigate('/account/forgot-password')} className='coloredTxt cursor-pointer'>Forgot Password</small>
                   </div>
 
                   {/* for registration action */}

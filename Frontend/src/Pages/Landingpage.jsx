@@ -19,6 +19,7 @@ import FeaturedProducts from '../components/FeaturedProducts'
 import FewProduct from "../components/FewProduct";
 import { useNavigate } from "react-router-dom";
 import ShowcaseProduct from "../components/ShowcaseProduct";
+import SkelentonLoader from "../components/SkelentonLoader";
 
 const Landingpage = () => {
   const prevRef = useRef(null);
@@ -248,9 +249,9 @@ const Landingpage = () => {
             className="w-full"
             
           >
-            {slideCategory.map((allCategory, index) => (
+            {slideCategory && slideCategory.length > 0 ? slideCategory.map((allCategory, index) => (
               <SwiperSlide key={index}>
-                {allCategory ?
+                {allCategory &&
                   <div className={`w-full grid gap-4 grid-cols-2 sm:grid-cols-4 lg:grid-cols-6`}>
                     {allCategory.map((category, i) => (
                       <div onClick={()  => navigate(`/shop/${category.name}`)}
@@ -265,14 +266,26 @@ const Landingpage = () => {
                       </div>
                     ))}
                   </div>
-                 :
-                  <div className="skeleton-loader">
-                    <div className="image"></div>
-                    <div className="title"></div>
-                  </div>
                 }
               </SwiperSlide>
-            ))}
+            ))
+            :
+            Array.from({ length: Math.ceil(12 / chunkSize) }).map((_, slideIndex) => (
+              <SwiperSlide key={slideIndex}>
+                <div className="w-full grid gap-4 grid-cols-2 sm:grid-cols-4 lg:grid-cols-6">
+                  {Array.from({ length: chunkSize }).map((_, index) => (
+                    <div
+                      key={index}
+                      className="w-full h-[250px] cursor-pointer flex flex-col gap-2 border border-[#E4E7E9]"
+                      style={{ padding: "10px" }}
+                    >
+                      <SkelentonLoader />
+                    </div>
+                  ))}
+                </div>
+              </SwiperSlide>
+            ))
+            }
           </Swiper>
           <div className="w-full flex justify-between items-center">
             <button

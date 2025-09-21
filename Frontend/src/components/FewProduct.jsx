@@ -3,6 +3,7 @@ import { CategoryContext } from '../CategoryContext'
 import ProductCard from './ProductCard'
 import { IoIosArrowRoundForward } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
+import SkelentonLoader from './SkelentonLoader';
 
 const FewProduct = () => {
   const { allProduct, allCategory } = useContext(CategoryContext)
@@ -51,9 +52,16 @@ const FewProduct = () => {
       </div>
 
       <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
-        {filteredProducts?.map((product) => (
+        {filteredProducts && filteredProducts.length > 0 ? filteredProducts?.map((product) => (
           <ProductCard key={product._id} product={product}/>
-        ))}
+        ))
+        :
+        Array.from({ length: 10}).map((_, index) => (
+          <div className="w-full h-[250px] cursor-pointer flex flex-col gap-2 border-1 border-[#E4E7E9]" style={{ padding: "10px" }}>
+            <SkelentonLoader />
+          </div>
+        ))
+        }
       </div>
     </div>
   )
