@@ -42,7 +42,7 @@ const greetingUser = async (req, res) => {
     const form = new userModel(userData);
 
     try {
-      await form.save();
+      await form.save();  
 
       const transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -125,6 +125,7 @@ const welcomeEmail = (user) => {
 
 const userLogin = (req, res) => {
   const { password } = req.body;
+  
 
   userModel.findOne({ email: req.body.email })
     .then((user) => {

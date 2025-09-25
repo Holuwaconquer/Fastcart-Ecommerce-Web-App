@@ -68,7 +68,7 @@ const Footer = () => {
         </div>
       </div>
       <div style={{padding: '2% 0'}} className='w-full border-t-1 border-t-[#ADB7BC] text-center text-[#ADB7BC]'>
-        <p>Fastcart - © 2025. Design by Okikiola</p>
+        <p>Fastcart - © 2025. Design by TriCore Solutions</p>
       </div>
     </div>
   )

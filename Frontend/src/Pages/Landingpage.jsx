@@ -215,7 +215,7 @@ const Landingpage = () => {
           <div className="flex gap-4 items-center">
             <p className="text-[#191C1F] text-[24px] font-bold">Best Deals</p>
           </div>
-          <div onClick={() => navigate('/shop')} className="text-[14px] text-[#2DA5F3] flex gap-2 font-bold">
+          <div onClick={() => navigate('/shop')} className="text-[14px] cursor-pointer text-[#2DA5F3] flex gap-2 font-bold">
             <span>Browse All Product</span>
             <IoIosArrowRoundForward size={20} />
           </div>
@@ -256,7 +256,7 @@ const Landingpage = () => {
                     {allCategory.map((category, i) => (
                       <div onClick={()  => navigate(`/shop/${category.name}`)}
                         key={i}
-                        className="bg-white border-1 border-[#E4E7E9] rounded-[4px] flex flex-col gap-4 items-center justify-center"
+                        className="bg-white cursor-pointer border-1 border-[#E4E7E9] rounded-[4px] flex flex-col gap-4 items-center justify-center"
                         style={{ padding: "24px 12px" }}
                       >
                         <img src={category.image} alt="category-image" />
